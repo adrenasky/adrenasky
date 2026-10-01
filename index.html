@@ -92,6 +92,9 @@ th{color:var(--muted);font-weight:400}
 .hypanel>div{flex:1}
 .hypanel b{display:block;font-family:"Barlow Condensed",sans-serif;font-size:22px}
 .hypanel span{font-size:14px;color:var(--muted)}
+.hysteps{display:flex;gap:16px;margin:8px 0 2px;flex-wrap:wrap}
+.hysteps span{font-size:12px}
+.hysteps b{font-size:22px;color:var(--chart);line-height:1}
 .auth{display:grid;gap:14px}
 .auth select,.auth textarea{font:inherit;padding:12px 14px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
 .auth textarea{resize:vertical;line-height:1.4}
@@ -298,9 +301,12 @@ function home(tab){
       </div>
     </section>
     ${(()=>{ const hy=QUESTIONS.filter(q=>q.hy); if(!hy.length) return "";
-      const strong=hy.filter(q=>(S.cards[q.id]||{box:0}).box>=3).length;
-      return `<section class="hypanel"><div><b>High-yield: Top 100</b><span>The concepts that come up most in real exams. ${strong} of ${hy.length} mastered.</span>
-        <div class="bar"><span style="width:${hy.length?strong/hy.length*100:0}%"></span></div></div>
+      const cd=q=>S.cards[q.id]||{box:0,seen:0,right:0};
+      const tried=hy.filter(q=>cd(q).seen>0).length, right=hy.filter(q=>cd(q).right>0).length, strong=hy.filter(q=>cd(q).box>=3).length;
+      return `<section class="hypanel"><div><b>High-yield: Top 100</b><span>The concepts that come up most in real exams.</span>
+        <div class="hysteps"><span><b>${tried}</b>practised</span><span><b>${right}</b>got right</span><span><b>${strong}</b>mastered</span><span><b>${hy.length}</b>total</span></div>
+        <div class="bar"><span style="width:${hy.length?right/hy.length*100:0}%"></span></div>
+        <span class="small">Mastered = right three times on separate days.</span></div>
         <button class="primary" id="go-hy">Practise</button></section>`; })()}
     <h3 class="section">Topics</h3>
     <p class="small" style="margin-top:0">Lamps light up as you get questions right on repeat visits. Tap a topic to read its notes.</p>
@@ -572,14 +578,16 @@ async function loadData(){
 let IS_ADMIN=false;
 const pct=v=>v===null||v===undefined?"–":Math.round(v)+"%";
 const ago=d=>{ if(!d) return "Never"; const m=(Date.now()-new Date(d))/60000;
-  return m<60?"Just now":m<1440?Math.floor(m/60)+" h ago":Math.floor(m/1440)+" d ago"; };
+  return m<2?"Just now":m<60?Math.floor(m)+" min ago":m<1440?Math.floor(m/60)+" h ago":Math.floor(m/1440)+" d ago"; };
 function adminShell(tab, body){
   const tabs=[["overview","Testers"],["exams","Exams"],["reports","Reports"],["questions","Questions"],["notes","Notes"],["chapters","Chapters"]];
   app.innerHTML=`<button class="link back" id="ab">Back to the app</button>
-    <h2 class="cond" style="font-size:34px;margin:6px 0 14px;color:var(--chart)">Admin</h2>
+    <div style="display:flex;justify-content:space-between;align-items:center"><h2 class="cond" style="font-size:34px;margin:6px 0 14px;color:var(--chart)">Admin</h2>
+    <button class="ghost" id="arf" style="min-height:40px;padding:8px 14px">Refresh</button></div>
     <div class="tabs adm" role="tablist">${tabs.map(([k,l])=>`<button role="tab" aria-selected="${k===tab}" data-t="${k}">${l}</button>`).join("")}</div>
     <div id="adm">${body||'<p class="small">Loading…</p>'}</div>`;
   $("#ab").onclick=()=>home();
+  $("#arf").onclick=()=>adminView(tab);
   app.querySelectorAll(".adm button").forEach(b=>b.onclick=()=>adminView(b.dataset.t));
 }
 async function rpc(name,args){ const {data,error}=await sb.rpc(name,args||{}); if(error){ toast(error.message); throw error; } return data; }
@@ -590,15 +598,15 @@ async function adminView(tab){
   if(tab==="overview"){
     const t=await rpc("admin_testers");
     const week=Date.now()-7*86400000;
-    const active=t.filter(x=>x.last_login&&new Date(x.last_login)>week).length;
+    const active=t.filter(x=>(x.last_active||x.last_login)&&new Date(x.last_active||x.last_login)>week).length;
     const exams=t.reduce((a,x)=>a+Number(x.exams_sat),0);
     el.innerHTML=`<div class="stats">
       <div><b>${t.length}</b><span>Testers</span></div><div><b>${active}</b><span>Active this week</span></div>
       <div><b>${exams}</b><span>Exams sat</span></div></div>
       <p class="small">Tap a tester to manage their devices.</p>
-      <div class="wrapx"><table><tr><th>Name</th><th>Last login</th><th>Tried</th><th>Accuracy</th><th>Exams</th><th>Best</th><th>Devices</th></tr>
+      <div class="wrapx"><table><tr><th>Name</th><th>Last active</th><th>Tried</th><th>Accuracy</th><th>Exams</th><th>Best</th><th>Devices</th></tr>
       ${t.map((x,i)=>`<tr class="tap-row" data-i="${i}"><td><b>${esc(x.full_name||"No name")}</b><br><span class="small">${esc(x.email)}</span></td>
-        <td>${ago(x.last_login)}</td><td>${x.questions_tried}</td><td>${pct(x.accuracy_pct)}</td><td>${x.exams_sat}</td><td>${pct(x.best_exam)}</td><td>${x.devices}/${x.device_limit}</td></tr>`).join("")}</table></div>`;
+        <td>${ago(x.last_active||x.last_login)}</td><td>${x.questions_tried}</td><td>${pct(x.accuracy_pct)}</td><td>${x.exams_sat}</td><td>${pct(x.best_exam)}</td><td>${x.devices}/${x.device_limit}</td></tr>`).join("")}</table></div>`;
     el.querySelectorAll(".tap-row").forEach(r=>r.onclick=()=>testerActions(t[+r.dataset.i]));
   }
   if(tab==="exams"){
