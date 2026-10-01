@@ -196,185 +196,8 @@ const TOPICS = [
 /* Draft questions, to be checked by the instructor before launch */
 let QUESTIONS = []; // loaded from the database after login
 
-/* ===================== SUMMARY NOTES (DRAFT, to be proofread) ===================== */
-const NOTES = {
- atm:{"points":["ISA at mean sea level: +15°C, 1013.25 hPa, density 1.225 kg/m³.","Temperature falls 1.98°C per 1,000 ft (6.5°C per km) up to the tropopause at 11 km (36,090 ft).","Above the ISA tropopause the temperature stays constant at −56.5°C up to 20 km.","The real tropopause is higher and colder over the equator (around 16 to 17 km) and lower over the poles (around 8 to 9 km).","ISA deviation = actual temperature minus ISA temperature at that level. Example: ISA at FL100 is about −5°C, so an actual −2°C is ISA +3."],"aid":"15, 1013, and 2 degrees per thousand.","trap":"Questions mix °C per km and °C per 1,000 ft. Check the units before picking an answer."},
- dens:{"points":["Air density falls with height, with rising temperature and with rising humidity, because moist air is less dense than dry air.","Density altitude is the altitude in the ISA that has the same density as the actual air. A high density altitude means less lift, less thrust and less engine power.","Density altitude is pressure altitude corrected for temperature. Hot and high airfields, like Nairobi's above 5,000 ft, mean longer take-off runs and weaker climb."],"aid":"High, hot and humid means low density and poor performance.","trap":"Humid air is less dense than dry air, not more."},
- temp:{"points":["The sun's radiation passes through the atmosphere largely unabsorbed and heats the ground. The air is then heated from below by conduction, convection and turbulence.","Advection moves warm or cold air horizontally, and latent heat released by condensation also warms the air.","Surface temperature usually peaks in mid-afternoon and is lowest around dawn.","Cloud at night reduces radiation loss, so cloudy nights are warmer than clear ones.","Inversions and isothermal layers are very stable."],"aid":"The sun heats the ground, and the ground heats the air.","trap":"The atmosphere is heated mainly from below, not directly by the sun."},
- stab:{"points":["Dry adiabatic lapse rate (DALR): 3°C per 1,000 ft for unsaturated rising air.","Saturated adiabatic lapse rate (SALR): about 1.5°C per 1,000 ft in warm low-level air. It is smaller because condensation releases latent heat.","Environmental lapse rate (ELR) greater than DALR: absolutely unstable.","ELR less than SALR: absolutely stable. ELR between the two: conditionally unstable (unstable only once saturated).","Unstable air: cumulus, showers, good visibility outside showers, bumpy flying. Stable air: layer cloud, poor visibility, steady precipitation, smooth flying.","Convective cloud base is roughly 400 ft for every 1°C between temperature and dew point."],"aid":"Environment cooling faster than the parcel means the parcel stays warm and keeps rising.","trap":"Stability depends on comparing lapse rates, not on the temperature itself."},
- alt:{"points":["QNH: the altimeter shows altitude above mean sea level. On the ground it reads aerodrome elevation.","QFE: the altimeter shows height above the aerodrome. On the runway it reads zero.","1013.25 hPa (standard setting): the altimeter shows pressure altitude, used for flight levels.","Near sea level, 1 hPa is about 27 ft (often rounded to 30 ft).","Climbing, set 1013 at the transition altitude. Descending, set QNH at the transition level.","Flying into lower pressure or colder air without resetting, you are lower than the altimeter shows."],"aid":"High to low, or hot to cold, look out below.","trap":"A higher subscale setting makes the altimeter read higher. Work out the direction before the number."},
- wind:{"points":["Three forces: pressure gradient force (towards low pressure), Coriolis (deflects to the right in the Northern Hemisphere, left in the Southern) and friction near the surface.","Above the friction layer, the geostrophic wind blows parallel to straight isobars. Closer isobars mean stronger wind.","Coriolis is zero at the equator and greatest at the poles, so geostrophic theory fails at low latitudes such as Kenya.","Buys Ballot: back to the wind, low pressure is on your left in the Northern Hemisphere and on your right in the Southern Hemisphere.","Friction makes the surface wind slower and turned towards low pressure (backed in the Northern Hemisphere). The effect is roughly 30° and half the speed over land, less over sea.","By day, mixing makes the surface wind stronger and closer to the wind aloft. At night it becomes lighter and more backed.","Sea breeze blows onshore by day and land breeze offshore at night. Anabatic winds flow up slopes by day, katabatic winds down slopes at night."],"aid":"Friction slows the wind, slower wind means less Coriolis, so it turns towards the low.","trap":"Check which hemisphere the question assumes. Kenya sits on the equator, so both versions are relevant here."},
- upper:{"points":["A jet stream is a narrow band of strong wind, 60 kt or more, usually just below the tropopause.","Jet streams: the polar front jet around FL300 at 40 to 60°, the subtropical jet around FL400 at 25 to 30°, and the tropical easterly jet around FL450 near 15°N in the northern summer.","Jet streams are strongest in winter, when the temperature contrast between polar and tropical air is greatest.","Upper winds depend on horizontal temperature differences. The stronger the temperature gradient, the more the wind increases with height.","Clear air turbulence is most likely on the cold (polar) side of the jet core, near the tropopause."],"aid":"Jets blow from the west, peak in winter, and bump on the cold side.","trap":"The tropical easterly jet is the exception: it blows from the east."},
- clouds:{"points":["High cloud: cirrus, cirrocumulus, cirrostratus. Middle: altocumulus, altostratus. Low: stratus, stratocumulus, nimbostratus. Vertical development: cumulus, cumulonimbus.","Cumulonimbus is the only cloud that produces thunderstorms. It brings hail, severe turbulence, severe icing, lightning and microbursts.","Lenticular clouds downwind of mountains warn of mountain waves and possible rotor turbulence."],"aid":"Cirro- is high, alto- is middle, strato- is layered, cumulo- is heaped, nimbo- brings rain.","trap":"Altostratus is a middle-level cloud, even though 'alto' means high."},
- cform:{"points":["Cloud forms when air is lifted and cooled to its dew point: by convection, by high ground, along fronts, by turbulence or by convergence.","Precipitation forms by the ice crystal process in cold cloud, and by droplets colliding and merging in warm cloud.","Layer cloud gives continuous precipitation. Cumuliform cloud gives showers.","Drizzle falls from stratus, steady rain from nimbostratus, and heavy showers and hail from cumulonimbus."],"aid":"Layer cloud, steady rain. Heaped cloud, showers.","trap":"Hail falls from cumulonimbus, not from nimbostratus."},
- ts:{"points":["A thunderstorm needs unstable air, enough moisture and a trigger to start lifting.","Cumulus stage: updrafts only. Mature stage: updrafts and downdrafts, precipitation reaching the ground, most dangerous. Dissipating stage: mainly downdrafts.","Hazards: severe turbulence, icing, hail (including in clear air under the anvil), lightning, windshear, gust fronts and microbursts.","A microburst is a downdraft less than 4 km across, usually lasting only a few minutes.","Microburst on approach: first a headwind (IAS up, above the glidepath), then a downdraft, then a tailwind with a sharp IAS loss.","Keep well clear of storms, commonly at least 10 nm and more for severe cells, and never fly under the anvil.","Around Kenya, afternoon convection over high ground and night storms over Lake Victoria are common."],"aid":"Gain first, then the drain. Don't chase the early IAS gain.","trap":"The early IAS increase in a microburst is a warning, not a reason to reduce power."},
- vis:{"points":["Fog means visibility below 1,000 m. Mist is 1,000 to 5,000 m in moist air. Haze is caused by dry particles.","Radiation fog: clear skies, light wind (roughly 2 to 8 kt), moist air, long nights. It clears as the sun warms the ground or the wind increases.","Advection fog: warm moist air moving over a colder surface. It can form in stronger wind and last all day.","Hill fog is low stratus covering high ground."],"aid":"Radiation fog needs a still, clear night. Advection fog needs moving air.","trap":"Calm wind gives dew rather than fog, and strong wind lifts it into low stratus."},
- ice:{"points":["Airframe icing needs supercooled water droplets and an airframe at or below 0°C.","Clear ice: large droplets freeze slowly and spread back. Most likely between 0 and −15°C in cumuliform cloud or freezing rain. Heavy and hard to remove.","Rime ice: small droplets freeze instantly, trapping air. Milky, brittle, common in colder stratiform cloud.","Hoar frost: water vapour freezing directly onto a cold airframe, for example descending from cold altitude into moist air.","The greatest icing risk is between 0 and about −20°C. Below about −40°C cloud is almost all ice crystals.","Carburettor icing can happen in clear air well above 0°C when humidity is high."],"aid":"Big drops, clear ice. Small drops, rime.","trap":"Icing risk doesn't keep increasing as it gets colder. Very cold cloud holds less supercooled water."},
- airm:{"points":["Air masses are named by source: maritime or continental, and polar, tropical or arctic.","Warm front: warm air rises gently over cold air. The cloud sequence is cirrus, cirrostratus, altostratus, then nimbostratus with a wide belt of steady rain and poor visibility.","Freezing rain is a risk ahead of a warm front in winter, where rain falls from warm air into sub-zero air below.","Cold front: steeper slope, cumulonimbus, heavy showers and squalls in a narrow band.","After a cold front (Northern Hemisphere): wind veers, temperature falls, pressure rises and visibility improves."],"aid":"Warm fronts are wide and gentle. Cold fronts are narrow and violent.","trap":"Wind veers at the passage of both warm and cold fronts in the Northern Hemisphere."},
- occl:{"points":["An occlusion forms when the cold front catches up with the warm front.","Cold occlusion: the air behind the cold front is colder than the air ahead of the warm front, so it undercuts it.","Warm occlusion: the air behind the cold front is less cold, so it rides up over the colder air ahead.","Occlusions bring warm-front layer cloud with cumulonimbus that can be embedded and hidden inside it."],"aid":"The coldest air always goes underneath.","trap":"Embedded cumulonimbus in an occlusion can't be seen from outside the cloud."},
- odep:{"points":["Tropical revolving storms need warm sea surfaces (around 26 to 27°C or more), low wind shear and a position at least about 5° from the equator.","Near the equator Coriolis is too weak to start rotation, so these storms don't form there.","Thermal lows form over hot land in summer as heated air rises.","Polar lows form in winter when very cold polar air moves over relatively warm sea."],"aid":"No Coriolis, no cyclone.","trap":"Tropical revolving storms weaken quickly over land because they lose their supply of warm, moist sea air."},
- clim:{"points":["Three-cell model: the Hadley cell (equator to about 30°), the Ferrel cell (30 to 60°) and the polar cell (60 to 90°).","Pressure belts: equatorial low (the ITCZ or doldrums), subtropical highs near 30°, subpolar lows near 60° along the polar front, and polar highs.","Surface winds: north-east trades in the Northern Hemisphere and south-east trades in the Southern, westerlies from 30 to 60°, and polar easterlies beyond.","The belts follow the sun with a lag of one to two months: further north in July, further south in January.","Jet streams: the polar front jet around FL300 at 40 to 60°, the subtropical jet around FL400 at 25 to 30°, and the tropical easterly jet around FL450 near 15°N in the northern summer.","Sinking air under the subtropical highs warms and dries, which is why many hot deserts lie between 20 and 30°.","Large winter highs over continents, such as the Siberian high, drive seasonal winds like the Asian north-east monsoon.","The ITCZ is where the trade winds of both hemispheres meet, forcing air upwards and producing convection and heavy showers."],"aid":"Low at the equator, high at 30, low at 60, high at the poles.","trap":"The ITCZ is not a front. It separates air masses of similar temperature, so the hazard is convection, not a frontal temperature contrast."},
- local:{"points":["Föhn: air rises up a mountain, cools at the SALR and drops its moisture, then descends warming at the DALR. The lee side is warmer and drier, with a clear Föhn gap in the cloud.","Chinook: the Föhn on the eastern side of the Rocky Mountains, able to melt snow very quickly.","Harmattan: a dry, dusty north-easterly from the Sahara over West Africa, roughly November to March. Dust haze can cut visibility badly and reach high levels.","Mistral: a cold northerly down the Rhône valley into the Gulf of Lion. Bora: a cold, gusty north-easterly fall wind on the Adriatic coast.","Sirocco: a hot southerly from the Sahara over the Mediterranean, humid by the time it reaches southern Europe. Khamsin: a hot, dry, dusty southerly over Egypt, mainly in spring.","Haboob: a dust storm from thunderstorm outflow, common in Sudan.","Monsoons are seasonal wind reversals caused by land and sea heating differently and by the ITCZ moving. Over India: the wet south-west monsoon from June to September and the dry north-east monsoon from December to March."],"aid":"Föhn goes up wet, comes down dry.","trap":"The Bora warms as it descends but still arrives cold, because its source air is so cold. Don't confuse it with a Föhn."},
- area:{"points":["The ITCZ follows the sun with a lag. Its passage over Kenya brings the long rains (around March to May) and short rains (around October to December).","On the Kenyan coast, the north-east monsoon blows roughly December to March and the south-east monsoon roughly June to September."],"aid":"Long rains around March to May, short rains around October to December.","trap":"The ITCZ passes over East Africa twice a year, which is why there are two rainy seasons."},
- metar:{"points":["METAR order: station, time, wind, visibility, RVR, present weather, cloud, temperature and dew point, QNH, then any trend.","Wind 24015G25KT means 240° true at 15 kt gusting 25 kt. VRB means variable direction.","Cloud: FEW 1 to 2 oktas, SCT 3 to 4, BKN 5 to 7, OVC 8. Heights are in hundreds of feet above the aerodrome.","CAVOK: visibility 10 km or more, no cloud below 5,000 ft (or the highest minimum sector altitude if higher), no Cb or TCU, and no significant weather.","Weather codes: − light, + heavy, VC in the vicinity. TS thunderstorm, SH showers, FZ freezing. RA rain, DZ drizzle, GR hail. BR mist, FG fog, HZ haze.","NOSIG at the end of a METAR means no significant change expected in the next 2 hours."],"aid":"Few, scattered, broken, overcast: 2, 4, 7, 8.","trap":"Wind in METARs and TAFs is in degrees true. Wind given by ATC for landing is magnetic."},
- taf:{"points":["A TAF gives the forecast for an aerodrome over its validity period, commonly between 9 and 30 hours.","TAF change groups: FM (from a set time), BECMG (lasting change during the period), TEMPO (short fluctuations), PROB30 or PROB40 (probability).","Wind in a TAF is given in degrees true."],"aid":"FM is a clean switch, BECMG a lasting change, TEMPO a short wobble.","trap":"TEMPO conditions come and go. BECMG conditions stay once the change is complete."},
- press:{"points":["Atmospheric pressure is the weight of the air above a point. ISA mean sea level pressure is 1013.25 hPa (29.92 inHg).","Pressure falls with height, but more slowly the higher you go: about 1 hPa per 27 ft near sea level, 50 ft around FL180 and 100 ft around FL390.","Pressure halves at about 18,000 ft. The 500 hPa level is near FL180 in the ISA.","Pressure falls faster with height in cold air than in warm air, because cold air is denser. Pressure levels are lower over cold air and higher over warm air.","Isobars join places of equal mean sea level pressure. Isallobars join places with equal pressure tendency.","QFE is pressure at aerodrome level. QNH reduces it to sea level using ISA conditions. QFF reduces it using the actual temperature and is used on surface weather charts.","In the tropics, pressure rises and falls twice a day by about 1 to 3 hPa, peaking around 1000 and 2200 local time and lowest around 0400 and 1600.","Instruments: the mercury barometer, the aneroid barometer (a sealed, partly evacuated capsule) and the barograph, which records pressure over time.","The pressure gradient force acts from high to low pressure, at right angles to the isobars. Closer isobars mean a steeper gradient and stronger wind."],"aid":"27 ft at the bottom, 50 at FL180, 100 at FL390.","trap":"At an aerodrome at sea level, QFE, QNH and QFF are all the same. They only differ at elevated aerodromes."},
- psys:{"points":["Depression (low): closed isobars around low pressure. Air converges at the surface and rises, giving cloud, rain and generally poor weather.","Winds blow anticlockwise around a low in the Northern Hemisphere and clockwise in the Southern Hemisphere.","Anticyclone (high): closed isobars around high pressure. Air sinks and spreads out at the surface, warming as it descends. Winds are usually light, especially near the centre.","Sinking air in a high often creates an inversion that traps haze, smoke and fog, or a persistent sheet of stratocumulus (anticyclonic gloom).","Winds blow clockwise around a high in the Northern Hemisphere and anticlockwise in the Southern Hemisphere.","Trough: an extension of low pressure, often with convergence, showers and thunderstorms. Ridge: an extension of high pressure, usually with fair weather.","Col: the neutral area between two highs and two lows, with light, variable winds. Expect fog in winter and thunderstorms in summer.","Warm anticyclones, such as the subtropical highs, are deep. Cold anticyclones, such as the winter Siberian high, are shallow because pressure falls quickly with height in cold air.","Thermal lows form over strongly heated land and are shallow.","A depression deepens when its central pressure falls and fills when it rises. Polar front depressions usually move in the direction of the isobars in their warm sector."],"aid":"Lows: air goes up, weather goes down. Highs: air goes down, weather settles.","trap":"A high doesn't guarantee good visibility. Its inversion can trap haze, smog and fog."},
- hum:{"points":["Humidity is the water vapour in the air. Warm air can hold much more water vapour than cold air.","Relative humidity (RH) is the water vapour present as a percentage of the maximum the air could hold at that temperature.","Dew point is the temperature the air must be cooled to, at constant pressure, to become saturated.","The smaller the gap between temperature and dew point (the spread), the higher the RH. When they are equal, RH is 100%.","Warming air without adding moisture lowers RH but leaves the dew point unchanged. Cooling it raises RH until it reaches the dew point.","Mixing ratio is grams of water vapour per kilogram of dry air. It stays constant in rising unsaturated air because no moisture is added or removed.","Evaporation, melting and sublimation absorb latent heat. Condensation, freezing and deposition release it.","Humidity is measured with a hygrometer, often wet and dry bulb thermometers. The wet bulb reads lower because evaporation cools it, unless RH is 100%.","RH is usually highest around dawn, when temperature is lowest, and lowest in mid-afternoon.","Moist air is less dense than dry air at the same temperature and pressure."],"aid":"Spread shrinking, fog or cloud thinking.","trap":"Dew point depends only on how much moisture is in the air. Heating or cooling changes RH, not dew point."},
- turb:{"points":["Turbulence comes from convection (thermals), mechanical effects (wind over rough ground and obstacles), mountain waves, windshear and wake vortices.","Convective turbulence is strongest over land on sunny afternoons and below cumulus, and worst in and around cumulonimbus. It eases in the evening as the ground cools.","Mechanical turbulence increases with wind speed and surface roughness. Expect it near the ground downwind of buildings, hangars and trees in strong wind.","Mountain waves need a strong wind (commonly 15 to 25 kt or more) blowing within about 30° of perpendicular to a ridge, a stable layer aloft, and wind increasing with height. They can extend far downwind and very high.","Signs of mountain waves are lenticular clouds and rotor clouds. Rotors form below the wave crests at about ridge height downwind and hold the most severe turbulence.","Clear air turbulence (CAT) occurs at high levels in clear air, mostly near jet streams, especially on the cold side near the tropopause where wind shear is strongest. There is often no visual warning.","Moderate turbulence: changes in attitude and altitude, but the aircraft stays in positive control. Severe: large, abrupt changes, and the aircraft may be momentarily out of control.","In turbulence, fly the recommended turbulence penetration speed and hold attitude rather than chasing altitude or airspeed.","Wake vortices form whenever the wing produces lift. They are strongest behind heavy, clean, slow aircraft, sink below the flight path and drift with the wind. A light crosswind can hold the upwind vortex over the runway.","Low-level windshear comes from thunderstorms and microbursts, fronts, surface inversions with a low-level jet at night, and obstacles. Losing headwind on approach lowers IAS and the aircraft sinks below the glidepath."],"aid":"Heavy, clean and slow makes the strongest wake.","trap":"Clear air turbulence gives no visual warning. There may be no cloud at all."}
-};
-
-/* ===================== FOCUSED NOTES PER QUESTION ===================== */
-const FOCUS = {
- "MET-001":["ISA at mean sea level: +15°C, 1013.25 hPa, density 1.225 kg/m³."],
- "MET-002":["Temperature falls 1.98°C per 1,000 ft (6.5°C per km) up to the tropopause at 11 km (36,090 ft)."],
- "MET-003":["Temperature falls 1.98°C per 1,000 ft (6.5°C per km) up to the tropopause at 11 km (36,090 ft).","Above the ISA tropopause the temperature stays constant at −56.5°C up to 20 km."],
- "MET-004":["ISA at mean sea level: +15°C, 1013.25 hPa, density 1.225 kg/m³."],
- "MET-005":["Flying into lower pressure or colder air without resetting, you are lower than the altimeter shows."],
- "MET-006":["Flying into lower pressure or colder air without resetting, you are lower than the altimeter shows."],
- "MET-007":["QFE: the altimeter shows height above the aerodrome. On the runway it reads zero."],
- "MET-008":["Near sea level, 1 hPa is about 27 ft (often rounded to 30 ft)."],
- "MET-009":["Dry adiabatic lapse rate (DALR): 3°C per 1,000 ft for unsaturated rising air."],
- "MET-010":["Environmental lapse rate (ELR) greater than DALR: absolutely unstable."],
- "MET-011":["ELR less than SALR: absolutely stable. ELR between the two: conditionally unstable (unstable only once saturated)."],
- "MET-012":["Inversions and isothermal layers are very stable."],
- "MET-013":["Buys Ballot: back to the wind, low pressure is on your left in the Northern Hemisphere and on your right in the Southern Hemisphere."],
- "MET-014":["Coriolis is zero at the equator and greatest at the poles, so geostrophic theory fails at low latitudes such as Kenya."],
- "MET-015":["Friction makes the surface wind slower and turned towards low pressure (backed in the Northern Hemisphere). The effect is roughly 30° and half the speed over land, less over sea."],
- "MET-016":[],
- "MET-017":["Radiation fog: clear skies, light wind (roughly 2 to 8 kt), moist air, long nights. It clears as the sun warms the ground or the wind increases."],
- "MET-018":["Advection fog: warm moist air moving over a colder surface. It can form in stronger wind and last all day."],
- "MET-019":["Cumulonimbus is the only cloud that produces thunderstorms. It brings hail, severe turbulence, severe icing, lightning and microbursts."],
- "MET-020":["Lenticular clouds downwind of mountains warn of mountain waves and possible rotor turbulence."],
- "MET-021":["Warm front: warm air rises gently over cold air. The cloud sequence is cirrus, cirrostratus, altostratus, then nimbostratus with a wide belt of steady rain and poor visibility."],
- "MET-022":["Cold front: steeper slope, cumulonimbus, heavy showers and squalls in a narrow band.","After a cold front (Northern Hemisphere): wind veers, temperature falls, pressure rises and visibility improves."],
- "MET-023":["Cumulus stage: updrafts only. Mature stage: updrafts and downdrafts, precipitation reaching the ground, most dangerous. Dissipating stage: mainly downdrafts."],
- "MET-024":["A microburst is a downdraft less than 4 km across, usually lasting only a few minutes.","Microburst on approach: first a headwind (IAS up, above the glidepath), then a downdraft, then a tailwind with a sharp IAS loss."],
- "MET-025":[],
- "MET-026":["Freezing rain needs a layer of above-zero air aloft over sub-zero air near the surface. Rain falls from the warm layer, supercools below it, and freezes on impact as clear ice."],
- "MET-027":["The ITCZ is where the trade winds of both hemispheres meet, forcing air upwards and producing convection and heavy showers.","The ITCZ follows the sun with a lag. Its passage over Kenya brings the long rains (around March to May) and short rains (around October to December)."],
- "MET-028":["Tropical revolving storms need warm sea surfaces (around 26 to 27°C or more), low wind shear and a position at least about 5° from the equator.","Near the equator Coriolis is too weak to start rotation, so these storms don't form there."],
- "MET-029":["CAVOK: visibility 10 km or more, no cloud below 5,000 ft (or the highest minimum sector altitude if higher), no Cb or TCU, and no significant weather."],
- "MET-030":["Cloud: FEW 1 to 2 oktas, SCT 3 to 4, BKN 5 to 7, OVC 8. Heights are in hundreds of feet above the aerodrome."],
- "MET-031":["TAF change groups: FM (from a set time), BECMG (lasting change during the period), TEMPO (short fluctuations), PROB30 or PROB40 (probability)."],
- "MET-032":["Weather codes: − light, + heavy, VC in the vicinity. TS thunderstorm, SH showers, FZ freezing. RA rain, DZ drizzle, GR hail. BR mist, FG fog, HZ haze."],
- "MET-033":["Pressure belts: equatorial low (the ITCZ or doldrums), subtropical highs near 30°, subpolar lows near 60° along the polar front, and polar highs."],
- "MET-034":["Surface winds: north-east trades in the Northern Hemisphere and south-east trades in the Southern, westerlies from 30 to 60°, and polar easterlies beyond."],
- "MET-035":["Surface winds: north-east trades in the Northern Hemisphere and south-east trades in the Southern, westerlies from 30 to 60°, and polar easterlies beyond."],
- "MET-036":["Jet streams: the polar front jet around FL300 at 40 to 60°, the subtropical jet around FL400 at 25 to 30°, and the tropical easterly jet around FL450 near 15°N in the northern summer."],
- "MET-037":["The belts follow the sun with a lag of one to two months: further north in July, further south in January."],
- "MET-038":["Sinking air under the subtropical highs warms and dries, which is why many hot deserts lie between 20 and 30°."],
- "MET-039":["Jet streams: the polar front jet around FL300 at 40 to 60°, the subtropical jet around FL400 at 25 to 30°, and the tropical easterly jet around FL450 near 15°N in the northern summer."],
- "MET-040":[],
- "MET-041":["Chinook: the Föhn on the eastern side of the Rocky Mountains, able to melt snow very quickly."],
- "MET-042":["Harmattan: a dry, dusty north-easterly from the Sahara over West Africa, roughly November to March. Dust haze can cut visibility badly and reach high levels."],
- "MET-043":["Mistral: a cold northerly down the Rhône valley into the Gulf of Lion. Bora: a cold, gusty north-easterly fall wind on the Adriatic coast."],
- "MET-044":["Mistral: a cold northerly down the Rhône valley into the Gulf of Lion. Bora: a cold, gusty north-easterly fall wind on the Adriatic coast."],
- "MET-045":["Sirocco: a hot southerly from the Sahara over the Mediterranean, humid by the time it reaches southern Europe. Khamsin: a hot, dry, dusty southerly over Egypt, mainly in spring."],
- "MET-046":[],
- "MET-047":["Haboob: a dust storm from thunderstorm outflow, common in Sudan."],
- "MET-048":["Pressure halves at about 18,000 ft. The 500 hPa level is near FL180 in the ISA."],
- "MET-049":["Pressure falls with height, but more slowly the higher you go: about 1 hPa per 27 ft near sea level, 50 ft around FL180 and 100 ft around FL390."],
- "MET-050":["Pressure falls with height, but more slowly the higher you go: about 1 hPa per 27 ft near sea level, 50 ft around FL180 and 100 ft around FL390."],
- "MET-051":["Pressure falls faster with height in cold air than in warm air, because cold air is denser. Pressure levels are lower over cold air and higher over warm air."],
- "MET-052":["QFE is pressure at aerodrome level. QNH reduces it to sea level using ISA conditions. QFF reduces it using the actual temperature and is used on surface weather charts."],
- "MET-053":["At a sea-level aerodrome there is no height to correct for, so QFE, QNH and QFF are equal. They differ only at elevated aerodromes."],
- "MET-054":["QFE is pressure at aerodrome level. QNH reduces it to sea level using ISA conditions. QFF reduces it using the actual temperature and is used on surface weather charts."],
- "MET-055":["Isobars join places of equal mean sea level pressure. Isallobars join places with equal pressure tendency."],
- "MET-056":["Isobars join equal pressure, isotherms equal temperature, isotachs equal wind speed and isallobars equal pressure tendency."],
- "MET-057":["The pressure gradient force acts from high to low pressure, at right angles to the isobars. Closer isobars mean a steeper gradient and stronger wind."],
- "MET-058":["In the tropics, pressure rises and falls twice a day by about 1 to 3 hPa, peaking around 1000 and 2200 local time and lowest around 0400 and 1600."],
- "MET-059":["In the tropics, pressure rises and falls twice a day by about 1 to 3 hPa, peaking around 1000 and 2200 local time and lowest around 0400 and 1600."],
- "MET-060":["Instruments: the mercury barometer, the aneroid barometer (a sealed, partly evacuated capsule) and the barograph, which records pressure over time."],
- "MET-061":["Atmospheric pressure is the weight of the air above a point. ISA mean sea level pressure is 1013.25 hPa (29.92 inHg)."],
- "MET-062":["Atmospheric pressure is the weight of the air above a point. ISA mean sea level pressure is 1013.25 hPa (29.92 inHg)."],
- "MET-063":["Pressure falls faster with height in cold air than in warm air, because cold air is denser. Pressure levels are lower over cold air and higher over warm air."],
- "MET-064":["Pressure tendency is the change in station pressure over the last three hours. Isallobars join places with the same tendency."],
- "MET-065":["Rapidly falling pressure usually means a depression or trough is approaching, with worsening weather. Rising pressure suggests improvement."],
- "MET-066":["The hectopascal (hPa) equals the millibar (mb). 1013.25 hPa is also 29.92 inHg and 760 mmHg."],
- "MET-067":["Instruments: the mercury barometer, the aneroid barometer (a sealed, partly evacuated capsule) and the barograph, which records pressure over time."],
- "MET-068":["Pressure falls with height, but more slowly the higher you go: about 1 hPa per 27 ft near sea level, 50 ft around FL180 and 100 ft around FL390."],
- "MET-069":["QFE is pressure at aerodrome level. QNH reduces it to sea level using ISA conditions. QFF reduces it using the actual temperature and is used on surface weather charts."],
- "MET-070":["Isobars join places of equal mean sea level pressure. Isallobars join places with equal pressure tendency."],
- "MET-071":["The pressure gradient force acts from high to low pressure, at right angles to the isobars. Closer isobars mean a steeper gradient and stronger wind."],
- "MET-072":["QFE is pressure at aerodrome level. QNH reduces it to sea level using ISA conditions. QFF reduces it using the actual temperature and is used on surface weather charts."],
- "MET-073":["Winds blow anticlockwise around a low in the Northern Hemisphere and clockwise in the Southern Hemisphere."],
- "MET-074":["Winds blow clockwise around a high in the Northern Hemisphere and anticlockwise in the Southern Hemisphere."],
- "MET-075":["Depression (low): closed isobars around low pressure. Air converges at the surface and rises, giving cloud, rain and generally poor weather."],
- "MET-076":["Anticyclone (high): closed isobars around high pressure. Air sinks and spreads out at the surface, warming as it descends. Winds are usually light, especially near the centre."],
- "MET-077":["Sinking air in a high often creates an inversion that traps haze, smoke and fog, or a persistent sheet of stratocumulus (anticyclonic gloom)."],
- "MET-078":["Sinking air in a high often creates an inversion that traps haze, smoke and fog, or a persistent sheet of stratocumulus (anticyclonic gloom)."],
- "MET-079":["Col: the neutral area between two highs and two lows, with light, variable winds. Expect fog in winter and thunderstorms in summer."],
- "MET-080":["Trough: an extension of low pressure, often with convergence, showers and thunderstorms. Ridge: an extension of high pressure, usually with fair weather."],
- "MET-081":["Trough: an extension of low pressure, often with convergence, showers and thunderstorms. Ridge: an extension of high pressure, usually with fair weather."],
- "MET-082":["Warm anticyclones, such as the subtropical highs, are deep. Cold anticyclones, such as the winter Siberian high, are shallow because pressure falls quickly with height in cold air."],
- "MET-083":["Warm anticyclones, such as the subtropical highs, are deep. Cold anticyclones, such as the winter Siberian high, are shallow because pressure falls quickly with height in cold air."],
- "MET-084":["Thermal lows form over strongly heated land and are shallow."],
- "MET-085":["Thermal lows form over strongly heated land and are shallow."],
- "MET-086":["Anticyclone (high): closed isobars around high pressure. Air sinks and spreads out at the surface, warming as it descends. Winds are usually light, especially near the centre."],
- "MET-087":["Starboard drift in the Northern Hemisphere means you are flying towards low pressure. Without resetting the altimeter, true altitude falls: high to low, look out below."],
- "MET-088":["A depression deepens when its central pressure falls and fills when it rises. Polar front depressions usually move in the direction of the isobars in their warm sector."],
- "MET-089":["Buys Ballot's law: back to the wind, low pressure is on your left in the Northern Hemisphere and on your right in the Southern Hemisphere."],
- "MET-090":["Trough: an extension of low pressure, often with convergence, showers and thunderstorms. Ridge: an extension of high pressure, usually with fair weather."],
- "MET-091":["Col: the neutral area between two highs and two lows, with light, variable winds. Expect fog in winter and thunderstorms in summer."],
- "MET-092":["Sinking air in a high often creates an inversion that traps haze, smoke and fog, or a persistent sheet of stratocumulus (anticyclonic gloom)."],
- "MET-093":["Depression (low): closed isobars around low pressure. Air converges at the surface and rises, giving cloud, rain and generally poor weather."],
- "MET-094":["A depression deepens when its central pressure falls and fills when it rises. Polar front depressions usually move in the direction of the isobars in their warm sector."],
- "MET-095":["A depression deepens when its central pressure falls and fills when it rises. Polar front depressions usually move in the direction of the isobars in their warm sector."],
- "MET-096":["Anticyclone (high): closed isobars around high pressure. Air sinks and spreads out at the surface, warming as it descends. Winds are usually light, especially near the centre."],
- "MET-097":["Relative humidity (RH) is the water vapour present as a percentage of the maximum the air could hold at that temperature."],
- "MET-098":["Dew point is the temperature the air must be cooled to, at constant pressure, to become saturated."],
- "MET-099":["The smaller the gap between temperature and dew point (the spread), the higher the RH. When they are equal, RH is 100%."],
- "MET-100":["Warming air without adding moisture lowers RH but leaves the dew point unchanged. Cooling it raises RH until it reaches the dew point."],
- "MET-101":["Warming air without adding moisture lowers RH but leaves the dew point unchanged. Cooling it raises RH until it reaches the dew point."],
- "MET-102":["Mixing ratio is grams of water vapour per kilogram of dry air. It stays constant in rising unsaturated air because no moisture is added or removed."],
- "MET-103":["Evaporation, melting and sublimation absorb latent heat. Condensation, freezing and deposition release it."],
- "MET-104":["Evaporation, melting and sublimation absorb latent heat. Condensation, freezing and deposition release it."],
- "MET-105":["Humidity is measured with a hygrometer, often wet and dry bulb thermometers. The wet bulb reads lower because evaporation cools it, unless RH is 100%."],
- "MET-106":["Humidity is measured with a hygrometer, often wet and dry bulb thermometers. The wet bulb reads lower because evaporation cools it, unless RH is 100%."],
- "MET-107":["RH is usually highest around dawn, when temperature is lowest, and lowest in mid-afternoon."],
- "MET-108":["Moist air is less dense than dry air at the same temperature and pressure."],
- "MET-109":["Humidity is the water vapour in the air. Warm air can hold much more water vapour than cold air."],
- "MET-110":["The smaller the gap between temperature and dew point (the spread), the higher the RH. When they are equal, RH is 100%."],
- "MET-111":["With only a 2°C spread, a small amount of overnight cooling brings the air to its dew point. Clear skies and light wind favour radiation fog."],
- "MET-112":["Evaporation, melting and sublimation absorb latent heat. Condensation, freezing and deposition release it."],
- "MET-113":["Absolute humidity is the mass of water vapour in a given volume of air, such as grams per cubic metre. Mixing ratio is grams per kilogram of dry air."],
- "MET-114":["Dew point is the temperature the air must be cooled to, at constant pressure, to become saturated."],
- "MET-115":["Rising unsaturated air cools at 3°C per 1,000 ft while its dew point falls about 0.5°C. They meet at cloud base, roughly 400 ft for every 1°C of spread."],
- "MET-116":["Convective cloud base is roughly 400 ft for every 1°C between temperature and dew point."],
- "MET-117":["Warming air without adding moisture lowers RH but leaves the dew point unchanged. Cooling it raises RH until it reaches the dew point."],
- "MET-118":["Descending air warms, so its relative humidity falls. That's why air in anticyclones and Föhn winds is dry."],
- "MET-119":["Rain falling into dry air evaporates and absorbs latent heat. The cooled air can sink as a downdraft, and rain that evaporates before reaching the ground is called virga."],
- "MET-120":["Saturation vapour pressure is lower over ice than over supercooled water, so ice crystals grow at the droplets' expense."],
- "MET-121":["Humidity is measured with a hygrometer, often wet and dry bulb thermometers. The wet bulb reads lower because evaporation cools it, unless RH is 100%."],
- "MET-122":["Convective turbulence is strongest over land on sunny afternoons and below cumulus, and worst in and around cumulonimbus. It eases in the evening as the ground cools."],
- "MET-123":["Mechanical turbulence increases with wind speed and surface roughness. Expect it near the ground downwind of buildings, hangars and trees in strong wind."],
- "MET-124":["Mountain waves need a strong wind (commonly 15 to 25 kt or more) blowing within about 30° of perpendicular to a ridge, a stable layer aloft, and wind increasing with height. They can extend far downwind and very high."],
- "MET-125":["Signs of mountain waves are lenticular clouds and rotor clouds. Rotors form below the wave crests at about ridge height downwind and hold the most severe turbulence."],
- "MET-126":["Signs of mountain waves are lenticular clouds and rotor clouds. Rotors form below the wave crests at about ridge height downwind and hold the most severe turbulence."],
- "MET-127":["Clear air turbulence (CAT) occurs at high levels in clear air, mostly near jet streams, especially on the cold side near the tropopause where wind shear is strongest. There is often no visual warning."],
- "MET-128":["Moderate turbulence: changes in attitude and altitude, but the aircraft stays in positive control. Severe: large, abrupt changes, and the aircraft may be momentarily out of control."],
- "MET-129":["Moderate turbulence: changes in attitude and altitude, but the aircraft stays in positive control. Severe: large, abrupt changes, and the aircraft may be momentarily out of control."],
- "MET-130":["In turbulence, fly the recommended turbulence penetration speed and hold attitude rather than chasing altitude or airspeed."],
- "MET-131":["Wake vortices form whenever the wing produces lift. They are strongest behind heavy, clean, slow aircraft, sink below the flight path and drift with the wind. A light crosswind can hold the upwind vortex over the runway."],
- "MET-132":["Wake vortices form whenever the wing produces lift. They are strongest behind heavy, clean, slow aircraft, sink below the flight path and drift with the wind. A light crosswind can hold the upwind vortex over the runway."],
- "MET-133":["Wake vortices form whenever the wing produces lift. They are strongest behind heavy, clean, slow aircraft, sink below the flight path and drift with the wind. A light crosswind can hold the upwind vortex over the runway."],
- "MET-134":["Low-level windshear comes from thunderstorms and microbursts, fronts, surface inversions with a low-level jet at night, and obstacles. Losing headwind on approach lowers IAS and the aircraft sinks below the glidepath."],
- "MET-135":["Signs of mountain waves are lenticular clouds and rotor clouds. Rotors form below the wave crests at about ridge height downwind and hold the most severe turbulence."],
- "MET-136":["Clear air turbulence (CAT) occurs at high levels in clear air, mostly near jet streams, especially on the cold side near the tropopause where wind shear is strongest. There is often no visual warning."],
- "MET-137":["Severe turbulence can extend well outside a cumulonimbus, including under the anvil, so storms need wide avoidance."],
- "MET-138":["Convective turbulence is strongest over land on sunny afternoons and below cumulus, and worst in and around cumulonimbus. It eases in the evening as the ground cools."],
- "MET-139":["Mechanical turbulence increases with wind speed and surface roughness. Expect it near the ground downwind of buildings, hangars and trees in strong wind."],
- "MET-140":["Mountain waves need a strong wind (commonly 15 to 25 kt or more) blowing within about 30° of perpendicular to a ridge, a stable layer aloft, and wind increasing with height. They can extend far downwind and very high."],
- "MET-141":["Mountain waves bring strong, smooth up and down currents. Downdrafts can exceed a light aircraft's climb rate, so cross ridges with plenty of height."],
- "MET-142":["Low-level windshear comes from thunderstorms and microbursts, fronts, surface inversions with a low-level jet at night, and obstacles. Losing headwind on approach lowers IAS and the aircraft sinks below the glidepath."],
- "MET-143":["Low-level windshear comes from thunderstorms and microbursts, fronts, surface inversions with a low-level jet at night, and obstacles. Losing headwind on approach lowers IAS and the aircraft sinks below the glidepath."],
- "MET-144":["Wake vortices form whenever the wing produces lift. They are strongest behind heavy, clean, slow aircraft, sink below the flight path and drift with the wind. A light crosswind can hold the upwind vortex over the runway."],
- "MET-145":["Convective turbulence is strongest over land on sunny afternoons and below cumulus, and worst in and around cumulonimbus. It eases in the evening as the ground cools."],
- "MET-146":["Convective turbulence is strongest over land on sunny afternoons and below cumulus, and worst in and around cumulonimbus. It eases in the evening as the ground cools."],
- "MET-147":["Trough: an extension of low pressure, often with convergence, showers and thunderstorms. Ridge: an extension of high pressure, usually with fair weather."]
-};
-const COMPARE = {"MET-016":{"title":"Sea breeze and land breeze","cols":["Sea breeze","Land breeze"],"rows":[["When","By day, peaking in the afternoon","At night, strongest around dawn"],["Why","Land heats faster than the sea, so pressure is lower over land","Land cools faster than the sea, so pressure is lower over the sea"],["Direction","Onshore: sea to land","Offshore: land to sea"],["Strength","Usually the stronger of the two","Usually lighter"],["What you'll notice","Afternoon wind shift at coastal airfields such as Mombasa and Malindi, sometimes a line of cumulus inland","Light offshore wind overnight and early morning"]]},"MET-025":{"title":"Clear ice and rime ice","cols":["Clear ice","Rime ice"],"rows":[["Droplets","Large supercooled droplets","Small supercooled droplets"],["How it freezes","Slowly, spreading back before freezing","Instantly on impact, trapping air"],["Typical cloud","Cumulus, cumulonimbus, freezing rain","Stratiform cloud, colder temperatures"],["Appearance","Transparent, smooth, heavy","Milky white, rough, brittle"],["Hazard","Hard to remove, distorts the wing shape","Easier to remove, but still adds drag"]]},"MET-040":{"title":"Föhn: windward and lee sides","cols":["Windward side","Lee side"],"rows":[["Air motion","Rising","Descending"],["Lapse rate","Cools at the SALR once saturated","Warms at the DALR"],["Weather","Cloud and rain on the slope","Clear Föhn gap, warm and dry"],["Result","Moisture is lost","Air arrives warmer and drier than it started"]]},"MET-044":{"title":"Warm and cold fall winds","cols":["Föhn and Chinook","Mistral and Bora"],"rows":[["Temperature on arrival","Warm","Cold"],["Humidity","Dry","Usually dry"],["Why","Descends at the DALR after losing moisture","Source air is so cold it stays cold despite warming on descent"],["Where","Alps, Rocky Mountains","Rhône valley, Adriatic coast"]]},"MET-046":{"title":"Indian monsoon seasons","cols":["South-west monsoon","North-east monsoon"],"rows":[["When","June to September","December to March"],["Flow","Moist air from the Indian Ocean onto land","Dry air from the continent out to sea"],["Cause","Land heats, low pressure over Asia, ITCZ moves north","Land cools, high pressure over Asia, ITCZ moves south"],["Weather","Heavy rain, Cb, poor visibility","Mostly dry and settled over India"]]},"MET-076":{"title":"Depression and anticyclone","cols":["Depression","Anticyclone"],"rows":[["Pressure","Low at the centre","High at the centre"],["Air motion","Converges at the surface and rises","Sinks and spreads out at the surface"],["Northern Hemisphere wind","Anticlockwise","Clockwise"],["Southern Hemisphere wind","Clockwise","Anticlockwise"],["Typical weather","Cloud, rain, stronger winds","Settled, light winds, possible haze, fog or anticyclonic gloom"]]},"MET-079":{"title":"Trough, ridge and col","cols":["Trough","Ridge","Col"],"rows":[["What it is","Extension of low pressure","Extension of high pressure","Neutral area between two highs and two lows"],["Air motion","Convergence, rising air","Sinking air","Weak gradients"],["Weather","Showers, thunderstorms","Fair","Light winds, fog in winter, storms in summer"]]},"MET-103":{"title":"Latent heat","cols":["Absorbs heat","Releases heat"],"rows":[["Liquid and vapour","Evaporation","Condensation"],["Ice and liquid","Melting","Freezing"],["Ice and vapour","Sublimation","Deposition"]]},"MET-128":{"title":"Turbulence intensity","cols":["Moderate","Severe"],"rows":[["Aircraft","Changes in attitude and altitude","Large, abrupt changes in attitude and altitude"],["Control","Positive control at all times","May be momentarily out of control"],["Cabin","Unsecured objects move","Occupants forced hard against seat belts"]]}};
+/* Notes, key points and comparison tables are loaded from the database */
+let NOTES = {}, FOCUS = {}, COMPARE = {};
 function focusBody(q){
   const n=NOTES[q.topic]||{points:[]}; const f=FOCUS[q.id]||[];
   const pts=f.filter(Boolean);
@@ -450,7 +273,7 @@ function home(tab){
     <h3 class="section">Summary notes</h3>
     <p class="small" style="margin-top:0">Short notes for quick reference before a session or an exam.</p>
     <ul class="topics">${TOPICS.map(t=>`<li class="tap"><button class="trow" data-t="${t.id}">
-      <span class="name">${TOPICS.indexOf(t)+1}. ${esc(t.name)}${NOTES[t.id]?'<span class="draft">Draft</span>':''}</span>
+      <span class="name">${TOPICS.indexOf(t)+1}. ${esc(t.name)}${NOTES[t.id]&&NOTES[t.id].is_draft?'<span class="draft">Draft</span>':''}</span>
       <span class="chev" aria-hidden="true">›</span>
       <span class="acc">${NOTES[t.id]?NOTES[t.id].points.length+" key points":"Notes coming soon"}</span></button></li>`).join("")}</ul>`;
     app.querySelectorAll(".trow").forEach(b=>b.onclick=()=>noteView(b.dataset.t));
@@ -496,7 +319,7 @@ function noteView(tid){
   stopTimer();
   const count=QUESTIONS.filter(q=>q.topic===tid).length;
   app.innerHTML=`<button class="link back" id="b">Back</button>
-    <article class="qcard note"><div class="qmeta"><span>${SUBJECT}</span>${NOTES[tid]?'<span class="draft">Draft</span>':''}</div>
+    <article class="qcard note"><div class="qmeta"><span>${SUBJECT}</span>${NOTES[tid]&&NOTES[tid].is_draft?'<span class="draft">Draft</span>':''}</div>
     <h2>${esc(topicName(tid))}</h2>${noteBody(tid)}</article>
     ${count?`<div class="row"><button class="primary" id="quiz">Test me on this topic (${count})</button></div>`:""}`;
   $("#b").onclick=()=>home();
@@ -702,15 +525,19 @@ function loading(text){ app.innerHTML=`<section class="briefing"><h2>${esc(text)
 async function loadData(){
   loading("Loading your revision");
   const [q,p,e,r]=await Promise.all([
-    sb.from("questions").select("id,topic_id,question,options,answer,explanation,is_active").eq("subject_id","met").order("id"),
+    sb.from("questions").select("id,topic_id,question,options,answer,explanation,is_active,key_points,compare").eq("subject_id","met").order("id"),
     sb.from("card_progress").select("question_id,box,due_at,seen,correct"),
     sb.from("exam_attempts").select("taken_at,correct,total,score_pct").eq("subject_id","met").order("taken_at",{ascending:false}).limit(30),
     sb.from("question_reports").select("question_id")
   ]);
+  const nt=await sb.from("notes").select("topic_id,points,aid,trap,is_draft");
+  NOTES={}; (nt.data||[]).forEach(n=>NOTES[n.topic_id.replace(/^met-/,"")]=n);
   const pr=await sb.from("profiles").select("is_admin").eq("id",USER.id).maybeSingle();
   IS_ADMIN=!!(pr.data&&pr.data.is_admin);
   const err=q.error||p.error||e.error||r.error;
   if(err){ console.error(err); app.innerHTML=`<section class="briefing"><h2>Couldn't load</h2><p>${esc(err.message)}</p><button class="primary" id="retry">Try again</button></section>`; $("#retry").onclick=loadData; return; }
+  FOCUS={}; COMPARE={};
+  q.data.forEach(x=>{ if(x.key_points&&x.key_points.length) FOCUS[x.id]=x.key_points; if(x.compare) COMPARE[x.id]=x.compare; });
   QUESTIONS=q.data.filter(x=>x.is_active!==false).map(x=>({id:x.id, topic:x.topic_id.replace(/^met-/,""), q:x.question, options:x.options, answer:x.answer, explanation:x.explanation}));
   S={cards:{},exams:[],flags:[]};
   p.data.forEach(c=>S.cards[c.question_id]={box:c.box,due:new Date(c.due_at).getTime(),seen:c.seen,right:c.correct});
@@ -726,7 +553,7 @@ const pct=v=>v===null||v===undefined?"–":Math.round(v)+"%";
 const ago=d=>{ if(!d) return "Never"; const m=(Date.now()-new Date(d))/60000;
   return m<60?"Just now":m<1440?Math.floor(m/60)+" h ago":Math.floor(m/1440)+" d ago"; };
 function adminShell(tab, body){
-  const tabs=[["overview","Testers"],["exams","Exams"],["reports","Reports"],["questions","Questions"],["chapters","Chapters"]];
+  const tabs=[["overview","Testers"],["exams","Exams"],["reports","Reports"],["questions","Questions"],["notes","Notes"],["chapters","Chapters"]];
   app.innerHTML=`<button class="link back" id="ab">Back to the app</button>
     <h2 class="cond" style="font-size:34px;margin:6px 0 14px;color:var(--chart)">Admin</h2>
     <div class="tabs adm" role="tablist">${tabs.map(([k,l])=>`<button role="tab" aria-selected="${k===tab}" data-t="${k}">${l}</button>`).join("")}</div>
@@ -792,6 +619,7 @@ async function adminView(tab){
     $("#fc").onchange=draw; $("#fs").oninput=draw; $("#fh").onchange=draw; draw();
     $("#newq").onclick=()=>editQuestion(null,"questions");
   }
+  if(tab==="notes") await notesAdmin();
   if(tab==="chapters"){
     const stats=await rpc("admin_question_stats");
     const by={}; stats.forEach(s=>{ const q=QUESTIONS.find(x=>x.id===s.question_id); const t=q?q.topic:"?"; const b=by[t]||(by[t]={a:0,c:0}); b.a+=Number(s.attempts); b.c+=Number(s.attempts)*Number(s.pct_correct||0)/100; });
@@ -802,6 +630,46 @@ async function adminView(tab){
   }catch(e){ console.error(e); el.innerHTML=`<p class="fail">Couldn't load: ${esc(e.message||String(e))}</p>`; }
 }
 const adminState={};
+async function notesAdmin(){
+  const el=$("#adm");
+  const {data,error}=await sb.from("notes").select("topic_id,points,is_draft,updated_at");
+  if(error) throw error;
+  const by={}; data.forEach(n=>by[n.topic_id]=n);
+  el.innerHTML=`<p class="small">Tap a chapter to write or edit its summary note. Notes stay marked Draft until you approve them.</p>
+    <ul class="topics">${TOPICS.map((t,i)=>{const n=by["met-"+t.id];
+      return `<li class="tap"><button class="trow" data-t="${t.id}"><span class="name">${i+1}. ${esc(t.name)}${n?(n.is_draft?'<span class="draft">Draft</span>':'<span class="draft" style="color:var(--ok);border-color:var(--ok)">Approved</span>'):""}</span>
+      <span class="chev">›</span><span class="acc">${n?n.points.length+" key points, updated "+fmtDate(n.updated_at):"No note yet"}</span></button></li>`;}).join("")}</ul>`;
+  el.querySelectorAll(".trow").forEach(b=>b.onclick=()=>editNote(b.dataset.t));
+}
+async function editNote(tid){
+  stopTimer(); loading("Opening note");
+  const {data:n,error}=await sb.from("notes").select("*").eq("topic_id","met-"+tid).maybeSingle();
+  if(error){ toast(error.message); return adminView("notes"); }
+  const note=n||{points:[],aid:"",trap:"",is_draft:true,is_free:true,_new:true};
+  app.innerHTML=`<button class="link back" id="cb">Back without saving</button>
+    <h2 class="cond" style="font-size:30px;margin:6px 0 12px;color:var(--chart)">${esc(topicName(tid))}</h2>
+    <div class="auth">
+      <label>Key points<textarea id="n-p" rows="12" placeholder="One key point per line">${esc(note.points.join("\n"))}</textarea></label>
+      <p class="small" style="margin:-6px 0 0">One point per line. Keep each to one idea.</p>
+      <label>Memory aid<textarea id="n-a" rows="2">${esc(note.aid||"")}</textarea></label>
+      <label>Exam trap<textarea id="n-t" rows="2">${esc(note.trap||"")}</textarea></label>
+      <label style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="n-d" ${note.is_draft?"":"checked"} style="min-height:auto;width:20px;height:20px"> Approved (removes the Draft label)</label>
+      <label style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="n-f" ${note.is_free?"checked":""} style="min-height:auto;width:20px;height:20px"> Free preview (visible without a subscription)</label>
+      <div class="row"><button class="ghost" id="n-prev">Preview</button><button class="primary" id="n-save">${note._new?"Create note":"Save note"}</button></div>
+      <div id="n-pv"></div>
+    </div>`;
+  const read=()=>({topic_id:"met-"+tid, points:$("#n-p").value.split("\n").map(x=>x.trim()).filter(Boolean),
+    aid:$("#n-a").value.trim(), trap:$("#n-t").value.trim(), is_draft:!$("#n-d").checked, is_free:$("#n-f").checked, updated_at:new Date().toISOString()});
+  $("#cb").onclick=()=>adminView("notes");
+  $("#n-prev").onclick=()=>{ const r=read(); const old=NOTES[tid]; NOTES[tid]=r; $("#n-pv").innerHTML=`<article class="qcard note">${noteBody(tid)}</article>`; if(old) NOTES[tid]=old; else delete NOTES[tid]; };
+  $("#n-save").onclick=async()=>{
+    const r=read(); if(!r.points.length) return toast("Add at least one key point.");
+    const {error}=await sb.from("notes").upsert(r);
+    if(error) return toast("Couldn't save: "+error.message);
+    NOTES[tid]=r; toast("Note saved"); adminView("notes");
+  };
+}
+
 function testerActions(x){
   const w=document.createElement("div"); w.className="modal";
   w.innerHTML=`<div class="modal-box"><p>${esc(x.full_name||x.email)}</p>
@@ -822,7 +690,7 @@ async function editQuestion(id, back){
   else {
     const {data}=await sb.from("questions").select("id").eq("subject_id","met");
     const n=Math.max(0,...(data||[]).map(r=>parseInt(r.id.replace(/\D/g,""),10)||0))+1;
-    q={id:"MET-"+String(n).padStart(3,"0"), topic_id:adminState.ch||"met-"+TOPICS[0].id, question:"", options:["","","",""], answer:0, explanation:"", is_active:true, is_free:true, _new:true};
+    q={id:"MET-"+String(n).padStart(3,"0"), topic_id:adminState.ch||"met-"+TOPICS[0].id, question:"", options:["","","",""], answer:0, explanation:"", key_points:[], is_active:true, is_free:true, _new:true};
   }
   app.innerHTML=`<button class="link back" id="cb">Back without saving</button>
     <h2 class="cond" style="font-size:30px;margin:6px 0 12px;color:var(--chart)">${q._new?"New question":"Edit question"} ${q.id}</h2>
@@ -832,6 +700,8 @@ async function editQuestion(id, back){
       ${[0,1,2,3].map(i=>`<label><span><input type="radio" name="e-a" value="${i}" ${q.answer===i?"checked":""} style="min-height:auto;width:18px;height:18px;vertical-align:-3px"> Option ${"ABCD"[i]}${i===q.answer?" (correct)":""}</span><input id="e-o${i}" value="${esc(q.options[i]||"")}"></label>`).join("")}
       <p class="small" style="margin:-4px 0 0">Tick the circle next to the correct answer. Options are shuffled for students.</p>
       <label>Explanation<textarea id="e-x" rows="4">${esc(q.explanation)}</textarea></label>
+      <label>Key point shown after answering<textarea id="e-k" rows="3" placeholder="One point per line">${esc((q.key_points||[]).join("\n"))}</textarea></label>
+      ${q.compare?`<p class="small" style="margin:-6px 0 0">This question also shows a comparison table: ${esc(q.compare.title)}.</p>`:""}
       <label style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="e-on" ${q.is_active?"checked":""} style="min-height:auto;width:20px;height:20px"> Active (students can see it)</label>
       <label style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="e-fr" ${q.is_free?"checked":""} style="min-height:auto;width:20px;height:20px"> Free preview (visible without a subscription)</label>
       <div class="row"><button class="primary" id="e-save">${q._new?"Add question":"Save changes"}</button></div>
@@ -840,10 +710,12 @@ async function editQuestion(id, back){
   $("#e-save").onclick=async()=>{
     const row={id:q.id, subject_id:"met", topic_id:$("#e-t").value, question:$("#e-q").value.trim(),
       options:[0,1,2,3].map(i=>$("#e-o"+i).value.trim()), answer:+(app.querySelector('input[name="e-a"]:checked')||{value:0}).value,
-      explanation:$("#e-x").value.trim(), is_active:$("#e-on").checked, is_free:$("#e-fr").checked};
+      explanation:$("#e-x").value.trim(), key_points:$("#e-k").value.split("\n").map(x=>x.trim()).filter(Boolean),
+      is_active:$("#e-on").checked, is_free:$("#e-fr").checked};
     if(!row.question||row.options.some(o=>!o)||!row.explanation) return toast("Fill in the question, all four options and the explanation.");
     const {error}=q._new?await sb.from("questions").insert(row):await sb.from("questions").update(row).eq("id",q.id);
     if(error) return toast("Couldn't save: "+error.message);
+    if(row.key_points.length) FOCUS[row.id]=row.key_points; else delete FOCUS[row.id];
     const local={id:row.id, topic:row.topic_id.replace(/^met-/,""), q:row.question, options:row.options, answer:row.answer, explanation:row.explanation};
     const i=QUESTIONS.findIndex(x=>x.id===row.id);
     if(row.is_active){ if(i>=0) QUESTIONS[i]=local; else QUESTIONS.push(local); } else if(i>=0) QUESTIONS.splice(i,1);
