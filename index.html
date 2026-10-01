@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Cleared: ATPL Meteorology revision</title>
+<title>Adrenasky: ATPL Meteorology revision</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
@@ -418,7 +419,7 @@ function home(tab){
   const tabs = `<div class="tabs" role="tablist">
     <button role="tab" aria-selected="${tab==="practice"}" id="t-p">Practice</button>
     <button role="tab" aria-selected="${tab==="notes"}" id="t-n">Notes</button></div>`;
-  const head = `<header class="top"><h1 class="brand">Cleared<small>ATPL ${SUBJECT}</small></h1></header>`;
+  const head = `<header class="top"><h1 class="brand">Adrenasky<small>ATPL ${SUBJECT}</small></h1></header>`;
   if(tab==="notes"){
     app.innerHTML = head + tabs + `
     <h3 class="section">Summary notes</h3>
@@ -622,7 +623,7 @@ function progress(){
   $("#reset").onclick=()=>ask("Reset your revision progress? Exam history is kept.","Reset","Cancel",async ()=>{
     const {error}=await sb.from("card_progress").delete().eq("user_id",USER.id); dbErr(error);
     if(!error){ S.cards={}; home(); toast("Revision progress reset"); } });
-  $("#logout").onclick=()=>ask("Log out of Cleared?","Log out","Cancel",async ()=>{ await sb.auth.signOut(); });
+  $("#logout").onclick=()=>ask("Log out of Adrenasky?","Log out","Cancel",async ()=>{ await sb.auth.signOut(); });
 }
 
 /* ===================== LOGIN AND SIGN-UP ===================== */
@@ -630,7 +631,7 @@ function authView(mode, msg){
   stopTimer();
   mode=mode||"login";
   const signup=mode==="signup";
-  app.innerHTML=`<header class="top"><h1 class="brand">Cleared<small>ATPL ${SUBJECT} revision</small></h1></header>
+  app.innerHTML=`<header class="top"><h1 class="brand">Adrenasky<small>ATPL ${SUBJECT} revision</small></h1></header>
   <section class="briefing">
     <h2>${signup?"Create your account":"Welcome back"}</h2>
     <p>${signup?"Free during testing. Your progress is saved to your account on every device.":"Log in to carry on where you left off."}</p>
