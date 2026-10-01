@@ -88,6 +88,16 @@ th{color:var(--muted);font-weight:400}
 .toast.show{opacity:1}
 .back{margin-bottom:6px}
 .auth{display:grid;gap:14px}
+.auth select,.auth textarea{font:inherit;padding:12px 14px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+.auth textarea{resize:vertical;line-height:1.4}
+.tabs.adm{overflow-x:auto}
+.tabs.adm button{flex:1 0 auto;padding:8px 12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stats div{background:var(--surface);border-radius:12px;padding:14px;text-align:center}
+.stats b{display:block;font-family:"Barlow Condensed",sans-serif;font-size:34px;color:var(--chart);line-height:1}
+.stats span{font-size:13px;color:var(--muted)}
+tr.tap-row{cursor:pointer}
+tr.tap-row:hover td{background:color-mix(in srgb,var(--chart) 8%,transparent)}
 .auth label{display:grid;gap:6px;font-weight:700;font-size:15px}
 .auth input{font:inherit;padding:12px 14px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);min-height:48px}
 .auth input:focus{outline:none;border-color:var(--chart)}
@@ -128,7 +138,22 @@ table.cmp th[scope=row]{color:var(--muted);font-weight:700;width:22%}
 /* ===================== DATABASE CONNECTION ===================== */
 const SUPABASE_URL = "https://rvwdcwrhgblkfxlewgpi.supabase.co";
 const SUPABASE_KEY = "sb_publishable_e5tb_2_jqWwza-pPpZ3c0g_AuAHkdYF"; // publishable key, safe in the browser
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+/* Each browser gets a permanent device ID, sent with every request so the
+   database can enforce the device limit. */
+function getDeviceId(){
+  const make=()=> (window.crypto&&crypto.randomUUID) ? crypto.randomUUID()
+    : Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);
+  try{ let id=localStorage.getItem("adrenasky-device"); if(!id){ id=make(); localStorage.setItem("adrenasky-device",id); } return id; }
+  catch(e){ return "nostorage-"+make(); }
+}
+function deviceLabel(){
+  const u=navigator.userAgent;
+  const b=/Edg\//.test(u)?"Edge":/OPR\//.test(u)?"Opera":/(CriOS|Chrome)\//.test(u)?"Chrome":/(FxiOS|Firefox)\//.test(u)?"Firefox":/Safari\//.test(u)?"Safari":"Browser";
+  const o=/iPhone/.test(u)?"iPhone":/iPad/.test(u)?"iPad":/Android/.test(u)?"Android":/Mac OS X|Macintosh/.test(u)?"Mac":/Windows/.test(u)?"Windows":/Linux/.test(u)?"Linux":"device";
+  return b+" on "+o;
+}
+const DEVICE_ID = getDeviceId();
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {global:{headers:{"x-device-id":DEVICE_ID}}});
 let USER = null;
 /* ===================== CONTENT =====================
    Sample questions written for testing. Every item must be checked
@@ -419,7 +444,7 @@ function home(tab){
   const tabs = `<div class="tabs" role="tablist">
     <button role="tab" aria-selected="${tab==="practice"}" id="t-p">Practice</button>
     <button role="tab" aria-selected="${tab==="notes"}" id="t-n">Notes</button></div>`;
-  const head = `<header class="top"><h1 class="brand">Adrenasky<small>ATPL ${SUBJECT}</small></h1></header>`;
+  const head = `<header class="top"><h1 class="brand">Adrenasky<small>ATPL ${SUBJECT}</small></h1>${IS_ADMIN?'<button class="ghost" id="go-admin" style="min-height:40px;padding:8px 14px">Admin</button>':""}</header>`;
   if(tab==="notes"){
     app.innerHTML = head + tabs + `
     <h3 class="section">Summary notes</h3>
@@ -455,6 +480,7 @@ function home(tab){
     $("#go-progress").onclick=()=>progress();
     app.querySelectorAll(".trow").forEach(b=>b.onclick=()=>noteView(b.dataset.t));
   }
+  const ga=$("#go-admin"); if(ga) ga.onclick=()=>adminView("overview");
   $("#t-p").onclick=()=>home("practice");
   $("#t-n").onclick=()=>home("notes");
 }
@@ -616,6 +642,8 @@ function progress(){
     <h3 class="section" style="margin-top:26px">Reset revision</h3>
     <p class="small">Clears your spaced-repetition progress so every question starts fresh. Exam history is kept.</p>
     <button class="ghost" id="reset">Reset revision progress</button>
+    <h3 class="section" style="margin-top:26px">Your devices</h3>
+    <div id="devs"><p class="small">Loading…</p></div>
     <h3 class="section" style="margin-top:26px">Account</h3>
     <p class="small">Signed in as ${esc(USER.email)}</p>
     <button class="ghost" id="logout">Log out</button>`;
@@ -623,6 +651,9 @@ function progress(){
   $("#reset").onclick=()=>ask("Reset your revision progress? Exam history is kept.","Reset","Cancel",async ()=>{
     const {error}=await sb.from("card_progress").delete().eq("user_id",USER.id); dbErr(error);
     if(!error){ S.cards={}; home(); toast("Revision progress reset"); } });
+  fetchDevices().then(({list,limit})=>{ const el=$("#devs"); if(!el) return;
+    el.innerHTML=`<p class="small" style="margin-top:0">${list.length} of ${limit} devices in use. Each browser counts as a device.</p>${deviceRows(list,false)}`;
+    el.querySelectorAll(".rm").forEach(b=>b.onclick=()=>removeDevice(b.dataset.id,b.dataset.l,()=>progress())); });
   $("#logout").onclick=()=>ask("Log out of Adrenasky?","Log out","Cancel",async ()=>{ await sb.auth.signOut(); });
 }
 
@@ -671,14 +702,16 @@ function loading(text){ app.innerHTML=`<section class="briefing"><h2>${esc(text)
 async function loadData(){
   loading("Loading your revision");
   const [q,p,e,r]=await Promise.all([
-    sb.from("questions").select("id,topic_id,question,options,answer,explanation").eq("subject_id","met").order("id"),
+    sb.from("questions").select("id,topic_id,question,options,answer,explanation,is_active").eq("subject_id","met").order("id"),
     sb.from("card_progress").select("question_id,box,due_at,seen,correct"),
     sb.from("exam_attempts").select("taken_at,correct,total,score_pct").eq("subject_id","met").order("taken_at",{ascending:false}).limit(30),
     sb.from("question_reports").select("question_id")
   ]);
+  const pr=await sb.from("profiles").select("is_admin").eq("id",USER.id).maybeSingle();
+  IS_ADMIN=!!(pr.data&&pr.data.is_admin);
   const err=q.error||p.error||e.error||r.error;
   if(err){ console.error(err); app.innerHTML=`<section class="briefing"><h2>Couldn't load</h2><p>${esc(err.message)}</p><button class="primary" id="retry">Try again</button></section>`; $("#retry").onclick=loadData; return; }
-  QUESTIONS=q.data.map(x=>({id:x.id, topic:x.topic_id.replace(/^met-/,""), q:x.question, options:x.options, answer:x.answer, explanation:x.explanation}));
+  QUESTIONS=q.data.filter(x=>x.is_active!==false).map(x=>({id:x.id, topic:x.topic_id.replace(/^met-/,""), q:x.question, options:x.options, answer:x.answer, explanation:x.explanation}));
   S={cards:{},exams:[],flags:[]};
   p.data.forEach(c=>S.cards[c.question_id]={box:c.box,due:new Date(c.due_at).getTime(),seen:c.seen,right:c.correct});
   S.exams=e.data.map(x=>({date:x.taken_at,pct:x.score_pct,right:x.correct,n:x.total}));
@@ -686,11 +719,191 @@ async function loadData(){
   home();
 }
 
+
+/* ===================== ADMIN PAGE ===================== */
+let IS_ADMIN=false;
+const pct=v=>v===null||v===undefined?"–":Math.round(v)+"%";
+const ago=d=>{ if(!d) return "Never"; const m=(Date.now()-new Date(d))/60000;
+  return m<60?"Just now":m<1440?Math.floor(m/60)+" h ago":Math.floor(m/1440)+" d ago"; };
+function adminShell(tab, body){
+  const tabs=[["overview","Testers"],["exams","Exams"],["reports","Reports"],["questions","Questions"],["chapters","Chapters"]];
+  app.innerHTML=`<button class="link back" id="ab">Back to the app</button>
+    <h2 class="cond" style="font-size:34px;margin:6px 0 14px;color:var(--chart)">Admin</h2>
+    <div class="tabs adm" role="tablist">${tabs.map(([k,l])=>`<button role="tab" aria-selected="${k===tab}" data-t="${k}">${l}</button>`).join("")}</div>
+    <div id="adm">${body||'<p class="small">Loading…</p>'}</div>`;
+  $("#ab").onclick=()=>home();
+  app.querySelectorAll(".adm button").forEach(b=>b.onclick=()=>adminView(b.dataset.t));
+}
+async function rpc(name,args){ const {data,error}=await sb.rpc(name,args||{}); if(error){ toast(error.message); throw error; } return data; }
+async function adminView(tab){
+  stopTimer(); tab=tab||"overview"; adminShell(tab); window.scrollTo(0,0);
+  const el=$("#adm");
+  try{
+  if(tab==="overview"){
+    const t=await rpc("admin_testers");
+    const week=Date.now()-7*86400000;
+    const active=t.filter(x=>x.last_login&&new Date(x.last_login)>week).length;
+    const exams=t.reduce((a,x)=>a+Number(x.exams_sat),0);
+    el.innerHTML=`<div class="stats">
+      <div><b>${t.length}</b><span>Testers</span></div><div><b>${active}</b><span>Active this week</span></div>
+      <div><b>${exams}</b><span>Exams sat</span></div></div>
+      <p class="small">Tap a tester to manage their devices.</p>
+      <div class="wrapx"><table><tr><th>Name</th><th>Last login</th><th>Tried</th><th>Accuracy</th><th>Exams</th><th>Best</th><th>Devices</th></tr>
+      ${t.map((x,i)=>`<tr class="tap-row" data-i="${i}"><td><b>${esc(x.full_name||"No name")}</b><br><span class="small">${esc(x.email)}</span></td>
+        <td>${ago(x.last_login)}</td><td>${x.questions_tried}</td><td>${pct(x.accuracy_pct)}</td><td>${x.exams_sat}</td><td>${pct(x.best_exam)}</td><td>${x.devices}/${x.device_limit}</td></tr>`).join("")}</table></div>`;
+    el.querySelectorAll(".tap-row").forEach(r=>r.onclick=()=>testerActions(t[+r.dataset.i]));
+  }
+  if(tab==="exams"){
+    const e=await rpc("admin_exams");
+    el.innerHTML=e.length?`<div class="wrapx"><table><tr><th>Name</th><th>Date</th><th>Score</th><th>Result</th></tr>
+      ${e.map(x=>`<tr><td>${esc(x.full_name||x.email)}</td><td>${fmtDate(x.taken_at)}</td><td>${x.correct}/${x.total} (${x.score_pct}%)</td>
+        <td class="${x.score_pct>=PASS_MARK?"pass":"fail"}">${x.score_pct>=PASS_MARK?"Pass":"Fail"}</td></tr>`).join("")}</table></div>`
+      :`<p class="small">No exams sat yet.</p>`;
+  }
+  if(tab==="reports"){
+    const r=await rpc("admin_reports");
+    el.innerHTML=r.length?r.map(x=>`<article class="qcard"><div class="qmeta"><span>${x.question_id}</span><span>Reported ${x.times_reported}× · ${ago(x.last_reported)}</span></div>
+      <p class="qtext" style="font-size:17px">${esc(x.question)}</p>
+      <div class="row"><button class="primary ed" data-id="${x.question_id}">Edit question</button><button class="ghost fx" data-id="${x.question_id}">Mark as fixed</button></div></article>`).join("")
+      :`<p class="small">No open reports. Nice.</p>`;
+    el.querySelectorAll(".ed").forEach(b=>b.onclick=()=>editQuestion(b.dataset.id,"reports"));
+    el.querySelectorAll(".fx").forEach(b=>b.onclick=async()=>{ await rpc("admin_resolve_reports",{p_question_id:b.dataset.id}); toast("Marked as fixed"); adminView("reports"); });
+  }
+  if(tab==="questions"){
+    const [{data:qs,error},stats]=await Promise.all([sb.from("questions").select("id,topic_id,question,is_active,is_free").eq("subject_id","met").order("id"), rpc("admin_question_stats")]);
+    if(error) throw error;
+    const st={}; stats.forEach(s=>st[s.question_id]=s);
+    adminState.qs=qs;
+    el.innerHTML=`<div class="row" style="margin-bottom:10px"><button class="primary" id="newq">Add a question</button></div>
+      <div class="auth" style="gap:10px;margin-bottom:12px">
+        <label>Chapter<select id="fc"><option value="">All chapters</option>${TOPICS.map((t,i)=>`<option value="met-${t.id}" ${adminState.ch==="met-"+t.id?"selected":""}>${i+1}. ${esc(t.name)}</option>`).join("")}</select></label>
+        <label>Search<input id="fs" placeholder="Words or question ID" value="${esc(adminState.q||"")}"></label>
+        <label style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="fh" ${adminState.hard?"checked":""} style="min-height:auto;width:20px;height:20px"> Hardest first</label></div>
+      <div id="ql"></div>`;
+    const draw=()=>{
+      adminState.ch=$("#fc").value; adminState.q=$("#fs").value.trim().toLowerCase(); adminState.hard=$("#fh").checked;
+      let list=qs.filter(x=>(!adminState.ch||x.topic_id===adminState.ch)&&(!adminState.q||x.id.toLowerCase().includes(adminState.q)||x.question.toLowerCase().includes(adminState.q)));
+      if(adminState.hard) list=list.slice().sort((a,b)=>{const pa=st[a.id]?Number(st[a.id].pct_correct):101, pb=st[b.id]?Number(st[b.id].pct_correct):101; return pa-pb;});
+      $("#ql").innerHTML=`<p class="small">${list.length} questions</p><ul class="topics">${list.map(x=>`<li class="tap"><button class="trow" data-id="${x.id}">
+        <span class="name">${x.id}${x.is_active?"":'<span class="draft">Off</span>'}${x.is_free?"":'<span class="draft" style="color:var(--chart);border-color:var(--chart)">Paid</span>'}</span>
+        <span class="chev">›</span><span class="acc">${esc(x.question.length>90?x.question.slice(0,90)+"…":x.question)}<br>${st[x.id]?`${pct(st[x.id].pct_correct)} correct from ${st[x.id].attempts} answers`:"Not answered yet"}</span></button></li>`).join("")}</ul>`;
+      $("#ql").querySelectorAll(".trow").forEach(b=>b.onclick=()=>editQuestion(b.dataset.id,"questions"));
+    };
+    $("#fc").onchange=draw; $("#fs").oninput=draw; $("#fh").onchange=draw; draw();
+    $("#newq").onclick=()=>editQuestion(null,"questions");
+  }
+  if(tab==="chapters"){
+    const stats=await rpc("admin_question_stats");
+    const by={}; stats.forEach(s=>{ const q=QUESTIONS.find(x=>x.id===s.question_id); const t=q?q.topic:"?"; const b=by[t]||(by[t]={a:0,c:0}); b.a+=Number(s.attempts); b.c+=Number(s.attempts)*Number(s.pct_correct||0)/100; });
+    const rows=TOPICS.map((t,i)=>({n:(i+1)+". "+t.name, q:QUESTIONS.filter(x=>x.topic===t.id).length, a:by[t.id]?by[t.id].a:0, p:by[t.id]&&by[t.id].a?100*by[t.id].c/by[t.id].a:null}));
+    el.innerHTML=`<p class="small">Lowest scores first. Chapters with no answers yet are at the bottom.</p><div class="wrapx"><table><tr><th>Chapter</th><th>Questions</th><th>Answers</th><th>Correct</th></tr>
+      ${rows.sort((x,y)=>(x.p===null)-(y.p===null)||(x.p||0)-(y.p||0)).map(r=>`<tr><td>${esc(r.n)}</td><td>${r.q}</td><td>${r.a}</td><td>${pct(r.p)}</td></tr>`).join("")}</table></div>`;
+  }
+  }catch(e){ console.error(e); el.innerHTML=`<p class="fail">Couldn't load: ${esc(e.message||String(e))}</p>`; }
+}
+const adminState={};
+function testerActions(x){
+  const w=document.createElement("div"); w.className="modal";
+  w.innerHTML=`<div class="modal-box"><p>${esc(x.full_name||x.email)}</p>
+    <p class="small" style="font-weight:400;margin-top:-8px">${esc(x.email)} · ${x.devices} of ${x.device_limit} devices</p>
+    <div class="auth"><label>Device limit<input id="dl" type="number" min="1" max="10" value="${x.device_limit}"></label>
+    <button class="primary" id="sdl">Save device limit</button>
+    <button class="ghost" id="rd">Clear all their devices</button>
+    <button class="link" id="cl">Close</button></div></div>`;
+  document.body.appendChild(w);
+  w.querySelector("#cl").onclick=()=>w.remove();
+  w.querySelector("#sdl").onclick=async()=>{ await rpc("admin_set_device_limit",{p_user:x.user_id,p_limit:+w.querySelector("#dl").value}); w.remove(); toast("Device limit saved"); adminView("overview"); };
+  w.querySelector("#rd").onclick=async()=>{ await rpc("admin_reset_devices",{p_user:x.user_id}); w.remove(); toast("Devices cleared. They can log in fresh."); adminView("overview"); };
+}
+async function editQuestion(id, back){
+  stopTimer(); loading("Opening question");
+  let q;
+  if(id){ const {data,error}=await sb.from("questions").select("*").eq("id",id).single(); if(error){ toast(error.message); return adminView(back); } q=data; }
+  else {
+    const {data}=await sb.from("questions").select("id").eq("subject_id","met");
+    const n=Math.max(0,...(data||[]).map(r=>parseInt(r.id.replace(/\D/g,""),10)||0))+1;
+    q={id:"MET-"+String(n).padStart(3,"0"), topic_id:adminState.ch||"met-"+TOPICS[0].id, question:"", options:["","","",""], answer:0, explanation:"", is_active:true, is_free:true, _new:true};
+  }
+  app.innerHTML=`<button class="link back" id="cb">Back without saving</button>
+    <h2 class="cond" style="font-size:30px;margin:6px 0 12px;color:var(--chart)">${q._new?"New question":"Edit question"} ${q.id}</h2>
+    <div class="auth">
+      <label>Chapter<select id="e-t">${TOPICS.map((t,i)=>`<option value="met-${t.id}" ${q.topic_id==="met-"+t.id?"selected":""}>${i+1}. ${esc(t.name)}</option>`).join("")}</select></label>
+      <label>Question<textarea id="e-q" rows="3">${esc(q.question)}</textarea></label>
+      ${[0,1,2,3].map(i=>`<label><span><input type="radio" name="e-a" value="${i}" ${q.answer===i?"checked":""} style="min-height:auto;width:18px;height:18px;vertical-align:-3px"> Option ${"ABCD"[i]}${i===q.answer?" (correct)":""}</span><input id="e-o${i}" value="${esc(q.options[i]||"")}"></label>`).join("")}
+      <p class="small" style="margin:-4px 0 0">Tick the circle next to the correct answer. Options are shuffled for students.</p>
+      <label>Explanation<textarea id="e-x" rows="4">${esc(q.explanation)}</textarea></label>
+      <label style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="e-on" ${q.is_active?"checked":""} style="min-height:auto;width:20px;height:20px"> Active (students can see it)</label>
+      <label style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="e-fr" ${q.is_free?"checked":""} style="min-height:auto;width:20px;height:20px"> Free preview (visible without a subscription)</label>
+      <div class="row"><button class="primary" id="e-save">${q._new?"Add question":"Save changes"}</button></div>
+    </div>`;
+  $("#cb").onclick=()=>adminView(back);
+  $("#e-save").onclick=async()=>{
+    const row={id:q.id, subject_id:"met", topic_id:$("#e-t").value, question:$("#e-q").value.trim(),
+      options:[0,1,2,3].map(i=>$("#e-o"+i).value.trim()), answer:+(app.querySelector('input[name="e-a"]:checked')||{value:0}).value,
+      explanation:$("#e-x").value.trim(), is_active:$("#e-on").checked, is_free:$("#e-fr").checked};
+    if(!row.question||row.options.some(o=>!o)||!row.explanation) return toast("Fill in the question, all four options and the explanation.");
+    const {error}=q._new?await sb.from("questions").insert(row):await sb.from("questions").update(row).eq("id",q.id);
+    if(error) return toast("Couldn't save: "+error.message);
+    const local={id:row.id, topic:row.topic_id.replace(/^met-/,""), q:row.question, options:row.options, answer:row.answer, explanation:row.explanation};
+    const i=QUESTIONS.findIndex(x=>x.id===row.id);
+    if(row.is_active){ if(i>=0) QUESTIONS[i]=local; else QUESTIONS.push(local); } else if(i>=0) QUESTIONS.splice(i,1);
+    toast(q._new?"Question added":"Saved");
+    if(back==="reports") ask("Mark this question's reports as fixed too?","Mark as fixed","Not yet",async()=>{ await rpc("admin_resolve_reports",{p_question_id:row.id}); adminView("reports"); });
+    adminView(back);
+  };
+}
+
+/* ===================== DEVICE LIMIT ===================== */
+const fmtDate=d=>new Date(d).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
+async function checkDevice(){
+  loading("Checking your device");
+  const {data,error}=await sb.rpc("register_device",{p_label:deviceLabel()});
+  if(error){ console.error(error); app.innerHTML=`<section class="briefing"><h2>Couldn't check this device</h2><p>${esc(error.message)}</p><button class="primary" id="retry">Try again</button></section>`; $("#retry").onclick=checkDevice; return; }
+  if(data==="ok") return loadData();
+  if(data==="limit") return deviceLimitView();
+  app.innerHTML=`<section class="briefing"><h2>This browser can't be registered</h2><p>Please allow site storage (turn off private browsing) and try again.</p><button class="primary" id="retry">Try again</button></section>`; $("#retry").onclick=checkDevice;
+}
+async function fetchDevices(){
+  const [d,p]=await Promise.all([
+    sb.from("devices").select("device_id,label,first_seen,last_seen").order("last_seen",{ascending:false}),
+    sb.from("profiles").select("device_limit").eq("id",USER.id).maybeSingle()
+  ]);
+  return {list:d.data||[], limit:(p.data&&p.data.device_limit)||2, error:d.error};
+}
+function deviceRows(list, allowThis){
+  return `<ul class="topics">${list.map(d=>`<li style="grid-template-columns:1fr auto;align-items:center">
+    <span><span class="name">${esc(d.label||"Unknown device")}</span>${d.device_id===DEVICE_ID?'<span class="draft" style="color:var(--chart);border-color:var(--chart)">This device</span>':""}<br>
+    <span class="small">Last used ${fmtDate(d.last_seen)}</span></span>
+    ${(d.device_id!==DEVICE_ID||allowThis)?`<button class="ghost rm" data-id="${esc(d.device_id)}" data-l="${esc(d.label||"this device")}" style="min-height:40px;padding:8px 14px">Remove</button>`:""}</li>`).join("")}</ul>`;
+}
+async function removeDevice(id, label, after){
+  ask(`Remove ${label}? It will need to log in again and count as a new device. You can remove up to 2 devices every 30 days.`,"Remove","Cancel",async ()=>{
+    const {data,error}=await sb.rpc("remove_device",{p_device_id:id});
+    if(error){ toast("Couldn't remove: "+error.message); return; }
+    if(data==="too_soon"){ toast("You've already removed 2 devices in the last 30 days."); return after(true); }
+    toast("Device removed"); after(false);
+  });
+}
+async function deviceLimitView(tooSoon){
+  stopTimer(); loading("Checking your devices");
+  const {list,limit}=await fetchDevices();
+  app.innerHTML=`<header class="top"><h1 class="brand">Adrenasky<small>ATPL ${SUBJECT}</small></h1></header>
+    <section class="briefing"><h2>Device limit reached</h2>
+    <p>Your account can be used on ${limit} devices. To use this one, remove a device you no longer use.</p>
+    ${tooSoon?`<p class="fail" style="font-weight:700">You've already removed 2 devices in the last 30 days. Please try again later or contact Adrenasky support.</p>`:""}
+    </section>
+    <h3 class="section">Your devices</h3>${deviceRows(list,false)}
+    <p class="small" style="margin-top:14px">Each browser counts as a device, so Chrome and Safari on the same laptop are two devices. You can remove up to 2 devices every 30 days.</p>
+    <p><button class="link" id="lo">Log out</button></p>`;
+  app.querySelectorAll(".rm").forEach(b=>b.onclick=()=>removeDevice(b.dataset.id,b.dataset.l,ts=>ts?deviceLimitView(true):checkDevice()));
+  $("#lo").onclick=()=>sb.auth.signOut();
+}
+
 let booted=false;
 sb.auth.onAuthStateChange((event, session)=>{
   const u=session?session.user:null;
   if(event==="PASSWORD_RECOVERY"){ return newPassword(); }
-  if(u && (!USER || USER.id!==u.id)){ USER=u; loadData(); }
+  if(u && (!USER || USER.id!==u.id)){ USER=u; checkDevice(); }
   else if(!u){ USER=null; authView("login"); }
   booted=true;
 });
@@ -699,7 +912,7 @@ function newPassword(){
     <div class="auth"><label>New password<input id="np" type="password" minlength="6" autocomplete="new-password"></label>
     <button class="primary" id="np-go">Save password</button></div></section>`;
   $("#np-go").onclick=async ()=>{ const {error}=await sb.auth.updateUser({password:$("#np").value});
-    if(error) toast(error.message); else { toast("Password updated"); loadData(); } };
+    if(error) toast(error.message); else { toast("Password updated"); checkDevice(); } };
 }
 loading("Starting up");
 </script>
