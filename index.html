@@ -87,6 +87,9 @@ th{color:var(--muted);font-weight:400}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:15px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
 .back{margin-bottom:6px}
+.chrow{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.chrow input{font:inherit;padding:10px 12px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);flex:1;min-width:0}
+.trow:disabled{pointer-events:none}
 .hyb{display:inline-block;font-size:12px;font-weight:700;color:var(--magenta);border:1px solid var(--magenta);border-radius:6px;padding:0 6px;margin-right:8px}
 .hypanel{display:flex;gap:14px;align-items:center;background:var(--surface);border-radius:14px;padding:16px 18px;margin:-12px 0 26px;border-left:5px solid var(--magenta)}
 .hypanel>div{flex:1}
@@ -167,41 +170,9 @@ let USER = null;
    Sample questions written for testing. Every item must be checked
    by the instructor before launch. Format matches the future database:
    id, topic, q, options[4], answer (index), explanation            */
-const SUBJECT = "Meteorology";
+/* Subjects and chapters are loaded from the database */
+let SUBJECTS = [], SUBJ = null, SUBJECT = "", TOPICS = [];
 const PASS_MARK = 75; // percent, set to the KCAA pass mark
-/* Topics follow the chapter order of the ATPL Meteorology syllabus book.
-   weight = approximate share (%) of real exam questions, from the question-bank frequency analysis */
-const TOPICS = [
- {"id":"atm","name":"The Atmosphere","weight":4},
- {"id":"press","name":"Pressure","weight":3},
- {"id":"dens","name":"Density","weight":1.5},
- {"id":"psys","name":"Pressure Systems","weight":4.5},
- {"id":"temp","name":"Temperature","weight":2.5},
- {"id":"hum","name":"Humidity","weight":2.5},
- {"id":"stab","name":"Adiabatics and Stability","weight":3.6},
- {"id":"turb","name":"Turbulence","weight":3.5},
- {"id":"alt","name":"Altimetry","weight":6.4},
- {"id":"wind","name":"Winds","weight":4.2},
- {"id":"upper","name":"Upper Winds","weight":2},
- {"id":"clouds","name":"Clouds","weight":6},
- {"id":"cform","name":"Cloud Formation and Precipitation","weight":3.8},
- {"id":"ts","name":"Thunderstorms","weight":4},
- {"id":"vis","name":"Visibility","weight":7.6},
- {"id":"ice","name":"Icing","weight":4},
- {"id":"airm","name":"Air Masses","weight":5.6},
- {"id":"occl","name":"Occlusions","weight":2},
- {"id":"odep","name":"Other Depressions","weight":1.3},
- {"id":"clim","name":"Global Climatology","weight":2.5},
- {"id":"local","name":"Local Winds and Weather","weight":1},
- {"id":"area","name":"Area Climatology","weight":0.7},
- {"id":"route","name":"Route Climatology","weight":0.7},
- {"id":"sat","name":"Satellite Observations","weight":0.5},
- {"id":"metar","name":"METARs","weight":3},
- {"id":"taf","name":"TAFs","weight":2},
- {"id":"sigwx","name":"Significant Weather and Wind Charts","weight":1.5},
- {"id":"warn","name":"Warning Messages","weight":1.5},
- {"id":"inflight","name":"Met Information for Aircraft in Flight","weight":0.9}
-];
 /* Draft questions, to be checked by the instructor before launch */
 let QUESTIONS = []; // loaded from the database after login
 
@@ -276,7 +247,7 @@ function home(tab){
   const tabs = `<div class="tabs" role="tablist">
     <button role="tab" aria-selected="${tab==="practice"}" id="t-p">Practice</button>
     <button role="tab" aria-selected="${tab==="notes"}" id="t-n">Notes</button></div>`;
-  const head = `<header class="top"><h1 class="brand">Adrenasky<small>ATPL ${SUBJECT}</small></h1>${IS_ADMIN?'<button class="ghost" id="go-admin" style="min-height:40px;padding:8px 14px">Admin</button>':""}</header>`;
+  const head = `<header class="top"><h1 class="brand">Adrenasky<small>ATPL ${esc(SUBJECT)} · <button class="link" id="chg-subj" style="font-size:14px;padding:0">Change subject</button></small></h1>${IS_ADMIN?'<button class="ghost" id="go-admin" style="min-height:40px;padding:8px 14px">Admin</button>':""}</header>`;
   if(tab==="notes"){
     app.innerHTML = head + tabs + `
     <h3 class="section">Summary notes</h3>
@@ -322,6 +293,7 @@ function home(tab){
     app.querySelectorAll(".trow").forEach(b=>b.onclick=()=>noteView(b.dataset.t));
   }
   const ga=$("#go-admin"); if(ga) ga.onclick=()=>adminView("overview");
+  $("#chg-subj").onclick=()=>subjectPicker();
   $("#t-p").onclick=()=>home("practice");
   $("#t-n").onclick=()=>home("notes");
 }
@@ -455,7 +427,7 @@ function exam(qs){
       const b=byTopic[q.topic]||(byTopic[q.topic]={r:0,n:0}); b.n++; if(ok) b.r++; });
     const pct=Math.round(right/qs.length*100), passed=pct>=PASS_MARK;
     S.exams.unshift({date:new Date().toISOString(),pct,right,n:qs.length}); S.exams=S.exams.slice(0,30);
-    sb.from("exam_attempts").insert({user_id:USER.id, subject_id:"met", correct:right, total:qs.length, score_pct:pct, by_topic:byTopic}).then(({error})=>dbErr(error));
+    sb.from("exam_attempts").insert({user_id:USER.id, subject_id:SUBJ.id, correct:right, total:qs.length, score_pct:pct, by_topic:byTopic}).then(({error})=>dbErr(error));
     const wrong=qs.map((q,k)=>({q,a:answers[k]})).filter(x=>x.a!==x.q.answer);
     app.innerHTML=`
       <section class="briefing"><p class="score ${passed?"pass":"fail"}">${pct}%</p>
@@ -549,28 +521,58 @@ function authView(mode, msg){
 }
 function loading(text){ app.innerHTML=`<section class="briefing"><h2>${esc(text)}</h2><p>One moment…</p></section>`; }
 
-async function loadData(){
-  loading("Loading your revision");
+async function loadSubjects(){
+  const [sj,tp]=await Promise.all([
+    sb.from("subjects").select("id,name,status,sort_order,id_prefix,description").order("sort_order"),
+    sb.from("topics").select("id,subject_id,name,weight,sort_order").order("sort_order")]);
+  if(sj.error||tp.error) throw (sj.error||tp.error);
+  SUBJECTS=sj.data.map(x=>({...x, topics:tp.data.filter(t=>t.subject_id===x.id).map(t=>({id:t.id,name:t.name,weight:Number(t.weight)||1}))}));
+}
+function setSubject(id){
+  SUBJ=SUBJECTS.find(x=>x.id===id); SUBJECT=SUBJ.name; TOPICS=SUBJ.topics;
+  try{ localStorage.setItem("adrenasky-subject",id); }catch(e){}
+}
+async function startApp(){
+  loading("Loading your subjects");
+  try{ await loadSubjects(); }catch(e){ console.error(e); app.innerHTML=`<section class="briefing"><h2>Couldn't load</h2><p>${esc(e.message||e)}</p><button class="primary" id="retry">Try again</button></section>`; $("#retry").onclick=startApp; return; }
+  let saved=null; try{ saved=localStorage.getItem("adrenasky-subject"); }catch(e){}
+  const live=SUBJECTS.filter(x=>x.status==="live");
+  const pick=live.find(x=>x.id===saved)||(live.length===1?live[0]:null);
+  if(pick){ setSubject(pick.id); return loadData(); }
+  subjectPicker();
+}
+function subjectPicker(){
+  stopTimer();
+  app.innerHTML=`<header class="top"><h1 class="brand">Adrenasky<small>ATPL theory revision</small></h1></header>
+    <h3 class="section">What are you studying today?</h3>
+    <ul class="topics">${SUBJECTS.map((x,i)=>{ const live=x.status==="live";
+      return `<li class="tap"><button class="trow subj" data-s="${x.id}" ${live?"":"disabled"} style="${live?"":"opacity:.55;cursor:default"}">
+        <span class="name">${esc(x.name)}${live?"":'<span class="draft" style="color:var(--muted);border-color:var(--line)">Coming soon</span>'}${SUBJ&&SUBJ.id===x.id?'<span class="draft" style="color:var(--chart);border-color:var(--chart)">Current</span>':""}</span>
+        <span class="chev">${live?"›":""}</span><span class="acc">${esc(x.description||(x.topics.length+" chapters"))}</span></button></li>`; }).join("")}</ul>`;
+  app.querySelectorAll(".subj:not([disabled])").forEach(b=>b.onclick=()=>{ setSubject(b.dataset.s); home.tab="practice"; loadData(); });
+}
+async function loadData(next){
+  loading("Loading "+(SUBJECT||"your revision"));
   const [q,p,e,r]=await Promise.all([
-    sb.from("questions").select("id,topic_id,question,options,answer,explanation,is_active,key_points,compare,is_high_yield").eq("subject_id","met").order("id"),
+    sb.from("questions").select("id,topic_id,question,options,answer,explanation,is_active,key_points,compare,is_high_yield").eq("subject_id",SUBJ.id).order("id"),
     sb.from("card_progress").select("question_id,box,due_at,seen,correct"),
-    sb.from("exam_attempts").select("taken_at,correct,total,score_pct").eq("subject_id","met").order("taken_at",{ascending:false}).limit(30),
+    sb.from("exam_attempts").select("taken_at,correct,total,score_pct").eq("subject_id",SUBJ.id).order("taken_at",{ascending:false}).limit(30),
     sb.from("question_reports").select("question_id")
   ]);
-  const nt=await sb.from("notes").select("topic_id,points,aid,trap,is_draft");
-  NOTES={}; (nt.data||[]).forEach(n=>NOTES[n.topic_id.replace(/^met-/,"")]=n);
+  const nt=await sb.from("notes").select("topic_id,points,aid,trap,is_draft").in("topic_id",TOPICS.map(t=>t.id).concat(["-"]));
+  NOTES={}; (nt.data||[]).forEach(n=>NOTES[n.topic_id]=n);
   const pr=await sb.from("profiles").select("is_admin").eq("id",USER.id).maybeSingle();
   IS_ADMIN=!!(pr.data&&pr.data.is_admin);
   const err=q.error||p.error||e.error||r.error;
   if(err){ console.error(err); app.innerHTML=`<section class="briefing"><h2>Couldn't load</h2><p>${esc(err.message)}</p><button class="primary" id="retry">Try again</button></section>`; $("#retry").onclick=loadData; return; }
   FOCUS={}; COMPARE={};
   q.data.forEach(x=>{ if(x.key_points&&x.key_points.length) FOCUS[x.id]=x.key_points; if(x.compare) COMPARE[x.id]=x.compare; });
-  QUESTIONS=q.data.filter(x=>x.is_active!==false).map(x=>({id:x.id, topic:x.topic_id.replace(/^met-/,""), q:x.question, options:x.options, answer:x.answer, explanation:x.explanation, hy:!!x.is_high_yield}));
+  QUESTIONS=q.data.filter(x=>x.is_active!==false).map(x=>({id:x.id, topic:x.topic_id, q:x.question, options:x.options, answer:x.answer, explanation:x.explanation, hy:!!x.is_high_yield}));
   S={cards:{},exams:[],flags:[]};
   p.data.forEach(c=>S.cards[c.question_id]={box:c.box,due:new Date(c.due_at).getTime(),seen:c.seen,right:c.correct});
   S.exams=e.data.map(x=>({date:x.taken_at,pct:x.score_pct,right:x.correct,n:x.total}));
   S.flags=[...new Set(r.data.map(x=>x.question_id))];
-  home();
+  (next||home)();
 }
 
 
@@ -580,14 +582,19 @@ const pct=v=>v===null||v===undefined?"–":Math.round(v)+"%";
 const ago=d=>{ if(!d) return "Never"; const m=(Date.now()-new Date(d))/60000;
   return m<2?"Just now":m<60?Math.floor(m)+" min ago":m<1440?Math.floor(m/60)+" h ago":Math.floor(m/1440)+" d ago"; };
 function adminShell(tab, body){
-  const tabs=[["overview","Testers"],["exams","Exams"],["reports","Reports"],["questions","Questions"],["notes","Notes"],["chapters","Chapters"]];
+  const tabs=[["overview","Testers"],["exams","Exams"],["reports","Reports"],["questions","Questions"],["notes","Notes"],["chapters","Chapters"],["subjects","Subjects"]];
   app.innerHTML=`<button class="link back" id="ab">Back to the app</button>
     <div style="display:flex;justify-content:space-between;align-items:center"><h2 class="cond" style="font-size:34px;margin:6px 0 14px;color:var(--chart)">Admin</h2>
     <button class="ghost" id="arf" style="min-height:40px;padding:8px 14px">Refresh</button></div>
+    <label class="small" style="display:flex;gap:8px;align-items:center;margin:-6px 0 12px">Subject
+      <select id="asj" style="font:inherit;padding:6px 10px;border-radius:8px;border:2px solid var(--line);background:var(--bg);color:var(--ink)">
+      ${SUBJECTS.map(x=>`<option value="${x.id}" ${SUBJ&&SUBJ.id===x.id?"selected":""}>${esc(x.name)}${x.status==="live"?"":" ("+(x.status==="hidden"?"hidden":"coming soon")+")"}</option>`).join("")}</select>
+      <span>Questions, notes and chapters below are for this subject.</span></label>
     <div class="tabs adm" role="tablist">${tabs.map(([k,l])=>`<button role="tab" aria-selected="${k===tab}" data-t="${k}">${l}</button>`).join("")}</div>
     <div id="adm">${body||'<p class="small">Loading…</p>'}</div>`;
   $("#ab").onclick=()=>home();
   $("#arf").onclick=()=>adminView(tab);
+  $("#asj").onchange=e=>{ setSubject(e.target.value); adminState.ch=""; loadData(()=>adminView(tab)); };
   app.querySelectorAll(".adm button").forEach(b=>b.onclick=()=>adminView(b.dataset.t));
 }
 async function rpc(name,args){ const {data,error}=await sb.rpc(name,args||{}); if(error){ toast(error.message); throw error; } return data; }
@@ -626,13 +633,13 @@ async function adminView(tab){
     el.querySelectorAll(".fx").forEach(b=>b.onclick=async()=>{ await rpc("admin_resolve_reports",{p_question_id:b.dataset.id}); toast("Marked as fixed"); adminView("reports"); });
   }
   if(tab==="questions"){
-    const [{data:qs,error},stats]=await Promise.all([sb.from("questions").select("id,topic_id,question,is_active,is_free,is_high_yield").eq("subject_id","met").order("id"), rpc("admin_question_stats")]);
+    const [{data:qs,error},stats]=await Promise.all([sb.from("questions").select("id,topic_id,question,is_active,is_free,is_high_yield").eq("subject_id",SUBJ.id).order("id"), rpc("admin_question_stats")]);
     if(error) throw error;
     const st={}; stats.forEach(s=>st[s.question_id]=s);
     adminState.qs=qs;
     el.innerHTML=`<div class="row" style="margin-bottom:10px"><button class="primary" id="newq">Add a question</button></div>
       <div class="auth" style="gap:10px;margin-bottom:12px">
-        <label>Chapter<select id="fc"><option value="">All chapters</option>${TOPICS.map((t,i)=>`<option value="met-${t.id}" ${adminState.ch==="met-"+t.id?"selected":""}>${i+1}. ${esc(t.name)}</option>`).join("")}</select></label>
+        <label>Chapter<select id="fc"><option value="">All chapters</option>${TOPICS.map((t,i)=>`<option value="${t.id}" ${adminState.ch===t.id?"selected":""}>${i+1}. ${esc(t.name)}</option>`).join("")}</select></label>
         <label>Search<input id="fs" placeholder="Words or question ID" value="${esc(adminState.q||"")}"></label>
         <label style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="fh" ${adminState.hard?"checked":""} style="min-height:auto;width:20px;height:20px"> Hardest first</label></div>
       <div id="ql"></div>`;
@@ -649,6 +656,7 @@ async function adminView(tab){
     $("#newq").onclick=()=>editQuestion(null,"questions");
   }
   if(tab==="notes") await notesAdmin();
+  if(tab==="subjects") await subjectsAdmin();
   if(tab==="chapters"){
     const stats=await rpc("admin_question_stats");
     const by={}; stats.forEach(s=>{ const q=QUESTIONS.find(x=>x.id===s.question_id); const t=q?q.topic:"?"; const b=by[t]||(by[t]={a:0,c:0}); b.a+=Number(s.attempts); b.c+=Number(s.attempts)*Number(s.pct_correct||0)/100; });
@@ -659,20 +667,79 @@ async function adminView(tab){
   }catch(e){ console.error(e); el.innerHTML=`<p class="fail">Couldn't load: ${esc(e.message||String(e))}</p>`; }
 }
 const adminState={};
+async function subjectsAdmin(){
+  const el=$("#adm");
+  await loadSubjects();
+  el.innerHTML=`<p class="small">Add subjects and their chapters here. Set a subject to <b>Live</b> when its questions are ready; <b>Coming soon</b> shows it locked; <b>Hidden</b> keeps it out of sight.</p>
+    <div class="row" style="margin-bottom:10px"><button class="primary" id="news">Add a subject</button></div>
+    <ul class="topics">${SUBJECTS.map(x=>`<li class="tap"><button class="trow" data-s="${x.id}"><span class="name">${esc(x.name)}<span class="draft" style="${x.status==="live"?"color:var(--ok);border-color:var(--ok)":"color:var(--muted);border-color:var(--line)"}">${x.status==="live"?"Live":x.status==="hidden"?"Hidden":"Coming soon"}</span></span>
+      <span class="chev">›</span><span class="acc">${x.topics.length} chapters · question IDs ${esc(x.id_prefix||x.id.toUpperCase())}-001…</span></button></li>`).join("")}</ul>`;
+  el.querySelectorAll(".trow").forEach(b=>b.onclick=()=>editSubject(b.dataset.s));
+  $("#news").onclick=()=>editSubject(null);
+}
+function editSubject(id){
+  const x=id?SUBJECTS.find(s=>s.id===id):{id:"",name:"",status:"coming_soon",id_prefix:"",description:"",sort_order:SUBJECTS.length+1,topics:[],_new:true};
+  const ch=x.topics.map(t=>({...t}));
+  const draw=()=>{
+    app.innerHTML=`<button class="link back" id="cb">Back without saving</button>
+    <h2 class="cond" style="font-size:30px;margin:6px 0 12px;color:var(--chart)">${x._new?"New subject":esc(x.name)}</h2>
+    <div class="auth">
+      <label>Subject name<input id="s-n" value="${esc(x.name)}" placeholder="e.g. Air Law"></label>
+      ${x._new?`<label>Short code (letters only, permanent)<input id="s-id" placeholder="e.g. law" value="${esc(x.id)}"></label>`:""}
+      <label>Question ID prefix<input id="s-p" value="${esc(x.id_prefix||"")}" placeholder="e.g. LAW"></label>
+      <label>Short description (optional)<input id="s-d" value="${esc(x.description||"")}"></label>
+      <label>Status<select id="s-st">${[["live","Live"],["coming_soon","Coming soon"],["hidden","Hidden"]].map(([v,l])=>`<option value="${v}" ${x.status===v?"selected":""}>${l}</option>`).join("")}</select></label>
+      <label>Position in the list<input id="s-o" type="number" min="1" value="${x.sort_order||1}"></label>
+    </div>
+    <h3 class="section" style="margin-top:22px">Chapters</h3>
+    <p class="small" style="margin-top:0">Weight is the chapter's approximate share (%) of real exam questions. It decides how often it appears in practice exams.</p>
+    <div id="chs">${ch.map((t,i)=>`<div class="chrow"><span class="small">${i+1}.</span><input data-i="${i}" data-k="name" value="${esc(t.name)}" placeholder="Chapter name"><input data-i="${i}" data-k="weight" type="number" step="0.1" min="0" value="${t.weight}" style="max-width:90px" title="Weight %">
+      <button class="link mv" data-i="${i}" data-d="-1" title="Move up">↑</button><button class="link mv" data-i="${i}" data-d="1" title="Move down">↓</button>${t.id?"":`<button class="link rmc" data-i="${i}">Remove</button>`}</div>`).join("")}</div>
+    <div class="row" style="margin-top:10px"><button class="ghost" id="addc">Add a chapter</button><button class="primary" id="s-save">Save subject</button></div>
+    <p class="small">Chapters that already have questions can be renamed or reordered but not removed here.</p>`;
+    const sync=()=>app.querySelectorAll("#chs input").forEach(inp=>{ const t=ch[+inp.dataset.i]; t[inp.dataset.k]=inp.dataset.k==="weight"?Number(inp.value)||0:inp.value; });
+    const keep=()=>{ x.name=$("#s-n").value; if($("#s-id")) x.id=$("#s-id").value; x.id_prefix=$("#s-p").value; x.description=$("#s-d").value; x.status=$("#s-st").value; x.sort_order=+$("#s-o").value||1; };
+    $("#cb").onclick=()=>adminView("subjects");
+    $("#addc").onclick=()=>{ sync(); keep(); ch.push({id:null,name:"",weight:2}); draw(); };
+    app.querySelectorAll(".rmc").forEach(b=>b.onclick=()=>{ sync(); keep(); ch.splice(+b.dataset.i,1); draw(); });
+    app.querySelectorAll(".mv").forEach(b=>b.onclick=()=>{ sync(); keep(); const i=+b.dataset.i, j=i+(+b.dataset.d); if(j<0||j>=ch.length) return; [ch[i],ch[j]]=[ch[j],ch[i]]; draw(); });
+    $("#s-save").onclick=async()=>{
+      sync(); keep();
+      const sid=(x.id||"").trim().toLowerCase();
+      if(!x.name.trim()) return toast("Give the subject a name.");
+      if(!/^[a-z]{2,12}$/.test(sid)) return toast("Short code: 2 to 12 letters, no spaces.");
+      if(x._new&&SUBJECTS.some(s=>s.id===sid)) return toast("That short code is already used.");
+      if(ch.some(t=>!t.name.trim())) return toast("Every chapter needs a name.");
+      const prefix=(x.id_prefix||sid).trim().toUpperCase().replace(/[^A-Z0-9]/g,"");
+      const {error:e1}=await sb.from("subjects").upsert({id:sid,name:x.name.trim(),status:x.status,id_prefix:prefix,description:x.description.trim()||null,sort_order:x.sort_order,is_published:x.status==="live"});
+      if(e1) return toast("Couldn't save: "+e1.message);
+      const slug=n=>n.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,24)||"chapter";
+      const used=new Set(ch.filter(t=>t.id).map(t=>t.id));
+      const rows=ch.map((t,i)=>{ let tid=t.id; if(!tid){ tid=sid+"-"+slug(t.name); let k=2; while(used.has(tid)) tid=sid+"-"+slug(t.name)+"-"+(k++); used.add(tid); }
+        return {id:tid, subject_id:sid, name:t.name.trim(), weight:t.weight, sort_order:i+1}; });
+      if(rows.length){ const {error:e2}=await sb.from("topics").upsert(rows); if(e2) return toast("Subject saved, but chapters failed: "+e2.message); }
+      toast("Subject saved");
+      await loadSubjects(); if(SUBJ) setSubject(SUBJ.id);
+      adminView("subjects");
+    };
+  };
+  draw();
+}
+
 async function notesAdmin(){
   const el=$("#adm");
   const {data,error}=await sb.from("notes").select("topic_id,points,is_draft,updated_at");
   if(error) throw error;
   const by={}; data.forEach(n=>by[n.topic_id]=n);
   el.innerHTML=`<p class="small">Tap a chapter to write or edit its summary note. Notes stay marked Draft until you approve them.</p>
-    <ul class="topics">${TOPICS.map((t,i)=>{const n=by["met-"+t.id];
+    <ul class="topics">${TOPICS.map((t,i)=>{const n=by[t.id];
       return `<li class="tap"><button class="trow" data-t="${t.id}"><span class="name">${i+1}. ${esc(t.name)}${n?(n.is_draft?'<span class="draft">Draft</span>':'<span class="draft" style="color:var(--ok);border-color:var(--ok)">Approved</span>'):""}</span>
       <span class="chev">›</span><span class="acc">${n?n.points.length+" key points, updated "+fmtDate(n.updated_at):"No note yet"}</span></button></li>`;}).join("")}</ul>`;
   el.querySelectorAll(".trow").forEach(b=>b.onclick=()=>editNote(b.dataset.t));
 }
 async function editNote(tid){
   stopTimer(); loading("Opening note");
-  const {data:n,error}=await sb.from("notes").select("*").eq("topic_id","met-"+tid).maybeSingle();
+  const {data:n,error}=await sb.from("notes").select("*").eq("topic_id",tid).maybeSingle();
   if(error){ toast(error.message); return adminView("notes"); }
   const note=n||{points:[],aid:"",trap:"",is_draft:true,is_free:true,_new:true};
   app.innerHTML=`<button class="link back" id="cb">Back without saving</button>
@@ -687,7 +754,7 @@ async function editNote(tid){
       <div class="row"><button class="ghost" id="n-prev">Preview</button><button class="primary" id="n-save">${note._new?"Create note":"Save note"}</button></div>
       <div id="n-pv"></div>
     </div>`;
-  const read=()=>({topic_id:"met-"+tid, points:$("#n-p").value.split("\n").map(x=>x.trim()).filter(Boolean),
+  const read=()=>({topic_id:tid, points:$("#n-p").value.split("\n").map(x=>x.trim()).filter(Boolean),
     aid:$("#n-a").value.trim(), trap:$("#n-t").value.trim(), is_draft:!$("#n-d").checked, is_free:$("#n-f").checked, updated_at:new Date().toISOString()});
   $("#cb").onclick=()=>adminView("notes");
   $("#n-prev").onclick=()=>{ const r=read(); const old=NOTES[tid]; NOTES[tid]=r; $("#n-pv").innerHTML=`<article class="qcard note">${noteBody(tid)}</article>`; if(old) NOTES[tid]=old; else delete NOTES[tid]; };
@@ -717,14 +784,14 @@ async function editQuestion(id, back){
   let q;
   if(id){ const {data,error}=await sb.from("questions").select("*").eq("id",id).single(); if(error){ toast(error.message); return adminView(back); } q=data; }
   else {
-    const {data}=await sb.from("questions").select("id").eq("subject_id","met");
+    const {data}=await sb.from("questions").select("id").eq("subject_id",SUBJ.id);
     const n=Math.max(0,...(data||[]).map(r=>parseInt(r.id.replace(/\D/g,""),10)||0))+1;
-    q={id:"MET-"+String(n).padStart(3,"0"), topic_id:adminState.ch||"met-"+TOPICS[0].id, question:"", options:["","","",""], answer:0, explanation:"", key_points:[], is_active:true, is_free:true, _new:true};
+    q={id:(SUBJ.id_prefix||SUBJ.id.toUpperCase())+"-"+String(n).padStart(3,"0"), topic_id:adminState.ch||TOPICS[0].id, question:"", options:["","","",""], answer:0, explanation:"", key_points:[], is_active:true, is_free:true, _new:true};
   }
   app.innerHTML=`<button class="link back" id="cb">Back without saving</button>
     <h2 class="cond" style="font-size:30px;margin:6px 0 12px;color:var(--chart)">${q._new?"New question":"Edit question"} ${q.id}</h2>
     <div class="auth">
-      <label>Chapter<select id="e-t">${TOPICS.map((t,i)=>`<option value="met-${t.id}" ${q.topic_id==="met-"+t.id?"selected":""}>${i+1}. ${esc(t.name)}</option>`).join("")}</select></label>
+      <label>Chapter<select id="e-t">${TOPICS.map((t,i)=>`<option value="${t.id}" ${q.topic_id===t.id?"selected":""}>${i+1}. ${esc(t.name)}</option>`).join("")}</select></label>
       <label>Question<textarea id="e-q" rows="3">${esc(q.question)}</textarea></label>
       ${[0,1,2,3].map(i=>`<label><span><input type="radio" name="e-a" value="${i}" ${q.answer===i?"checked":""} style="min-height:auto;width:18px;height:18px;vertical-align:-3px"> Option ${"ABCD"[i]}${i===q.answer?" (correct)":""}</span><input id="e-o${i}" value="${esc(q.options[i]||"")}"></label>`).join("")}
       <p class="small" style="margin:-4px 0 0">Tick the circle next to the correct answer. Options are shuffled for students.</p>
@@ -738,7 +805,7 @@ async function editQuestion(id, back){
     </div>`;
   $("#cb").onclick=()=>adminView(back);
   $("#e-save").onclick=async()=>{
-    const row={id:q.id, subject_id:"met", topic_id:$("#e-t").value, question:$("#e-q").value.trim(),
+    const row={id:q.id, subject_id:SUBJ.id, topic_id:$("#e-t").value, question:$("#e-q").value.trim(),
       options:[0,1,2,3].map(i=>$("#e-o"+i).value.trim()), answer:+(app.querySelector('input[name="e-a"]:checked')||{value:0}).value,
       explanation:$("#e-x").value.trim(), key_points:$("#e-k").value.split("\n").map(x=>x.trim()).filter(Boolean),
       is_active:$("#e-on").checked, is_free:$("#e-fr").checked, is_high_yield:$("#e-hy").checked};
@@ -746,7 +813,7 @@ async function editQuestion(id, back){
     const {error}=q._new?await sb.from("questions").insert(row):await sb.from("questions").update(row).eq("id",q.id);
     if(error) return toast("Couldn't save: "+error.message);
     if(row.key_points.length) FOCUS[row.id]=row.key_points; else delete FOCUS[row.id];
-    const local={id:row.id, topic:row.topic_id.replace(/^met-/,""), q:row.question, options:row.options, answer:row.answer, explanation:row.explanation, hy:row.is_high_yield};
+    const local={id:row.id, topic:row.topic_id, q:row.question, options:row.options, answer:row.answer, explanation:row.explanation, hy:row.is_high_yield};
     const i=QUESTIONS.findIndex(x=>x.id===row.id);
     if(row.is_active){ if(i>=0) QUESTIONS[i]=local; else QUESTIONS.push(local); } else if(i>=0) QUESTIONS.splice(i,1);
     toast(q._new?"Question added":"Saved");
@@ -761,7 +828,7 @@ async function checkDevice(){
   loading("Checking your device");
   const {data,error}=await sb.rpc("register_device",{p_label:deviceLabel()});
   if(error){ console.error(error); app.innerHTML=`<section class="briefing"><h2>Couldn't check this device</h2><p>${esc(error.message)}</p><button class="primary" id="retry">Try again</button></section>`; $("#retry").onclick=checkDevice; return; }
-  if(data==="ok") return loadData();
+  if(data==="ok") return startApp();
   if(data==="limit") return deviceLimitView();
   app.innerHTML=`<section class="briefing"><h2>This browser can't be registered</h2><p>Please allow site storage (turn off private browsing) and try again.</p><button class="primary" id="retry">Try again</button></section>`; $("#retry").onclick=checkDevice;
 }
