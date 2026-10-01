@@ -87,6 +87,11 @@ th{color:var(--muted);font-weight:400}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:15px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
 .back{margin-bottom:6px}
+.hyb{display:inline-block;font-size:12px;font-weight:700;color:var(--magenta);border:1px solid var(--magenta);border-radius:6px;padding:0 6px;margin-right:8px}
+.hypanel{display:flex;gap:14px;align-items:center;background:var(--surface);border-radius:14px;padding:16px 18px;margin:-12px 0 26px;border-left:5px solid var(--magenta)}
+.hypanel>div{flex:1}
+.hypanel b{display:block;font-family:"Barlow Condensed",sans-serif;font-size:22px}
+.hypanel span{font-size:14px;color:var(--muted)}
 .auth{display:grid;gap:14px}
 .auth select,.auth textarea{font:inherit;padding:12px 14px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
 .auth textarea{resize:vertical;line-height:1.4}
@@ -161,37 +166,38 @@ let USER = null;
    id, topic, q, options[4], answer (index), explanation            */
 const SUBJECT = "Meteorology";
 const PASS_MARK = 75; // percent, set to the KCAA pass mark
-/* Topics follow the chapter order of the ATPL Meteorology syllabus book */
+/* Topics follow the chapter order of the ATPL Meteorology syllabus book.
+   weight = approximate share (%) of real exam questions, from the question-bank frequency analysis */
 const TOPICS = [
- {"id":"atm","name":"The Atmosphere","weight":2},
- {"id":"press","name":"Pressure","weight":2},
- {"id":"dens","name":"Density","weight":2},
- {"id":"psys","name":"Pressure Systems","weight":2},
- {"id":"temp","name":"Temperature","weight":2},
- {"id":"hum","name":"Humidity","weight":2},
- {"id":"stab","name":"Adiabatics and Stability","weight":2},
- {"id":"turb","name":"Turbulence","weight":2},
- {"id":"alt","name":"Altimetry","weight":2},
- {"id":"wind","name":"Winds","weight":2},
+ {"id":"atm","name":"The Atmosphere","weight":4},
+ {"id":"press","name":"Pressure","weight":3},
+ {"id":"dens","name":"Density","weight":1.5},
+ {"id":"psys","name":"Pressure Systems","weight":4.5},
+ {"id":"temp","name":"Temperature","weight":2.5},
+ {"id":"hum","name":"Humidity","weight":2.5},
+ {"id":"stab","name":"Adiabatics and Stability","weight":3.6},
+ {"id":"turb","name":"Turbulence","weight":3.5},
+ {"id":"alt","name":"Altimetry","weight":6.4},
+ {"id":"wind","name":"Winds","weight":4.2},
  {"id":"upper","name":"Upper Winds","weight":2},
- {"id":"clouds","name":"Clouds","weight":2},
- {"id":"cform","name":"Cloud Formation and Precipitation","weight":2},
- {"id":"ts","name":"Thunderstorms","weight":2},
- {"id":"vis","name":"Visibility","weight":2},
- {"id":"ice","name":"Icing","weight":2},
- {"id":"airm","name":"Air Masses","weight":2},
+ {"id":"clouds","name":"Clouds","weight":6},
+ {"id":"cform","name":"Cloud Formation and Precipitation","weight":3.8},
+ {"id":"ts","name":"Thunderstorms","weight":4},
+ {"id":"vis","name":"Visibility","weight":7.6},
+ {"id":"ice","name":"Icing","weight":4},
+ {"id":"airm","name":"Air Masses","weight":5.6},
  {"id":"occl","name":"Occlusions","weight":2},
- {"id":"odep","name":"Other Depressions","weight":2},
- {"id":"clim","name":"Global Climatology","weight":2},
- {"id":"local","name":"Local Winds and Weather","weight":2},
- {"id":"area","name":"Area Climatology","weight":2},
- {"id":"route","name":"Route Climatology","weight":2},
- {"id":"sat","name":"Satellite Observations","weight":2},
- {"id":"metar","name":"METARs","weight":2},
+ {"id":"odep","name":"Other Depressions","weight":1.3},
+ {"id":"clim","name":"Global Climatology","weight":2.5},
+ {"id":"local","name":"Local Winds and Weather","weight":1},
+ {"id":"area","name":"Area Climatology","weight":0.7},
+ {"id":"route","name":"Route Climatology","weight":0.7},
+ {"id":"sat","name":"Satellite Observations","weight":0.5},
+ {"id":"metar","name":"METARs","weight":3},
  {"id":"taf","name":"TAFs","weight":2},
- {"id":"sigwx","name":"Significant Weather and Wind Charts","weight":2},
- {"id":"warn","name":"Warning Messages","weight":2},
- {"id":"inflight","name":"Met Information for Aircraft in Flight","weight":2}
+ {"id":"sigwx","name":"Significant Weather and Wind Charts","weight":1.5},
+ {"id":"warn","name":"Warning Messages","weight":1.5},
+ {"id":"inflight","name":"Met Information for Aircraft in Flight","weight":0.9}
 ];
 /* Draft questions, to be checked by the instructor before launch */
 let QUESTIONS = []; // loaded from the database after login
@@ -291,6 +297,11 @@ function home(tab){
         <button class="ghost" id="go-exam">Sit practice exam</button>
       </div>
     </section>
+    ${(()=>{ const hy=QUESTIONS.filter(q=>q.hy); if(!hy.length) return "";
+      const strong=hy.filter(q=>(S.cards[q.id]||{box:0}).box>=3).length;
+      return `<section class="hypanel"><div><b>High-yield: Top 100</b><span>The concepts that come up most in real exams. ${strong} of ${hy.length} mastered.</span>
+        <div class="bar"><span style="width:${hy.length?strong/hy.length*100:0}%"></span></div></div>
+        <button class="primary" id="go-hy">Practise</button></section>`; })()}
     <h3 class="section">Topics</h3>
     <p class="small" style="margin-top:0">Lamps light up as you get questions right on repeat visits. Tap a topic to read its notes.</p>
     <ul class="topics">${TOPICS.map(t=>{const s=topicStats(t.id);
@@ -300,6 +311,7 @@ function home(tab){
     <p style="margin-top:22px"><button class="link" id="go-progress">Exam history and reported questions</button></p>`;
     $("#go-study").onclick=()=>study();
     $("#go-exam").onclick=()=>examStart();
+    const gh=$("#go-hy"); if(gh) gh.onclick=()=>study("__hy");
     $("#go-progress").onclick=()=>progress();
     app.querySelectorAll(".trow").forEach(b=>b.onclick=()=>noteView(b.dataset.t));
   }
@@ -331,7 +343,14 @@ function noteView(tid){
 function study(topic){
   const now=Date.now();
   let queue;
-  if(topic){ queue=shuffle(QUESTIONS.filter(q=>q.topic===topic)).slice(0,10); }
+  if(topic==="__hy"){
+    // High-yield: due first, then unseen, then the weakest ones
+    const hy=QUESTIONS.filter(q=>q.hy), box=q=>(S.cards[q.id]||{box:0}).box;
+    const due=shuffle(hy.filter(q=>{const c=S.cards[q.id]; return c&&c.box>0&&c.due<=now;}));
+    const rest=shuffle(hy.filter(q=>!due.includes(q))).sort((a,b)=>box(a)-box(b));
+    queue=due.concat(rest).slice(0,20);
+  }
+  else if(topic){ queue=shuffle(QUESTIONS.filter(q=>q.topic===topic)).slice(0,10); }
   else {
     const due=shuffle(QUESTIONS.filter(q=>{const c=S.cards[q.id]; return c&&c.box>0&&c.due<=now;}));
     const fresh=shuffle(QUESTIONS.filter(q=>!S.cards[q.id]||S.cards[q.id].box===0));
@@ -346,7 +365,7 @@ function study(topic){
       <div class="bar"><span style="width:${i/queue.length*100}%"></span></div>
       <div class="small">Question ${i+1} of ${queue.length}</div>
       <article class="qcard">
-        <div class="qmeta"><span>${esc(topicName(q.topic))}</span><span>${q.id}</span></div>
+        <div class="qmeta"><span>${esc(topicName(q.topic))}</span><span>${q.hy?'<span class="hyb">High-yield</span>':""}${q.id}</span></div>
         <p class="qtext">${esc(q.q)}</p>
         <div class="opts">${order.map(o=>`<button class="opt" data-o="${o}">${esc(q.options[o])}</button>`).join("")}</div>
         <div id="after"></div>
@@ -378,7 +397,9 @@ function study(topic){
 function pickExam(n){
   // weighted pick across topics, no repeats
   const pool=shuffle(QUESTIONS), out=[];
-  const weightOf=q=>(TOPICS.find(t=>t.id===q.topic)||{weight:1}).weight;
+  // Each chapter's share of the exam follows its real-exam weight, however many questions it holds
+  const counts={}; QUESTIONS.forEach(q=>counts[q.topic]=(counts[q.topic]||0)+1);
+  const weightOf=q=>((TOPICS.find(t=>t.id===q.topic)||{weight:1}).weight)/(counts[q.topic]||1);
   while(out.length<Math.min(n,QUESTIONS.length)){
     const left=pool.filter(q=>!out.includes(q)); const total=left.reduce((s,q)=>s+weightOf(q),0);
     let r=Math.random()*total; for(const q of left){ r-=weightOf(q); if(r<=0){out.push(q);break;} }
@@ -405,7 +426,7 @@ function exam(qs){
     app.innerHTML=`
       <div class="qmeta" style="align-items:center"><button class="link" id="quit">Leave exam</button><span class="timer" id="timer" aria-label="Time left">${fmt(left)}</span></div>
       <article class="qcard">
-        <div class="qmeta"><span>Question ${i+1} of ${qs.length}</span><span>${q.id}</span></div>
+        <div class="qmeta"><span>Question ${i+1} of ${qs.length}</span><span>${q.hy?'<span class="hyb">High-yield</span>':""}${q.id}</span></div>
         <p class="qtext">${esc(q.q)}</p>
         <div class="opts">${orders[i].map(o=>`<button class="opt ${answers[i]===o?"sel":""}" data-o="${o}">${esc(q.options[o])}</button>`).join("")}</div>
       </article>
@@ -525,7 +546,7 @@ function loading(text){ app.innerHTML=`<section class="briefing"><h2>${esc(text)
 async function loadData(){
   loading("Loading your revision");
   const [q,p,e,r]=await Promise.all([
-    sb.from("questions").select("id,topic_id,question,options,answer,explanation,is_active,key_points,compare").eq("subject_id","met").order("id"),
+    sb.from("questions").select("id,topic_id,question,options,answer,explanation,is_active,key_points,compare,is_high_yield").eq("subject_id","met").order("id"),
     sb.from("card_progress").select("question_id,box,due_at,seen,correct"),
     sb.from("exam_attempts").select("taken_at,correct,total,score_pct").eq("subject_id","met").order("taken_at",{ascending:false}).limit(30),
     sb.from("question_reports").select("question_id")
@@ -538,7 +559,7 @@ async function loadData(){
   if(err){ console.error(err); app.innerHTML=`<section class="briefing"><h2>Couldn't load</h2><p>${esc(err.message)}</p><button class="primary" id="retry">Try again</button></section>`; $("#retry").onclick=loadData; return; }
   FOCUS={}; COMPARE={};
   q.data.forEach(x=>{ if(x.key_points&&x.key_points.length) FOCUS[x.id]=x.key_points; if(x.compare) COMPARE[x.id]=x.compare; });
-  QUESTIONS=q.data.filter(x=>x.is_active!==false).map(x=>({id:x.id, topic:x.topic_id.replace(/^met-/,""), q:x.question, options:x.options, answer:x.answer, explanation:x.explanation}));
+  QUESTIONS=q.data.filter(x=>x.is_active!==false).map(x=>({id:x.id, topic:x.topic_id.replace(/^met-/,""), q:x.question, options:x.options, answer:x.answer, explanation:x.explanation, hy:!!x.is_high_yield}));
   S={cards:{},exams:[],flags:[]};
   p.data.forEach(c=>S.cards[c.question_id]={box:c.box,due:new Date(c.due_at).getTime(),seen:c.seen,right:c.correct});
   S.exams=e.data.map(x=>({date:x.taken_at,pct:x.score_pct,right:x.correct,n:x.total}));
@@ -597,7 +618,7 @@ async function adminView(tab){
     el.querySelectorAll(".fx").forEach(b=>b.onclick=async()=>{ await rpc("admin_resolve_reports",{p_question_id:b.dataset.id}); toast("Marked as fixed"); adminView("reports"); });
   }
   if(tab==="questions"){
-    const [{data:qs,error},stats]=await Promise.all([sb.from("questions").select("id,topic_id,question,is_active,is_free").eq("subject_id","met").order("id"), rpc("admin_question_stats")]);
+    const [{data:qs,error},stats]=await Promise.all([sb.from("questions").select("id,topic_id,question,is_active,is_free,is_high_yield").eq("subject_id","met").order("id"), rpc("admin_question_stats")]);
     if(error) throw error;
     const st={}; stats.forEach(s=>st[s.question_id]=s);
     adminState.qs=qs;
@@ -612,7 +633,7 @@ async function adminView(tab){
       let list=qs.filter(x=>(!adminState.ch||x.topic_id===adminState.ch)&&(!adminState.q||x.id.toLowerCase().includes(adminState.q)||x.question.toLowerCase().includes(adminState.q)));
       if(adminState.hard) list=list.slice().sort((a,b)=>{const pa=st[a.id]?Number(st[a.id].pct_correct):101, pb=st[b.id]?Number(st[b.id].pct_correct):101; return pa-pb;});
       $("#ql").innerHTML=`<p class="small">${list.length} questions</p><ul class="topics">${list.map(x=>`<li class="tap"><button class="trow" data-id="${x.id}">
-        <span class="name">${x.id}${x.is_active?"":'<span class="draft">Off</span>'}${x.is_free?"":'<span class="draft" style="color:var(--chart);border-color:var(--chart)">Paid</span>'}</span>
+        <span class="name">${x.id}${x.is_active?"":'<span class="draft">Off</span>'}${x.is_high_yield?'<span class="hyb" style="margin-left:6px">High-yield</span>':""}${x.is_free?"":'<span class="draft" style="color:var(--chart);border-color:var(--chart)">Paid</span>'}</span>
         <span class="chev">›</span><span class="acc">${esc(x.question.length>90?x.question.slice(0,90)+"…":x.question)}<br>${st[x.id]?`${pct(st[x.id].pct_correct)} correct from ${st[x.id].attempts} answers`:"Not answered yet"}</span></button></li>`).join("")}</ul>`;
       $("#ql").querySelectorAll(".trow").forEach(b=>b.onclick=()=>editQuestion(b.dataset.id,"questions"));
     };
@@ -703,6 +724,7 @@ async function editQuestion(id, back){
       <label>Key point shown after answering<textarea id="e-k" rows="3" placeholder="One point per line">${esc((q.key_points||[]).join("\n"))}</textarea></label>
       ${q.compare?`<p class="small" style="margin:-6px 0 0">This question also shows a comparison table: ${esc(q.compare.title)}.</p>`:""}
       <label style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="e-on" ${q.is_active?"checked":""} style="min-height:auto;width:20px;height:20px"> Active (students can see it)</label>
+      <label style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="e-hy" ${q.is_high_yield?"checked":""} style="min-height:auto;width:20px;height:20px"> High-yield (part of the Top 100 set)</label>
       <label style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="e-fr" ${q.is_free?"checked":""} style="min-height:auto;width:20px;height:20px"> Free preview (visible without a subscription)</label>
       <div class="row"><button class="primary" id="e-save">${q._new?"Add question":"Save changes"}</button></div>
     </div>`;
@@ -711,12 +733,12 @@ async function editQuestion(id, back){
     const row={id:q.id, subject_id:"met", topic_id:$("#e-t").value, question:$("#e-q").value.trim(),
       options:[0,1,2,3].map(i=>$("#e-o"+i).value.trim()), answer:+(app.querySelector('input[name="e-a"]:checked')||{value:0}).value,
       explanation:$("#e-x").value.trim(), key_points:$("#e-k").value.split("\n").map(x=>x.trim()).filter(Boolean),
-      is_active:$("#e-on").checked, is_free:$("#e-fr").checked};
+      is_active:$("#e-on").checked, is_free:$("#e-fr").checked, is_high_yield:$("#e-hy").checked};
     if(!row.question||row.options.some(o=>!o)||!row.explanation) return toast("Fill in the question, all four options and the explanation.");
     const {error}=q._new?await sb.from("questions").insert(row):await sb.from("questions").update(row).eq("id",q.id);
     if(error) return toast("Couldn't save: "+error.message);
     if(row.key_points.length) FOCUS[row.id]=row.key_points; else delete FOCUS[row.id];
-    const local={id:row.id, topic:row.topic_id.replace(/^met-/,""), q:row.question, options:row.options, answer:row.answer, explanation:row.explanation};
+    const local={id:row.id, topic:row.topic_id.replace(/^met-/,""), q:row.question, options:row.options, answer:row.answer, explanation:row.explanation, hy:row.is_high_yield};
     const i=QUESTIONS.findIndex(x=>x.id===row.id);
     if(row.is_active){ if(i>=0) QUESTIONS[i]=local; else QUESTIONS.push(local); } else if(i>=0) QUESTIONS.splice(i,1);
     toast(q._new?"Question added":"Saved");
