@@ -87,6 +87,7 @@ th{color:var(--muted);font-weight:400}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:15px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
 .back{margin-bottom:6px}
+h4.nsec{font-family:"Barlow Condensed",sans-serif;font-size:19px;font-weight:600;color:var(--chart);margin:18px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
 .chrow{display:flex;gap:8px;align-items:center;margin-bottom:8px}
 .chrow input{font:inherit;padding:10px 12px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);flex:1;min-width:0}
 .trow:disabled{pointer-events:none}
@@ -255,7 +256,7 @@ function home(tab){
     <ul class="topics">${TOPICS.map(t=>`<li class="tap"><button class="trow" data-t="${t.id}">
       <span class="name">${TOPICS.indexOf(t)+1}. ${esc(t.name)}${NOTES[t.id]&&NOTES[t.id].is_draft?'<span class="draft">Draft</span>':''}</span>
       <span class="chev" aria-hidden="true">›</span>
-      <span class="acc">${NOTES[t.id]?NOTES[t.id].points.length+" key points":"Notes coming soon"}</span></button></li>`).join("")}</ul>`;
+      <span class="acc">${NOTES[t.id]?NOTES[t.id].points.filter(x=>!/^##\s/.test(x)).length+" key points":"Notes coming soon"}</span></button></li>`).join("")}</ul>`;
     app.querySelectorAll(".trow").forEach(b=>b.onclick=()=>noteView(b.dataset.t));
   } else {
     const now=Date.now();
@@ -301,9 +302,15 @@ function home(tab){
 /* ===================== NOTES ===================== */
 function noteBody(tid){
   const n=NOTES[tid]; if(!n) return `<p class="small">Notes for this topic are coming soon.</p>`;
-  return `<ul>${n.points.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>
-    <div class="aid"><strong>Memory aid</strong>${esc(n.aid)}</div>
-    <div class="trapbox"><strong>Exam trap</strong>${esc(n.trap)}</div>`;
+  // Lines starting "## " are section headings inside the note
+  let html="", open=false;
+  (n.points||[]).forEach(p=>{
+    if(/^##\s/.test(p)){ if(open){ html+="</ul>"; open=false; } html+=`<h4 class="nsec">${esc(p.replace(/^##\s*/,""))}</h4>`; }
+    else { if(!open){ html+="<ul>"; open=true; } html+=`<li>${esc(p)}</li>`; }
+  });
+  if(open) html+="</ul>";
+  return html+(n.aid?`<div class="aid"><strong>Memory aid</strong>${esc(n.aid)}</div>`:"")
+    +(n.trap?`<div class="trapbox"><strong>Exam trap</strong>${esc(n.trap)}</div>`:"");
 }
 function noteView(tid){
   stopTimer();
@@ -734,7 +741,7 @@ async function notesAdmin(){
   el.innerHTML=`<p class="small">Tap a chapter to write or edit its summary note. Notes stay marked Draft until you approve them.</p>
     <ul class="topics">${TOPICS.map((t,i)=>{const n=by[t.id];
       return `<li class="tap"><button class="trow" data-t="${t.id}"><span class="name">${i+1}. ${esc(t.name)}${n?(n.is_draft?'<span class="draft">Draft</span>':'<span class="draft" style="color:var(--ok);border-color:var(--ok)">Approved</span>'):""}</span>
-      <span class="chev">›</span><span class="acc">${n?n.points.length+" key points, updated "+fmtDate(n.updated_at):"No note yet"}</span></button></li>`;}).join("")}</ul>`;
+      <span class="chev">›</span><span class="acc">${n?n.points.filter(x=>!/^##\s/.test(x)).length+" key points, updated "+fmtDate(n.updated_at):"No note yet"}</span></button></li>`;}).join("")}</ul>`;
   el.querySelectorAll(".trow").forEach(b=>b.onclick=()=>editNote(b.dataset.t));
 }
 async function editNote(tid){
@@ -746,7 +753,7 @@ async function editNote(tid){
     <h2 class="cond" style="font-size:30px;margin:6px 0 12px;color:var(--chart)">${esc(topicName(tid))}</h2>
     <div class="auth">
       <label>Key points<textarea id="n-p" rows="12" placeholder="One key point per line">${esc(note.points.join("\n"))}</textarea></label>
-      <p class="small" style="margin:-6px 0 0">One point per line. Keep each to one idea.</p>
+      <p class="small" style="margin:-6px 0 0">One point per line. Start a line with "## " to make it a section heading.</p>
       <label>Memory aid<textarea id="n-a" rows="2">${esc(note.aid||"")}</textarea></label>
       <label>Exam trap<textarea id="n-t" rows="2">${esc(note.trap||"")}</textarea></label>
       <label style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="n-d" ${note.is_draft?"":"checked"} style="min-height:auto;width:20px;height:20px"> Approved (removes the Draft label)</label>
