@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cleared: ATPL Meteorology revision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9F0F4; --surface:#FFFFFF; --ink:#13232F; --muted:#566875;
+  --chart:#1F4E79; --magenta:#A3195B; --ok:#2E7D4F; --bad:#B3261E; --line:#C8D5DE; --lamp:#E8A800; --lampoff:#D3DDE4;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1922; --surface:#15242F; --ink:#E5EDF2; --muted:#93A5B3; --chart:#86B7E0; --magenta:#E36FA5;
+    --ok:#5BC489; --bad:#F2796F; --line:#29404F; --lamp:#FFC23D; --lampoff:#2A3B47;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1922; --surface:#15242F; --ink:#E5EDF2; --muted:#93A5B3; --chart:#86B7E0; --magenta:#E36FA5;
+  --ok:#5BC489; --bad:#F2796F; --line:#29404F; --lamp:#FFC23D; --lampoff:#2A3B47;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.cond{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;font-weight:600;letter-spacing:.01em;line-height:1.1}
+main{max-width:680px;margin:0 auto;padding:20px 18px 48px}
+header.top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:22px}
+.brand{font-size:30px;margin:0;color:var(--chart)}
+.brand small{display:block;font-family:"Atkinson Hyperlegible",sans-serif;font-size:14px;font-weight:400;color:var(--muted);letter-spacing:0;margin-top:4px}
+button,.btn{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:14px 18px;font-weight:700;min-height:48px}
+button:focus-visible,a:focus-visible{outline:3px solid var(--magenta);outline-offset:2px}
+.primary{background:var(--chart);color:#fff}
+:root[data-theme="dark"] .primary{color:#0D1922}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .primary{color:#0D1922}}
+.ghost{background:transparent;color:var(--chart);border:2px solid var(--chart)}
+.link{background:none;border:0;padding:6px 0;min-height:auto;color:var(--chart);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.small{font-size:14px;color:var(--muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row > *{flex:1 1 200px}
+
+/* Briefing panel: the one bold element, styled like a chart airspace boundary */
+.briefing{position:relative;background:var(--surface);border-radius:18px;padding:22px 20px 20px;margin-bottom:26px;outline:3px dashed var(--magenta);outline-offset:-9px}
+.briefing h2{font-size:44px;margin:0;color:var(--ink)}
+.briefing p{margin:6px 0 18px;color:var(--muted)}
+
+.topics{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.topics li{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:14px 2px;border-bottom:1px solid var(--line)}
+.topics .name{font-weight:700}
+.topics .acc{font-size:14px;color:var(--muted);grid-column:1}
+.lamps{display:flex;gap:6px;align-items:center;grid-row:1 / span 2;grid-column:2}
+.lamp{width:11px;height:11px;border-radius:50%;background:var(--lampoff)}
+.lamp.on{background:var(--lamp);box-shadow:0 0 6px var(--lamp)}
+h3.section{font-size:24px;margin:0 0 6px}
+
+/* Question */
+.qcard{background:var(--surface);border-radius:14px;padding:20px;margin:14px 0}
+.qmeta{display:flex;justify-content:space-between;gap:10px;font-size:14px;color:var(--muted);margin-bottom:10px}
+.qtext{font-size:19px;font-weight:700;margin:0 0 16px}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;background:var(--bg);color:var(--ink);border:2px solid var(--line);font-weight:400;line-height:1.35}
+.opt.sel{border-color:var(--chart);background:color-mix(in srgb,var(--chart) 12%,var(--surface))}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.opt:disabled{cursor:default;opacity:1}
+.explain{margin-top:16px;padding:14px 16px;border-left:4px solid var(--chart);background:var(--bg);border-radius:0 10px 10px 0}
+.explain strong{display:block;margin-bottom:4px}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:8px 0 4px}
+.bar span{display:block;height:100%;background:var(--chart);transition:width .25s}
+.timer{font-family:"Barlow Condensed",sans-serif;font-size:26px;font-weight:600}
+.timer.low{color:var(--bad)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:6px;margin:14px 0}
+.grid button{min-height:40px;padding:0;background:var(--surface);color:var(--ink);border:2px solid var(--line);font-weight:700;font-size:14px}
+.grid button.done{background:var(--chart);border-color:var(--chart);color:var(--surface)}
+.grid button.cur{border-color:var(--magenta)}
+.score{font-size:64px;margin:0;color:var(--chart)}
+.pass{color:var(--ok)} .fail{color:var(--bad)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+td,th{padding:8px 4px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--muted);font-weight:400}
+.wrapx{overflow-x:auto}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:15px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+.back{margin-bottom:6px}
+.auth{display:grid;gap:14px}
+.auth label{display:grid;gap:6px;font-weight:700;font-size:15px}
+.auth input{font:inherit;padding:12px 14px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);min-height:48px}
+.auth input:focus{outline:none;border-color:var(--chart)}
+.modal{position:fixed;inset:0;background:rgba(10,20,28,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:10}
+.modal-box{background:var(--surface);color:var(--ink);border-radius:14px;padding:20px;max-width:420px;width:100%}
+.modal-box p{margin:0 0 16px;font-weight:700}
+.tabs{display:flex;gap:6px;background:var(--surface);padding:5px;border-radius:12px;margin-bottom:20px}
+.tabs button{flex:1;background:transparent;color:var(--muted);min-height:42px;padding:8px}
+.tabs button[aria-selected="true"]{background:var(--chart);color:var(--surface)}
+.topics button.trow{all:unset;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:4px 12px;width:100%;padding:14px 2px}
+.topics li.tap{padding:0}
+.topics button.trow:focus-visible{outline:3px solid var(--magenta);outline-offset:2px}
+.chev{grid-row:1 / span 2;grid-column:2;color:var(--chart);font-weight:700;align-self:center}
+.draft{display:inline-block;font-size:13px;color:var(--magenta);border:1px solid var(--magenta);border-radius:6px;padding:0 6px;margin-left:6px;vertical-align:2px}
+.note h2{font-size:34px;margin:4px 0 14px;color:var(--chart)}
+.note ul{margin:0;padding-left:20px}
+.note li{margin-bottom:10px}
+.aid,.trapbox{border-radius:10px;padding:12px 14px;margin:16px 0 0}
+.aid{background:color-mix(in srgb,var(--lamp) 18%,var(--surface))}
+.trapbox{background:color-mix(in srgb,var(--bad) 10%,var(--surface))}
+.aid strong,.trapbox strong{display:block}
+details.inline-note{margin-top:12px}
+details.inline-note summary{cursor:pointer;color:var(--chart);font-weight:700}
+details.inline-note ul{padding-left:20px;margin:10px 0 0}
+details.inline-note li{margin-bottom:8px;font-size:16px}
+table.cmp{font-size:15px;min-width:420px}
+table.cmp th,table.cmp td{vertical-align:top;padding:8px 6px}
+table.cmp tr:first-child th{color:var(--chart);font-weight:700}
+table.cmp th[scope=row]{color:var(--muted);font-weight:700;width:22%}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+<div class="toast" id="toast" role="status"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+/* ===================== DATABASE CONNECTION ===================== */
+const SUPABASE_URL = "https://rvwdcwrhgblkfxlewgpi.supabase.co";
+const SUPABASE_KEY = "sb_publishable_e5tb_2_jqWwza-pPpZ3c0g_AuAHkdYF"; // publishable key, safe in the browser
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let USER = null;
+/* ===================== CONTENT =====================
+   Sample questions written for testing. Every item must be checked
+   by the instructor before launch. Format matches the future database:
+   id, topic, q, options[4], answer (index), explanation            */
+const SUBJECT = "Meteorology";
+const PASS_MARK = 75; // percent, set to the KCAA pass mark
+/* Topics follow the chapter order of the ATPL Meteorology syllabus book */
+const TOPICS = [
+ {"id":"atm","name":"The Atmosphere","weight":2},
+ {"id":"press","name":"Pressure","weight":2},
+ {"id":"dens","name":"Density","weight":2},
+ {"id":"psys","name":"Pressure Systems","weight":2},
+ {"id":"temp","name":"Temperature","weight":2},
+ {"id":"hum","name":"Humidity","weight":2},
+ {"id":"stab","name":"Adiabatics and Stability","weight":2},
+ {"id":"turb","name":"Turbulence","weight":2},
+ {"id":"alt","name":"Altimetry","weight":2},
+ {"id":"wind","name":"Winds","weight":2},
+ {"id":"upper","name":"Upper Winds","weight":2},
+ {"id":"clouds","name":"Clouds","weight":2},
+ {"id":"cform","name":"Cloud Formation and Precipitation","weight":2},
+ {"id":"ts","name":"Thunderstorms","weight":2},
+ {"id":"vis","name":"Visibility","weight":2},
+ {"id":"ice","name":"Icing","weight":2},
+ {"id":"airm","name":"Air Masses","weight":2},
+ {"id":"occl","name":"Occlusions","weight":2},
+ {"id":"odep","name":"Other Depressions","weight":2},
+ {"id":"clim","name":"Global Climatology","weight":2},
+ {"id":"local","name":"Local Winds and Weather","weight":2},
+ {"id":"area","name":"Area Climatology","weight":2},
+ {"id":"route","name":"Route Climatology","weight":2},
+ {"id":"sat","name":"Satellite Observations","weight":2},
+ {"id":"metar","name":"METARs","weight":2},
+ {"id":"taf","name":"TAFs","weight":2},
+ {"id":"sigwx","name":"Significant Weather and Wind Charts","weight":2},
+ {"id":"warn","name":"Warning Messages","weight":2},
+ {"id":"inflight","name":"Met Information for Aircraft in Flight","weight":2}
+];
+/* Draft questions, to be checked by the instructor before launch */
+let QUESTIONS = []; // loaded from the database after login
+
+/* ===================== SUMMARY NOTES (DRAFT, to be proofread) ===================== */
+const NOTES = {
+ atm:{"points":["ISA at mean sea level: +15°C, 1013.25 hPa, density 1.225 kg/m³.","Temperature falls 1.98°C per 1,000 ft (6.5°C per km) up to the tropopause at 11 km (36,090 ft).","Above the ISA tropopause the temperature stays constant at −56.5°C up to 20 km.","The real tropopause is higher and colder over the equator (around 16 to 17 km) and lower over the poles (around 8 to 9 km).","ISA deviation = actual temperature minus ISA temperature at that level. Example: ISA at FL100 is about −5°C, so an actual −2°C is ISA +3."],"aid":"15, 1013, and 2 degrees per thousand.","trap":"Questions mix °C per km and °C per 1,000 ft. Check the units before picking an answer."},
+ dens:{"points":["Air density falls with height, with rising temperature and with rising humidity, because moist air is less dense than dry air.","Density altitude is the altitude in the ISA that has the same density as the actual air. A high density altitude means less lift, less thrust and less engine power.","Density altitude is pressure altitude corrected for temperature. Hot and high airfields, like Nairobi's above 5,000 ft, mean longer take-off runs and weaker climb."],"aid":"High, hot and humid means low density and poor performance.","trap":"Humid air is less dense than dry air, not more."},
+ temp:{"points":["The sun's radiation passes through the atmosphere largely unabsorbed and heats the ground. The air is then heated from below by conduction, convection and turbulence.","Advection moves warm or cold air horizontally, and latent heat released by condensation also warms the air.","Surface temperature usually peaks in mid-afternoon and is lowest around dawn.","Cloud at night reduces radiation loss, so cloudy nights are warmer than clear ones.","Inversions and isothermal layers are very stable."],"aid":"The sun heats the ground, and the ground heats the air.","trap":"The atmosphere is heated mainly from below, not directly by the sun."},
+ stab:{"points":["Dry adiabatic lapse rate (DALR): 3°C per 1,000 ft for unsaturated rising air.","Saturated adiabatic lapse rate (SALR): about 1.5°C per 1,000 ft in warm low-level air. It is smaller because condensation releases latent heat.","Environmental lapse rate (ELR) greater than DALR: absolutely unstable.","ELR less than SALR: absolutely stable. ELR between the two: conditionally unstable (unstable only once saturated).","Unstable air: cumulus, showers, good visibility outside showers, bumpy flying. Stable air: layer cloud, poor visibility, steady precipitation, smooth flying.","Convective cloud base is roughly 400 ft for every 1°C between temperature and dew point."],"aid":"Environment cooling faster than the parcel means the parcel stays warm and keeps rising.","trap":"Stability depends on comparing lapse rates, not on the temperature itself."},
+ alt:{"points":["QNH: the altimeter shows altitude above mean sea level. On the ground it reads aerodrome elevation.","QFE: the altimeter shows height above the aerodrome. On the runway it reads zero.","1013.25 hPa (standard setting): the altimeter shows pressure altitude, used for flight levels.","Near sea level, 1 hPa is about 27 ft (often rounded to 30 ft).","Climbing, set 1013 at the transition altitude. Descending, set QNH at the transition level.","Flying into lower pressure or colder air without resetting, you are lower than the altimeter shows."],"aid":"High to low, or hot to cold, look out below.","trap":"A higher subscale setting makes the altimeter read higher. Work out the direction before the number."},
+ wind:{"points":["Three forces: pressure gradient force (towards low pressure), Coriolis (deflects to the right in the Northern Hemisphere, left in the Southern) and friction near the surface.","Above the friction layer, the geostrophic wind blows parallel to straight isobars. Closer isobars mean stronger wind.","Coriolis is zero at the equator and greatest at the poles, so geostrophic theory fails at low latitudes such as Kenya.","Buys Ballot: back to the wind, low pressure is on your left in the Northern Hemisphere and on your right in the Southern Hemisphere.","Friction makes the surface wind slower and turned towards low pressure (backed in the Northern Hemisphere). The effect is roughly 30° and half the speed over land, less over sea.","By day, mixing makes the surface wind stronger and closer to the wind aloft. At night it becomes lighter and more backed.","Sea breeze blows onshore by day and land breeze offshore at night. Anabatic winds flow up slopes by day, katabatic winds down slopes at night."],"aid":"Friction slows the wind, slower wind means less Coriolis, so it turns towards the low.","trap":"Check which hemisphere the question assumes. Kenya sits on the equator, so both versions are relevant here."},
+ upper:{"points":["A jet stream is a narrow band of strong wind, 60 kt or more, usually just below the tropopause.","Jet streams: the polar front jet around FL300 at 40 to 60°, the subtropical jet around FL400 at 25 to 30°, and the tropical easterly jet around FL450 near 15°N in the northern summer.","Jet streams are strongest in winter, when the temperature contrast between polar and tropical air is greatest.","Upper winds depend on horizontal temperature differences. The stronger the temperature gradient, the more the wind increases with height.","Clear air turbulence is most likely on the cold (polar) side of the jet core, near the tropopause."],"aid":"Jets blow from the west, peak in winter, and bump on the cold side.","trap":"The tropical easterly jet is the exception: it blows from the east."},
+ clouds:{"points":["High cloud: cirrus, cirrocumulus, cirrostratus. Middle: altocumulus, altostratus. Low: stratus, stratocumulus, nimbostratus. Vertical development: cumulus, cumulonimbus.","Cumulonimbus is the only cloud that produces thunderstorms. It brings hail, severe turbulence, severe icing, lightning and microbursts.","Lenticular clouds downwind of mountains warn of mountain waves and possible rotor turbulence."],"aid":"Cirro- is high, alto- is middle, strato- is layered, cumulo- is heaped, nimbo- brings rain.","trap":"Altostratus is a middle-level cloud, even though 'alto' means high."},
+ cform:{"points":["Cloud forms when air is lifted and cooled to its dew point: by convection, by high ground, along fronts, by turbulence or by convergence.","Precipitation forms by the ice crystal process in cold cloud, and by droplets colliding and merging in warm cloud.","Layer cloud gives continuous precipitation. Cumuliform cloud gives showers.","Drizzle falls from stratus, steady rain from nimbostratus, and heavy showers and hail from cumulonimbus."],"aid":"Layer cloud, steady rain. Heaped cloud, showers.","trap":"Hail falls from cumulonimbus, not from nimbostratus."},
+ ts:{"points":["A thunderstorm needs unstable air, enough moisture and a trigger to start lifting.","Cumulus stage: updrafts only. Mature stage: updrafts and downdrafts, precipitation reaching the ground, most dangerous. Dissipating stage: mainly downdrafts.","Hazards: severe turbulence, icing, hail (including in clear air under the anvil), lightning, windshear, gust fronts and microbursts.","A microburst is a downdraft less than 4 km across, usually lasting only a few minutes.","Microburst on approach: first a headwind (IAS up, above the glidepath), then a downdraft, then a tailwind with a sharp IAS loss.","Keep well clear of storms, commonly at least 10 nm and more for severe cells, and never fly under the anvil.","Around Kenya, afternoon convection over high ground and night storms over Lake Victoria are common."],"aid":"Gain first, then the drain. Don't chase the early IAS gain.","trap":"The early IAS increase in a microburst is a warning, not a reason to reduce power."},
+ vis:{"points":["Fog means visibility below 1,000 m. Mist is 1,000 to 5,000 m in moist air. Haze is caused by dry particles.","Radiation fog: clear skies, light wind (roughly 2 to 8 kt), moist air, long nights. It clears as the sun warms the ground or the wind increases.","Advection fog: warm moist air moving over a colder surface. It can form in stronger wind and last all day.","Hill fog is low stratus covering high ground."],"aid":"Radiation fog needs a still, clear night. Advection fog needs moving air.","trap":"Calm wind gives dew rather than fog, and strong wind lifts it into low stratus."},
+ ice:{"points":["Airframe icing needs supercooled water droplets and an airframe at or below 0°C.","Clear ice: large droplets freeze slowly and spread back. Most likely between 0 and −15°C in cumuliform cloud or freezing rain. Heavy and hard to remove.","Rime ice: small droplets freeze instantly, trapping air. Milky, brittle, common in colder stratiform cloud.","Hoar frost: water vapour freezing directly onto a cold airframe, for example descending from cold altitude into moist air.","The greatest icing risk is between 0 and about −20°C. Below about −40°C cloud is almost all ice crystals.","Carburettor icing can happen in clear air well above 0°C when humidity is high."],"aid":"Big drops, clear ice. Small drops, rime.","trap":"Icing risk doesn't keep increasing as it gets colder. Very cold cloud holds less supercooled water."},
+ airm:{"points":["Air masses are named by source: maritime or continental, and polar, tropical or arctic.","Warm front: warm air rises gently over cold air. The cloud sequence is cirrus, cirrostratus, altostratus, then nimbostratus with a wide belt of steady rain and poor visibility.","Freezing rain is a risk ahead of a warm front in winter, where rain falls from warm air into sub-zero air below.","Cold front: steeper slope, cumulonimbus, heavy showers and squalls in a narrow band.","After a cold front (Northern Hemisphere): wind veers, temperature falls, pressure rises and visibility improves."],"aid":"Warm fronts are wide and gentle. Cold fronts are narrow and violent.","trap":"Wind veers at the passage of both warm and cold fronts in the Northern Hemisphere."},
+ occl:{"points":["An occlusion forms when the cold front catches up with the warm front.","Cold occlusion: the air behind the cold front is colder than the air ahead of the warm front, so it undercuts it.","Warm occlusion: the air behind the cold front is less cold, so it rides up over the colder air ahead.","Occlusions bring warm-front layer cloud with cumulonimbus that can be embedded and hidden inside it."],"aid":"The coldest air always goes underneath.","trap":"Embedded cumulonimbus in an occlusion can't be seen from outside the cloud."},
+ odep:{"points":["Tropical revolving storms need warm sea surfaces (around 26 to 27°C or more), low wind shear and a position at least about 5° from the equator.","Near the equator Coriolis is too weak to start rotation, so these storms don't form there.","Thermal lows form over hot land in summer as heated air rises.","Polar lows form in winter when very cold polar air moves over relatively warm sea."],"aid":"No Coriolis, no cyclone.","trap":"Tropical revolving storms weaken quickly over land because they lose their supply of warm, moist sea air."},
+ clim:{"points":["Three-cell model: the Hadley cell (equator to about 30°), the Ferrel cell (30 to 60°) and the polar cell (60 to 90°).","Pressure belts: equatorial low (the ITCZ or doldrums), subtropical highs near 30°, subpolar lows near 60° along the polar front, and polar highs.","Surface winds: north-east trades in the Northern Hemisphere and south-east trades in the Southern, westerlies from 30 to 60°, and polar easterlies beyond.","The belts follow the sun with a lag of one to two months: further north in July, further south in January.","Jet streams: the polar front jet around FL300 at 40 to 60°, the subtropical jet around FL400 at 25 to 30°, and the tropical easterly jet around FL450 near 15°N in the northern summer.","Sinking air under the subtropical highs warms and dries, which is why many hot deserts lie between 20 and 30°.","Large winter highs over continents, such as the Siberian high, drive seasonal winds like the Asian north-east monsoon.","The ITCZ is where the trade winds of both hemispheres meet, forcing air upwards and producing convection and heavy showers."],"aid":"Low at the equator, high at 30, low at 60, high at the poles.","trap":"The ITCZ is not a front. It separates air masses of similar temperature, so the hazard is convection, not a frontal temperature contrast."},
+ local:{"points":["Föhn: air rises up a mountain, cools at the SALR and drops its moisture, then descends warming at the DALR. The lee side is warmer and drier, with a clear Föhn gap in the cloud.","Chinook: the Föhn on the eastern side of the Rocky Mountains, able to melt snow very quickly.","Harmattan: a dry, dusty north-easterly from the Sahara over West Africa, roughly November to March. Dust haze can cut visibility badly and reach high levels.","Mistral: a cold northerly down the Rhône valley into the Gulf of Lion. Bora: a cold, gusty north-easterly fall wind on the Adriatic coast.","Sirocco: a hot southerly from the Sahara over the Mediterranean, humid by the time it reaches southern Europe. Khamsin: a hot, dry, dusty southerly over Egypt, mainly in spring.","Haboob: a dust storm from thunderstorm outflow, common in Sudan.","Monsoons are seasonal wind reversals caused by land and sea heating differently and by the ITCZ moving. Over India: the wet south-west monsoon from June to September and the dry north-east monsoon from December to March."],"aid":"Föhn goes up wet, comes down dry.","trap":"The Bora warms as it descends but still arrives cold, because its source air is so cold. Don't confuse it with a Föhn."},
+ area:{"points":["The ITCZ follows the sun with a lag. Its passage over Kenya brings the long rains (around March to May) and short rains (around October to December).","On the Kenyan coast, the north-east monsoon blows roughly December to March and the south-east monsoon roughly June to September."],"aid":"Long rains around March to May, short rains around October to December.","trap":"The ITCZ passes over East Africa twice a year, which is why there are two rainy seasons."},
+ metar:{"points":["METAR order: station, time, wind, visibility, RVR, present weather, cloud, temperature and dew point, QNH, then any trend.","Wind 24015G25KT means 240° true at 15 kt gusting 25 kt. VRB means variable direction.","Cloud: FEW 1 to 2 oktas, SCT 3 to 4, BKN 5 to 7, OVC 8. Heights are in hundreds of feet above the aerodrome.","CAVOK: visibility 10 km or more, no cloud below 5,000 ft (or the highest minimum sector altitude if higher), no Cb or TCU, and no significant weather.","Weather codes: − light, + heavy, VC in the vicinity. TS thunderstorm, SH showers, FZ freezing. RA rain, DZ drizzle, GR hail. BR mist, FG fog, HZ haze.","NOSIG at the end of a METAR means no significant change expected in the next 2 hours."],"aid":"Few, scattered, broken, overcast: 2, 4, 7, 8.","trap":"Wind in METARs and TAFs is in degrees true. Wind given by ATC for landing is magnetic."},
+ taf:{"points":["A TAF gives the forecast for an aerodrome over its validity period, commonly between 9 and 30 hours.","TAF change groups: FM (from a set time), BECMG (lasting change during the period), TEMPO (short fluctuations), PROB30 or PROB40 (probability).","Wind in a TAF is given in degrees true."],"aid":"FM is a clean switch, BECMG a lasting change, TEMPO a short wobble.","trap":"TEMPO conditions come and go. BECMG conditions stay once the change is complete."},
+ press:{"points":["Atmospheric pressure is the weight of the air above a point. ISA mean sea level pressure is 1013.25 hPa (29.92 inHg).","Pressure falls with height, but more slowly the higher you go: about 1 hPa per 27 ft near sea level, 50 ft around FL180 and 100 ft around FL390.","Pressure halves at about 18,000 ft. The 500 hPa level is near FL180 in the ISA.","Pressure falls faster with height in cold air than in warm air, because cold air is denser. Pressure levels are lower over cold air and higher over warm air.","Isobars join places of equal mean sea level pressure. Isallobars join places with equal pressure tendency.","QFE is pressure at aerodrome level. QNH reduces it to sea level using ISA conditions. QFF reduces it using the actual temperature and is used on surface weather charts.","In the tropics, pressure rises and falls twice a day by about 1 to 3 hPa, peaking around 1000 and 2200 local time and lowest around 0400 and 1600.","Instruments: the mercury barometer, the aneroid barometer (a sealed, partly evacuated capsule) and the barograph, which records pressure over time.","The pressure gradient force acts from high to low pressure, at right angles to the isobars. Closer isobars mean a steeper gradient and stronger wind."],"aid":"27 ft at the bottom, 50 at FL180, 100 at FL390.","trap":"At an aerodrome at sea level, QFE, QNH and QFF are all the same. They only differ at elevated aerodromes."},
+ psys:{"points":["Depression (low): closed isobars around low pressure. Air converges at the surface and rises, giving cloud, rain and generally poor weather.","Winds blow anticlockwise around a low in the Northern Hemisphere and clockwise in the Southern Hemisphere.","Anticyclone (high): closed isobars around high pressure. Air sinks and spreads out at the surface, warming as it descends. Winds are usually light, especially near the centre.","Sinking air in a high often creates an inversion that traps haze, smoke and fog, or a persistent sheet of stratocumulus (anticyclonic gloom).","Winds blow clockwise around a high in the Northern Hemisphere and anticlockwise in the Southern Hemisphere.","Trough: an extension of low pressure, often with convergence, showers and thunderstorms. Ridge: an extension of high pressure, usually with fair weather.","Col: the neutral area between two highs and two lows, with light, variable winds. Expect fog in winter and thunderstorms in summer.","Warm anticyclones, such as the subtropical highs, are deep. Cold anticyclones, such as the winter Siberian high, are shallow because pressure falls quickly with height in cold air.","Thermal lows form over strongly heated land and are shallow.","A depression deepens when its central pressure falls and fills when it rises. Polar front depressions usually move in the direction of the isobars in their warm sector."],"aid":"Lows: air goes up, weather goes down. Highs: air goes down, weather settles.","trap":"A high doesn't guarantee good visibility. Its inversion can trap haze, smog and fog."},
+ hum:{"points":["Humidity is the water vapour in the air. Warm air can hold much more water vapour than cold air.","Relative humidity (RH) is the water vapour present as a percentage of the maximum the air could hold at that temperature.","Dew point is the temperature the air must be cooled to, at constant pressure, to become saturated.","The smaller the gap between temperature and dew point (the spread), the higher the RH. When they are equal, RH is 100%.","Warming air without adding moisture lowers RH but leaves the dew point unchanged. Cooling it raises RH until it reaches the dew point.","Mixing ratio is grams of water vapour per kilogram of dry air. It stays constant in rising unsaturated air because no moisture is added or removed.","Evaporation, melting and sublimation absorb latent heat. Condensation, freezing and deposition release it.","Humidity is measured with a hygrometer, often wet and dry bulb thermometers. The wet bulb reads lower because evaporation cools it, unless RH is 100%.","RH is usually highest around dawn, when temperature is lowest, and lowest in mid-afternoon.","Moist air is less dense than dry air at the same temperature and pressure."],"aid":"Spread shrinking, fog or cloud thinking.","trap":"Dew point depends only on how much moisture is in the air. Heating or cooling changes RH, not dew point."},
+ turb:{"points":["Turbulence comes from convection (thermals), mechanical effects (wind over rough ground and obstacles), mountain waves, windshear and wake vortices.","Convective turbulence is strongest over land on sunny afternoons and below cumulus, and worst in and around cumulonimbus. It eases in the evening as the ground cools.","Mechanical turbulence increases with wind speed and surface roughness. Expect it near the ground downwind of buildings, hangars and trees in strong wind.","Mountain waves need a strong wind (commonly 15 to 25 kt or more) blowing within about 30° of perpendicular to a ridge, a stable layer aloft, and wind increasing with height. They can extend far downwind and very high.","Signs of mountain waves are lenticular clouds and rotor clouds. Rotors form below the wave crests at about ridge height downwind and hold the most severe turbulence.","Clear air turbulence (CAT) occurs at high levels in clear air, mostly near jet streams, especially on the cold side near the tropopause where wind shear is strongest. There is often no visual warning.","Moderate turbulence: changes in attitude and altitude, but the aircraft stays in positive control. Severe: large, abrupt changes, and the aircraft may be momentarily out of control.","In turbulence, fly the recommended turbulence penetration speed and hold attitude rather than chasing altitude or airspeed.","Wake vortices form whenever the wing produces lift. They are strongest behind heavy, clean, slow aircraft, sink below the flight path and drift with the wind. A light crosswind can hold the upwind vortex over the runway.","Low-level windshear comes from thunderstorms and microbursts, fronts, surface inversions with a low-level jet at night, and obstacles. Losing headwind on approach lowers IAS and the aircraft sinks below the glidepath."],"aid":"Heavy, clean and slow makes the strongest wake.","trap":"Clear air turbulence gives no visual warning. There may be no cloud at all."}
+};
+
+/* ===================== FOCUSED NOTES PER QUESTION ===================== */
+const FOCUS = {
+ "MET-001":["ISA at mean sea level: +15°C, 1013.25 hPa, density 1.225 kg/m³."],
+ "MET-002":["Temperature falls 1.98°C per 1,000 ft (6.5°C per km) up to the tropopause at 11 km (36,090 ft)."],
+ "MET-003":["Temperature falls 1.98°C per 1,000 ft (6.5°C per km) up to the tropopause at 11 km (36,090 ft).","Above the ISA tropopause the temperature stays constant at −56.5°C up to 20 km."],
+ "MET-004":["ISA at mean sea level: +15°C, 1013.25 hPa, density 1.225 kg/m³."],
+ "MET-005":["Flying into lower pressure or colder air without resetting, you are lower than the altimeter shows."],
+ "MET-006":["Flying into lower pressure or colder air without resetting, you are lower than the altimeter shows."],
+ "MET-007":["QFE: the altimeter shows height above the aerodrome. On the runway it reads zero."],
+ "MET-008":["Near sea level, 1 hPa is about 27 ft (often rounded to 30 ft)."],
+ "MET-009":["Dry adiabatic lapse rate (DALR): 3°C per 1,000 ft for unsaturated rising air."],
+ "MET-010":["Environmental lapse rate (ELR) greater than DALR: absolutely unstable."],
+ "MET-011":["ELR less than SALR: absolutely stable. ELR between the two: conditionally unstable (unstable only once saturated)."],
+ "MET-012":["Inversions and isothermal layers are very stable."],
+ "MET-013":["Buys Ballot: back to the wind, low pressure is on your left in the Northern Hemisphere and on your right in the Southern Hemisphere."],
+ "MET-014":["Coriolis is zero at the equator and greatest at the poles, so geostrophic theory fails at low latitudes such as Kenya."],
+ "MET-015":["Friction makes the surface wind slower and turned towards low pressure (backed in the Northern Hemisphere). The effect is roughly 30° and half the speed over land, less over sea."],
+ "MET-016":[],
+ "MET-017":["Radiation fog: clear skies, light wind (roughly 2 to 8 kt), moist air, long nights. It clears as the sun warms the ground or the wind increases."],
+ "MET-018":["Advection fog: warm moist air moving over a colder surface. It can form in stronger wind and last all day."],
+ "MET-019":["Cumulonimbus is the only cloud that produces thunderstorms. It brings hail, severe turbulence, severe icing, lightning and microbursts."],
+ "MET-020":["Lenticular clouds downwind of mountains warn of mountain waves and possible rotor turbulence."],
+ "MET-021":["Warm front: warm air rises gently over cold air. The cloud sequence is cirrus, cirrostratus, altostratus, then nimbostratus with a wide belt of steady rain and poor visibility."],
+ "MET-022":["Cold front: steeper slope, cumulonimbus, heavy showers and squalls in a narrow band.","After a cold front (Northern Hemisphere): wind veers, temperature falls, pressure rises and visibility improves."],
+ "MET-023":["Cumulus stage: updrafts only. Mature stage: updrafts and downdrafts, precipitation reaching the ground, most dangerous. Dissipating stage: mainly downdrafts."],
+ "MET-024":["A microburst is a downdraft less than 4 km across, usually lasting only a few minutes.","Microburst on approach: first a headwind (IAS up, above the glidepath), then a downdraft, then a tailwind with a sharp IAS loss."],
+ "MET-025":[],
+ "MET-026":["Freezing rain needs a layer of above-zero air aloft over sub-zero air near the surface. Rain falls from the warm layer, supercools below it, and freezes on impact as clear ice."],
+ "MET-027":["The ITCZ is where the trade winds of both hemispheres meet, forcing air upwards and producing convection and heavy showers.","The ITCZ follows the sun with a lag. Its passage over Kenya brings the long rains (around March to May) and short rains (around October to December)."],
+ "MET-028":["Tropical revolving storms need warm sea surfaces (around 26 to 27°C or more), low wind shear and a position at least about 5° from the equator.","Near the equator Coriolis is too weak to start rotation, so these storms don't form there."],
+ "MET-029":["CAVOK: visibility 10 km or more, no cloud below 5,000 ft (or the highest minimum sector altitude if higher), no Cb or TCU, and no significant weather."],
+ "MET-030":["Cloud: FEW 1 to 2 oktas, SCT 3 to 4, BKN 5 to 7, OVC 8. Heights are in hundreds of feet above the aerodrome."],
+ "MET-031":["TAF change groups: FM (from a set time), BECMG (lasting change during the period), TEMPO (short fluctuations), PROB30 or PROB40 (probability)."],
+ "MET-032":["Weather codes: − light, + heavy, VC in the vicinity. TS thunderstorm, SH showers, FZ freezing. RA rain, DZ drizzle, GR hail. BR mist, FG fog, HZ haze."],
+ "MET-033":["Pressure belts: equatorial low (the ITCZ or doldrums), subtropical highs near 30°, subpolar lows near 60° along the polar front, and polar highs."],
+ "MET-034":["Surface winds: north-east trades in the Northern Hemisphere and south-east trades in the Southern, westerlies from 30 to 60°, and polar easterlies beyond."],
+ "MET-035":["Surface winds: north-east trades in the Northern Hemisphere and south-east trades in the Southern, westerlies from 30 to 60°, and polar easterlies beyond."],
+ "MET-036":["Jet streams: the polar front jet around FL300 at 40 to 60°, the subtropical jet around FL400 at 25 to 30°, and the tropical easterly jet around FL450 near 15°N in the northern summer."],
+ "MET-037":["The belts follow the sun with a lag of one to two months: further north in July, further south in January."],
+ "MET-038":["Sinking air under the subtropical highs warms and dries, which is why many hot deserts lie between 20 and 30°."],
+ "MET-039":["Jet streams: the polar front jet around FL300 at 40 to 60°, the subtropical jet around FL400 at 25 to 30°, and the tropical easterly jet around FL450 near 15°N in the northern summer."],
+ "MET-040":[],
+ "MET-041":["Chinook: the Föhn on the eastern side of the Rocky Mountains, able to melt snow very quickly."],
+ "MET-042":["Harmattan: a dry, dusty north-easterly from the Sahara over West Africa, roughly November to March. Dust haze can cut visibility badly and reach high levels."],
+ "MET-043":["Mistral: a cold northerly down the Rhône valley into the Gulf of Lion. Bora: a cold, gusty north-easterly fall wind on the Adriatic coast."],
+ "MET-044":["Mistral: a cold northerly down the Rhône valley into the Gulf of Lion. Bora: a cold, gusty north-easterly fall wind on the Adriatic coast."],
+ "MET-045":["Sirocco: a hot southerly from the Sahara over the Mediterranean, humid by the time it reaches southern Europe. Khamsin: a hot, dry, dusty southerly over Egypt, mainly in spring."],
+ "MET-046":[],
+ "MET-047":["Haboob: a dust storm from thunderstorm outflow, common in Sudan."],
+ "MET-048":["Pressure halves at about 18,000 ft. The 500 hPa level is near FL180 in the ISA."],
+ "MET-049":["Pressure falls with height, but more slowly the higher you go: about 1 hPa per 27 ft near sea level, 50 ft around FL180 and 100 ft around FL390."],
+ "MET-050":["Pressure falls with height, but more slowly the higher you go: about 1 hPa per 27 ft near sea level, 50 ft around FL180 and 100 ft around FL390."],
+ "MET-051":["Pressure falls faster with height in cold air than in warm air, because cold air is denser. Pressure levels are lower over cold air and higher over warm air."],
+ "MET-052":["QFE is pressure at aerodrome level. QNH reduces it to sea level using ISA conditions. QFF reduces it using the actual temperature and is used on surface weather charts."],
+ "MET-053":["At a sea-level aerodrome there is no height to correct for, so QFE, QNH and QFF are equal. They differ only at elevated aerodromes."],
+ "MET-054":["QFE is pressure at aerodrome level. QNH reduces it to sea level using ISA conditions. QFF reduces it using the actual temperature and is used on surface weather charts."],
+ "MET-055":["Isobars join places of equal mean sea level pressure. Isallobars join places with equal pressure tendency."],
+ "MET-056":["Isobars join equal pressure, isotherms equal temperature, isotachs equal wind speed and isallobars equal pressure tendency."],
+ "MET-057":["The pressure gradient force acts from high to low pressure, at right angles to the isobars. Closer isobars mean a steeper gradient and stronger wind."],
+ "MET-058":["In the tropics, pressure rises and falls twice a day by about 1 to 3 hPa, peaking around 1000 and 2200 local time and lowest around 0400 and 1600."],
+ "MET-059":["In the tropics, pressure rises and falls twice a day by about 1 to 3 hPa, peaking around 1000 and 2200 local time and lowest around 0400 and 1600."],
+ "MET-060":["Instruments: the mercury barometer, the aneroid barometer (a sealed, partly evacuated capsule) and the barograph, which records pressure over time."],
+ "MET-061":["Atmospheric pressure is the weight of the air above a point. ISA mean sea level pressure is 1013.25 hPa (29.92 inHg)."],
+ "MET-062":["Atmospheric pressure is the weight of the air above a point. ISA mean sea level pressure is 1013.25 hPa (29.92 inHg)."],
+ "MET-063":["Pressure falls faster with height in cold air than in warm air, because cold air is denser. Pressure levels are lower over cold air and higher over warm air."],
+ "MET-064":["Pressure tendency is the change in station pressure over the last three hours. Isallobars join places with the same tendency."],
+ "MET-065":["Rapidly falling pressure usually means a depression or trough is approaching, with worsening weather. Rising pressure suggests improvement."],
+ "MET-066":["The hectopascal (hPa) equals the millibar (mb). 1013.25 hPa is also 29.92 inHg and 760 mmHg."],
+ "MET-067":["Instruments: the mercury barometer, the aneroid barometer (a sealed, partly evacuated capsule) and the barograph, which records pressure over time."],
+ "MET-068":["Pressure falls with height, but more slowly the higher you go: about 1 hPa per 27 ft near sea level, 50 ft around FL180 and 100 ft around FL390."],
+ "MET-069":["QFE is pressure at aerodrome level. QNH reduces it to sea level using ISA conditions. QFF reduces it using the actual temperature and is used on surface weather charts."],
+ "MET-070":["Isobars join places of equal mean sea level pressure. Isallobars join places with equal pressure tendency."],
+ "MET-071":["The pressure gradient force acts from high to low pressure, at right angles to the isobars. Closer isobars mean a steeper gradient and stronger wind."],
+ "MET-072":["QFE is pressure at aerodrome level. QNH reduces it to sea level using ISA conditions. QFF reduces it using the actual temperature and is used on surface weather charts."],
+ "MET-073":["Winds blow anticlockwise around a low in the Northern Hemisphere and clockwise in the Southern Hemisphere."],
+ "MET-074":["Winds blow clockwise around a high in the Northern Hemisphere and anticlockwise in the Southern Hemisphere."],
+ "MET-075":["Depression (low): closed isobars around low pressure. Air converges at the surface and rises, giving cloud, rain and generally poor weather."],
+ "MET-076":["Anticyclone (high): closed isobars around high pressure. Air sinks and spreads out at the surface, warming as it descends. Winds are usually light, especially near the centre."],
+ "MET-077":["Sinking air in a high often creates an inversion that traps haze, smoke and fog, or a persistent sheet of stratocumulus (anticyclonic gloom)."],
+ "MET-078":["Sinking air in a high often creates an inversion that traps haze, smoke and fog, or a persistent sheet of stratocumulus (anticyclonic gloom)."],
+ "MET-079":["Col: the neutral area between two highs and two lows, with light, variable winds. Expect fog in winter and thunderstorms in summer."],
+ "MET-080":["Trough: an extension of low pressure, often with convergence, showers and thunderstorms. Ridge: an extension of high pressure, usually with fair weather."],
+ "MET-081":["Trough: an extension of low pressure, often with convergence, showers and thunderstorms. Ridge: an extension of high pressure, usually with fair weather."],
+ "MET-082":["Warm anticyclones, such as the subtropical highs, are deep. Cold anticyclones, such as the winter Siberian high, are shallow because pressure falls quickly with height in cold air."],
+ "MET-083":["Warm anticyclones, such as the subtropical highs, are deep. Cold anticyclones, such as the winter Siberian high, are shallow because pressure falls quickly with height in cold air."],
+ "MET-084":["Thermal lows form over strongly heated land and are shallow."],
+ "MET-085":["Thermal lows form over strongly heated land and are shallow."],
+ "MET-086":["Anticyclone (high): closed isobars around high pressure. Air sinks and spreads out at the surface, warming as it descends. Winds are usually light, especially near the centre."],
+ "MET-087":["Starboard drift in the Northern Hemisphere means you are flying towards low pressure. Without resetting the altimeter, true altitude falls: high to low, look out below."],
+ "MET-088":["A depression deepens when its central pressure falls and fills when it rises. Polar front depressions usually move in the direction of the isobars in their warm sector."],
+ "MET-089":["Buys Ballot's law: back to the wind, low pressure is on your left in the Northern Hemisphere and on your right in the Southern Hemisphere."],
+ "MET-090":["Trough: an extension of low pressure, often with convergence, showers and thunderstorms. Ridge: an extension of high pressure, usually with fair weather."],
+ "MET-091":["Col: the neutral area between two highs and two lows, with light, variable winds. Expect fog in winter and thunderstorms in summer."],
+ "MET-092":["Sinking air in a high often creates an inversion that traps haze, smoke and fog, or a persistent sheet of stratocumulus (anticyclonic gloom)."],
+ "MET-093":["Depression (low): closed isobars around low pressure. Air converges at the surface and rises, giving cloud, rain and generally poor weather."],
+ "MET-094":["A depression deepens when its central pressure falls and fills when it rises. Polar front depressions usually move in the direction of the isobars in their warm sector."],
+ "MET-095":["A depression deepens when its central pressure falls and fills when it rises. Polar front depressions usually move in the direction of the isobars in their warm sector."],
+ "MET-096":["Anticyclone (high): closed isobars around high pressure. Air sinks and spreads out at the surface, warming as it descends. Winds are usually light, especially near the centre."],
+ "MET-097":["Relative humidity (RH) is the water vapour present as a percentage of the maximum the air could hold at that temperature."],
+ "MET-098":["Dew point is the temperature the air must be cooled to, at constant pressure, to become saturated."],
+ "MET-099":["The smaller the gap between temperature and dew point (the spread), the higher the RH. When they are equal, RH is 100%."],
+ "MET-100":["Warming air without adding moisture lowers RH but leaves the dew point unchanged. Cooling it raises RH until it reaches the dew point."],
+ "MET-101":["Warming air without adding moisture lowers RH but leaves the dew point unchanged. Cooling it raises RH until it reaches the dew point."],
+ "MET-102":["Mixing ratio is grams of water vapour per kilogram of dry air. It stays constant in rising unsaturated air because no moisture is added or removed."],
+ "MET-103":["Evaporation, melting and sublimation absorb latent heat. Condensation, freezing and deposition release it."],
+ "MET-104":["Evaporation, melting and sublimation absorb latent heat. Condensation, freezing and deposition release it."],
+ "MET-105":["Humidity is measured with a hygrometer, often wet and dry bulb thermometers. The wet bulb reads lower because evaporation cools it, unless RH is 100%."],
+ "MET-106":["Humidity is measured with a hygrometer, often wet and dry bulb thermometers. The wet bulb reads lower because evaporation cools it, unless RH is 100%."],
+ "MET-107":["RH is usually highest around dawn, when temperature is lowest, and lowest in mid-afternoon."],
+ "MET-108":["Moist air is less dense than dry air at the same temperature and pressure."],
+ "MET-109":["Humidity is the water vapour in the air. Warm air can hold much more water vapour than cold air."],
+ "MET-110":["The smaller the gap between temperature and dew point (the spread), the higher the RH. When they are equal, RH is 100%."],
+ "MET-111":["With only a 2°C spread, a small amount of overnight cooling brings the air to its dew point. Clear skies and light wind favour radiation fog."],
+ "MET-112":["Evaporation, melting and sublimation absorb latent heat. Condensation, freezing and deposition release it."],
+ "MET-113":["Absolute humidity is the mass of water vapour in a given volume of air, such as grams per cubic metre. Mixing ratio is grams per kilogram of dry air."],
+ "MET-114":["Dew point is the temperature the air must be cooled to, at constant pressure, to become saturated."],
+ "MET-115":["Rising unsaturated air cools at 3°C per 1,000 ft while its dew point falls about 0.5°C. They meet at cloud base, roughly 400 ft for every 1°C of spread."],
+ "MET-116":["Convective cloud base is roughly 400 ft for every 1°C between temperature and dew point."],
+ "MET-117":["Warming air without adding moisture lowers RH but leaves the dew point unchanged. Cooling it raises RH until it reaches the dew point."],
+ "MET-118":["Descending air warms, so its relative humidity falls. That's why air in anticyclones and Föhn winds is dry."],
+ "MET-119":["Rain falling into dry air evaporates and absorbs latent heat. The cooled air can sink as a downdraft, and rain that evaporates before reaching the ground is called virga."],
+ "MET-120":["Saturation vapour pressure is lower over ice than over supercooled water, so ice crystals grow at the droplets' expense."],
+ "MET-121":["Humidity is measured with a hygrometer, often wet and dry bulb thermometers. The wet bulb reads lower because evaporation cools it, unless RH is 100%."],
+ "MET-122":["Convective turbulence is strongest over land on sunny afternoons and below cumulus, and worst in and around cumulonimbus. It eases in the evening as the ground cools."],
+ "MET-123":["Mechanical turbulence increases with wind speed and surface roughness. Expect it near the ground downwind of buildings, hangars and trees in strong wind."],
+ "MET-124":["Mountain waves need a strong wind (commonly 15 to 25 kt or more) blowing within about 30° of perpendicular to a ridge, a stable layer aloft, and wind increasing with height. They can extend far downwind and very high."],
+ "MET-125":["Signs of mountain waves are lenticular clouds and rotor clouds. Rotors form below the wave crests at about ridge height downwind and hold the most severe turbulence."],
+ "MET-126":["Signs of mountain waves are lenticular clouds and rotor clouds. Rotors form below the wave crests at about ridge height downwind and hold the most severe turbulence."],
+ "MET-127":["Clear air turbulence (CAT) occurs at high levels in clear air, mostly near jet streams, especially on the cold side near the tropopause where wind shear is strongest. There is often no visual warning."],
+ "MET-128":["Moderate turbulence: changes in attitude and altitude, but the aircraft stays in positive control. Severe: large, abrupt changes, and the aircraft may be momentarily out of control."],
+ "MET-129":["Moderate turbulence: changes in attitude and altitude, but the aircraft stays in positive control. Severe: large, abrupt changes, and the aircraft may be momentarily out of control."],
+ "MET-130":["In turbulence, fly the recommended turbulence penetration speed and hold attitude rather than chasing altitude or airspeed."],
+ "MET-131":["Wake vortices form whenever the wing produces lift. They are strongest behind heavy, clean, slow aircraft, sink below the flight path and drift with the wind. A light crosswind can hold the upwind vortex over the runway."],
+ "MET-132":["Wake vortices form whenever the wing produces lift. They are strongest behind heavy, clean, slow aircraft, sink below the flight path and drift with the wind. A light crosswind can hold the upwind vortex over the runway."],
+ "MET-133":["Wake vortices form whenever the wing produces lift. They are strongest behind heavy, clean, slow aircraft, sink below the flight path and drift with the wind. A light crosswind can hold the upwind vortex over the runway."],
+ "MET-134":["Low-level windshear comes from thunderstorms and microbursts, fronts, surface inversions with a low-level jet at night, and obstacles. Losing headwind on approach lowers IAS and the aircraft sinks below the glidepath."],
+ "MET-135":["Signs of mountain waves are lenticular clouds and rotor clouds. Rotors form below the wave crests at about ridge height downwind and hold the most severe turbulence."],
+ "MET-136":["Clear air turbulence (CAT) occurs at high levels in clear air, mostly near jet streams, especially on the cold side near the tropopause where wind shear is strongest. There is often no visual warning."],
+ "MET-137":["Severe turbulence can extend well outside a cumulonimbus, including under the anvil, so storms need wide avoidance."],
+ "MET-138":["Convective turbulence is strongest over land on sunny afternoons and below cumulus, and worst in and around cumulonimbus. It eases in the evening as the ground cools."],
+ "MET-139":["Mechanical turbulence increases with wind speed and surface roughness. Expect it near the ground downwind of buildings, hangars and trees in strong wind."],
+ "MET-140":["Mountain waves need a strong wind (commonly 15 to 25 kt or more) blowing within about 30° of perpendicular to a ridge, a stable layer aloft, and wind increasing with height. They can extend far downwind and very high."],
+ "MET-141":["Mountain waves bring strong, smooth up and down currents. Downdrafts can exceed a light aircraft's climb rate, so cross ridges with plenty of height."],
+ "MET-142":["Low-level windshear comes from thunderstorms and microbursts, fronts, surface inversions with a low-level jet at night, and obstacles. Losing headwind on approach lowers IAS and the aircraft sinks below the glidepath."],
+ "MET-143":["Low-level windshear comes from thunderstorms and microbursts, fronts, surface inversions with a low-level jet at night, and obstacles. Losing headwind on approach lowers IAS and the aircraft sinks below the glidepath."],
+ "MET-144":["Wake vortices form whenever the wing produces lift. They are strongest behind heavy, clean, slow aircraft, sink below the flight path and drift with the wind. A light crosswind can hold the upwind vortex over the runway."],
+ "MET-145":["Convective turbulence is strongest over land on sunny afternoons and below cumulus, and worst in and around cumulonimbus. It eases in the evening as the ground cools."],
+ "MET-146":["Convective turbulence is strongest over land on sunny afternoons and below cumulus, and worst in and around cumulonimbus. It eases in the evening as the ground cools."],
+ "MET-147":["Trough: an extension of low pressure, often with convergence, showers and thunderstorms. Ridge: an extension of high pressure, usually with fair weather."]
+};
+const COMPARE = {"MET-016":{"title":"Sea breeze and land breeze","cols":["Sea breeze","Land breeze"],"rows":[["When","By day, peaking in the afternoon","At night, strongest around dawn"],["Why","Land heats faster than the sea, so pressure is lower over land","Land cools faster than the sea, so pressure is lower over the sea"],["Direction","Onshore: sea to land","Offshore: land to sea"],["Strength","Usually the stronger of the two","Usually lighter"],["What you'll notice","Afternoon wind shift at coastal airfields such as Mombasa and Malindi, sometimes a line of cumulus inland","Light offshore wind overnight and early morning"]]},"MET-025":{"title":"Clear ice and rime ice","cols":["Clear ice","Rime ice"],"rows":[["Droplets","Large supercooled droplets","Small supercooled droplets"],["How it freezes","Slowly, spreading back before freezing","Instantly on impact, trapping air"],["Typical cloud","Cumulus, cumulonimbus, freezing rain","Stratiform cloud, colder temperatures"],["Appearance","Transparent, smooth, heavy","Milky white, rough, brittle"],["Hazard","Hard to remove, distorts the wing shape","Easier to remove, but still adds drag"]]},"MET-040":{"title":"Föhn: windward and lee sides","cols":["Windward side","Lee side"],"rows":[["Air motion","Rising","Descending"],["Lapse rate","Cools at the SALR once saturated","Warms at the DALR"],["Weather","Cloud and rain on the slope","Clear Föhn gap, warm and dry"],["Result","Moisture is lost","Air arrives warmer and drier than it started"]]},"MET-044":{"title":"Warm and cold fall winds","cols":["Föhn and Chinook","Mistral and Bora"],"rows":[["Temperature on arrival","Warm","Cold"],["Humidity","Dry","Usually dry"],["Why","Descends at the DALR after losing moisture","Source air is so cold it stays cold despite warming on descent"],["Where","Alps, Rocky Mountains","Rhône valley, Adriatic coast"]]},"MET-046":{"title":"Indian monsoon seasons","cols":["South-west monsoon","North-east monsoon"],"rows":[["When","June to September","December to March"],["Flow","Moist air from the Indian Ocean onto land","Dry air from the continent out to sea"],["Cause","Land heats, low pressure over Asia, ITCZ moves north","Land cools, high pressure over Asia, ITCZ moves south"],["Weather","Heavy rain, Cb, poor visibility","Mostly dry and settled over India"]]},"MET-076":{"title":"Depression and anticyclone","cols":["Depression","Anticyclone"],"rows":[["Pressure","Low at the centre","High at the centre"],["Air motion","Converges at the surface and rises","Sinks and spreads out at the surface"],["Northern Hemisphere wind","Anticlockwise","Clockwise"],["Southern Hemisphere wind","Clockwise","Anticlockwise"],["Typical weather","Cloud, rain, stronger winds","Settled, light winds, possible haze, fog or anticyclonic gloom"]]},"MET-079":{"title":"Trough, ridge and col","cols":["Trough","Ridge","Col"],"rows":[["What it is","Extension of low pressure","Extension of high pressure","Neutral area between two highs and two lows"],["Air motion","Convergence, rising air","Sinking air","Weak gradients"],["Weather","Showers, thunderstorms","Fair","Light winds, fog in winter, storms in summer"]]},"MET-103":{"title":"Latent heat","cols":["Absorbs heat","Releases heat"],"rows":[["Liquid and vapour","Evaporation","Condensation"],["Ice and liquid","Melting","Freezing"],["Ice and vapour","Sublimation","Deposition"]]},"MET-128":{"title":"Turbulence intensity","cols":["Moderate","Severe"],"rows":[["Aircraft","Changes in attitude and altitude","Large, abrupt changes in attitude and altitude"],["Control","Positive control at all times","May be momentarily out of control"],["Cabin","Unsecured objects move","Occupants forced hard against seat belts"]]}};
+function focusBody(q){
+  const n=NOTES[q.topic]||{points:[]}; const f=FOCUS[q.id]||[];
+  const pts=f.filter(Boolean);
+  const c=COMPARE[q.id];
+  let h=pts.length?`<ul>${pts.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:"";
+  if(c) h+=`<p style="margin:10px 0 6px;font-weight:700">${esc(c.title)}</p><div class="wrapx"><table class="cmp">
+    <tr><th></th>${c.cols.map(x=>`<th>${esc(x)}</th>`).join("")}</tr>
+    ${c.rows.map(r=>`<tr><th scope="row">${esc(r[0])}</th>${r.slice(1).map(x=>`<td>${esc(x)}</td>`).join("")}</tr>`).join("")}</table></div>`;
+  return h;
+}
+function inlineNotes(q, open){
+  const focus=focusBody(q);
+  return `${focus?`<details class="inline-note" ${open?"open":""}><summary>Key point</summary>${focus}</details>`:""}
+    ${NOTES[q.topic]?`<details class="inline-note"><summary>Full ${esc(topicName(q.topic))} note</summary>${noteBody(q.topic)}</details>`:""}`;
+}
+
+/* ===================== STATE ===================== */
+
+const KEY = "cleared-met-v1";
+const INTERVALS = [0, 1, 2, 4, 8, 16]; // days for Leitner boxes 0..5
+const DAY = 86400000;
+function save(){} // progress is saved to the database as it happens
+let S = {cards:{},exams:[],flags:[]};
+function dbErr(error){ if(error){ console.error(error); toast("Couldn't save. Check your connection."); } }
+function card(id){ return S.cards[id] || (S.cards[id]={box:0,due:0,seen:0,right:0}); }
+function record(id, ok, schedule){
+  const c=card(id); c.seen++; if(ok) c.right++;
+  if(schedule){ c.box = ok ? Math.min(c.box+1,5) : 1; c.due = Date.now() + INTERVALS[c.box]*DAY; }
+  if(USER) sb.from("card_progress").upsert({user_id:USER.id, question_id:id, box:c.box,
+    due_at:new Date(c.due||Date.now()).toISOString(), seen:c.seen, correct:c.right, updated_at:new Date().toISOString()})
+    .then(({error})=>dbErr(error));
+}
+
+/* ===================== HELPERS ===================== */
+const $ = s => document.querySelector(s);
+const app = $("#app");
+const esc = t => String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const topicName = id => (TOPICS.find(t=>t.id===id)||{}).name || id;
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"),2200); }
+function ask(msg, yes, no, onYes){
+  const w=document.createElement("div"); w.className="modal"; w.setAttribute("role","dialog"); w.setAttribute("aria-modal","true");
+  w.innerHTML=`<div class="modal-box"><p>${esc(msg)}</p><div class="row"><button class="ghost" data-a="no">${esc(no)}</button><button class="primary" data-a="yes">${esc(yes)}</button></div></div>`;
+  document.body.appendChild(w);
+  const close=()=>w.remove();
+  w.querySelector('[data-a="no"]').onclick=close;
+  w.querySelector('[data-a="yes"]').onclick=()=>{close(); onYes();};
+  w.onclick=e=>{ if(e.target===w) close(); };
+  w.querySelector('[data-a="yes"]').focus();
+}
+let timerId=null; function stopTimer(){ if(timerId){clearInterval(timerId); timerId=null;} }
+function topicStats(tid){
+  const qs=QUESTIONS.filter(q=>q.topic===tid); let seen=0,right=0,boxes=0;
+  qs.forEach(q=>{const c=S.cards[q.id]; if(c){seen+=c.seen;right+=c.right;boxes+=c.box;}});
+  return {count:qs.length, acc: seen? Math.round(right/seen*100):null, level: qs.length? Math.round(boxes/qs.length):0};
+}
+function flag(id){
+  if(S.flags.includes(id)){ toast("Already reported"); return; }
+  S.flags.push(id);
+  sb.from("question_reports").insert({user_id:USER.id, question_id:id}).then(({error})=>{ dbErr(error); if(!error) toast("Question "+id+" reported. Thank you."); });
+}
+
+/* ===================== HOME ===================== */
+function home(tab){
+  stopTimer();
+  tab = tab || home.tab || "practice"; home.tab = tab;
+  const tabs = `<div class="tabs" role="tablist">
+    <button role="tab" aria-selected="${tab==="practice"}" id="t-p">Practice</button>
+    <button role="tab" aria-selected="${tab==="notes"}" id="t-n">Notes</button></div>`;
+  const head = `<header class="top"><h1 class="brand">Cleared<small>ATPL ${SUBJECT}</small></h1></header>`;
+  if(tab==="notes"){
+    app.innerHTML = head + tabs + `
+    <h3 class="section">Summary notes</h3>
+    <p class="small" style="margin-top:0">Short notes for quick reference before a session or an exam.</p>
+    <ul class="topics">${TOPICS.map(t=>`<li class="tap"><button class="trow" data-t="${t.id}">
+      <span class="name">${TOPICS.indexOf(t)+1}. ${esc(t.name)}${NOTES[t.id]?'<span class="draft">Draft</span>':''}</span>
+      <span class="chev" aria-hidden="true">›</span>
+      <span class="acc">${NOTES[t.id]?NOTES[t.id].points.length+" key points":"Notes coming soon"}</span></button></li>`).join("")}</ul>`;
+    app.querySelectorAll(".trow").forEach(b=>b.onclick=()=>noteView(b.dataset.t));
+  } else {
+    const now=Date.now();
+    const due=QUESTIONS.filter(q=>{const c=S.cards[q.id]; return c&&c.box>0&&c.due<=now;}).length;
+    const fresh=QUESTIONS.filter(q=>!S.cards[q.id]||S.cards[q.id].box===0).length;
+    const headline = due ? `${due} to review` : fresh ? `${fresh} new questions` : "All caught up";
+    const sub = due && fresh ? `Plus ${fresh} you haven't seen yet.` : due ? "Reviewing now keeps them in long-term memory." : fresh ? "Start a session of up to 15 questions." : "Come back tomorrow, or sit a practice exam.";
+    app.innerHTML = head + tabs + `
+    <section class="briefing">
+      <h2>${headline}</h2><p>${sub}</p>
+      <div class="row">
+        <button class="primary" id="go-study" ${!due&&!fresh?"disabled":""}>Start revision</button>
+        <button class="ghost" id="go-exam">Sit practice exam</button>
+      </div>
+    </section>
+    <h3 class="section">Topics</h3>
+    <p class="small" style="margin-top:0">Lamps light up as you get questions right on repeat visits. Tap a topic to read its notes.</p>
+    <ul class="topics">${TOPICS.map(t=>{const s=topicStats(t.id);
+      return `<li class="tap"><button class="trow" data-t="${t.id}"><span class="name">${TOPICS.indexOf(t)+1}. ${esc(t.name)}</span>
+        <span class="lamps" aria-label="Mastery ${s.level} of 5">${[1,2,3,4,5].map(i=>`<span class="lamp ${i<=s.level?"on":""}"></span>`).join("")}</span>
+        <span class="acc">${!s.count?"Questions coming soon":s.count+(s.count===1?" question, ":" questions, ")+(s.acc===null?"not started":s.acc+"% correct")}</span></button></li>`}).join("")}</ul>
+    <p style="margin-top:22px"><button class="link" id="go-progress">Exam history and reported questions</button></p>`;
+    $("#go-study").onclick=()=>study();
+    $("#go-exam").onclick=()=>examStart();
+    $("#go-progress").onclick=()=>progress();
+    app.querySelectorAll(".trow").forEach(b=>b.onclick=()=>noteView(b.dataset.t));
+  }
+  $("#t-p").onclick=()=>home("practice");
+  $("#t-n").onclick=()=>home("notes");
+}
+
+/* ===================== NOTES ===================== */
+function noteBody(tid){
+  const n=NOTES[tid]; if(!n) return `<p class="small">Notes for this topic are coming soon.</p>`;
+  return `<ul>${n.points.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>
+    <div class="aid"><strong>Memory aid</strong>${esc(n.aid)}</div>
+    <div class="trapbox"><strong>Exam trap</strong>${esc(n.trap)}</div>`;
+}
+function noteView(tid){
+  stopTimer();
+  const count=QUESTIONS.filter(q=>q.topic===tid).length;
+  app.innerHTML=`<button class="link back" id="b">Back</button>
+    <article class="qcard note"><div class="qmeta"><span>${SUBJECT}</span>${NOTES[tid]?'<span class="draft">Draft</span>':''}</div>
+    <h2>${esc(topicName(tid))}</h2>${noteBody(tid)}</article>
+    ${count?`<div class="row"><button class="primary" id="quiz">Test me on this topic (${count})</button></div>`:""}`;
+  $("#b").onclick=()=>home();
+  const qz=$("#quiz"); if(qz) qz.onclick=()=>study(tid);
+  window.scrollTo(0,0);
+}
+
+/* ===================== REVISION (spaced repetition) ===================== */
+function study(topic){
+  const now=Date.now();
+  let queue;
+  if(topic){ queue=shuffle(QUESTIONS.filter(q=>q.topic===topic)).slice(0,10); }
+  else {
+    const due=shuffle(QUESTIONS.filter(q=>{const c=S.cards[q.id]; return c&&c.box>0&&c.due<=now;}));
+    const fresh=shuffle(QUESTIONS.filter(q=>!S.cards[q.id]||S.cards[q.id].box===0));
+    queue=due.concat(fresh).slice(0,15);
+  }
+  let i=0, right=0;
+  function show(){
+    if(i>=queue.length){ return summary(); }
+    const q=queue[i], order=shuffle([0,1,2,3]);
+    app.innerHTML=`
+      <button class="link back" id="quit">Back to topics</button>
+      <div class="bar"><span style="width:${i/queue.length*100}%"></span></div>
+      <div class="small">Question ${i+1} of ${queue.length}</div>
+      <article class="qcard">
+        <div class="qmeta"><span>${esc(topicName(q.topic))}</span><span>${q.id}</span></div>
+        <p class="qtext">${esc(q.q)}</p>
+        <div class="opts">${order.map(o=>`<button class="opt" data-o="${o}">${esc(q.options[o])}</button>`).join("")}</div>
+        <div id="after"></div>
+      </article>`;
+    $("#quit").onclick=()=>home();
+    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+      const pick=+b.dataset.o, ok=pick===q.answer; if(ok) right++;
+      record(q.id, ok, true);
+      app.querySelectorAll(".opt").forEach(x=>{x.disabled=true; const o=+x.dataset.o;
+        if(o===q.answer) x.classList.add("right"); else if(o===pick) x.classList.add("wrong");});
+      $("#after").innerHTML=`<div class="explain"><strong class="${ok?"pass":"fail"}">${ok?"Correct":"Not quite"}</strong>${esc(q.explanation)}
+        ${inlineNotes(q, !ok)}</div>
+        <div class="row" style="margin-top:14px"><button class="primary" id="next">${i+1<queue.length?"Next question":"Finish session"}</button></div>
+        <button class="link" id="rep" style="margin-top:8px">Report a problem with this question</button>`;
+      $("#next").onclick=()=>{i++;show();}; $("#next").focus();
+      $("#rep").onclick=()=>flag(q.id);
+    });
+  }
+  function summary(){
+    app.innerHTML=`<section class="briefing"><h2>${right} of ${queue.length} correct</h2>
+      <p>Questions you missed will come back first next time. Correct ones return after a longer gap each time you get them right.</p>
+      <div class="row"><button class="primary" id="h">Back to topics</button></div></section>`;
+    $("#h").onclick=()=>home();
+  }
+  show();
+}
+
+/* ===================== PRACTICE EXAM ===================== */
+function pickExam(n){
+  // weighted pick across topics, no repeats
+  const pool=shuffle(QUESTIONS), out=[];
+  const weightOf=q=>(TOPICS.find(t=>t.id===q.topic)||{weight:1}).weight;
+  while(out.length<Math.min(n,QUESTIONS.length)){
+    const left=pool.filter(q=>!out.includes(q)); const total=left.reduce((s,q)=>s+weightOf(q),0);
+    let r=Math.random()*total; for(const q of left){ r-=weightOf(q); if(r<=0){out.push(q);break;} }
+  }
+  return out;
+}
+function examStart(){
+  const N=20, qs=pickExam(N);
+  app.innerHTML=`<button class="link back" id="quit">Back to topics</button>
+    <section class="briefing"><h2>Practice exam</h2>
+    <p>${qs.length} questions, ${Math.round(qs.length*1.5)} minutes. Answers are revealed at the end. Pass mark ${PASS_MARK}%.</p>
+    <div class="row"><button class="primary" id="begin">Start exam</button></div></section>`;
+  $("#quit").onclick=()=>home(); $("#begin").onclick=()=>exam(qs);
+}
+function exam(qs){
+  const answers=new Array(qs.length).fill(null);
+  const orders=qs.map(()=>shuffle([0,1,2,3]));
+  let i=0, left=Math.round(qs.length*90); // seconds
+  stopTimer();
+  timerId=setInterval(()=>{ left--; const t=$("#timer"); if(t){t.textContent=fmt(left); t.classList.toggle("low",left<120);} if(left<=0){stopTimer(); finish();} },1000);
+  function fmt(s){ s=Math.max(0,s); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); }
+  function show(){
+    const q=qs[i];
+    app.innerHTML=`
+      <div class="qmeta" style="align-items:center"><button class="link" id="quit">Leave exam</button><span class="timer" id="timer" aria-label="Time left">${fmt(left)}</span></div>
+      <article class="qcard">
+        <div class="qmeta"><span>Question ${i+1} of ${qs.length}</span><span>${q.id}</span></div>
+        <p class="qtext">${esc(q.q)}</p>
+        <div class="opts">${orders[i].map(o=>`<button class="opt ${answers[i]===o?"sel":""}" data-o="${o}">${esc(q.options[o])}</button>`).join("")}</div>
+      </article>
+      <div class="row"><button class="ghost" id="prev" ${i===0?"disabled":""}>Previous</button>
+        ${i<qs.length-1?`<button class="primary" id="nx">Next</button>`:`<button class="primary" id="sub">Submit exam</button>`}</div>
+      <div class="grid" aria-label="Jump to question">${qs.map((_,k)=>`<button class="${answers[k]!==null?"done":""} ${k===i?"cur":""}" data-k="${k}">${k+1}</button>`).join("")}</div>
+      ${i<qs.length-1?`<button class="link" id="sub">Submit exam now</button>`:""}`;
+    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{answers[i]=+b.dataset.o; show();});
+    app.querySelectorAll(".grid button").forEach(b=>b.onclick=()=>{i=+b.dataset.k; show();});
+    $("#prev").onclick=()=>{if(i>0){i--;show();}};
+    const nx=$("#nx"); if(nx) nx.onclick=()=>{i++;show();};
+    $("#sub").onclick=()=>{ const blank=answers.filter(a=>a===null).length;
+      const go=()=>{stopTimer(); finish();};
+      if(blank) ask(`${blank} ${blank===1?"question is":"questions are"} unanswered. Submit anyway?`,"Submit exam","Keep going",go); else ask("Submit your exam now?","Submit exam","Keep going",go); };
+    $("#quit").onclick=()=>ask("Leave the exam? Your answers won't be saved.","Leave exam","Stay",()=>{stopTimer(); home();});
+  }
+  function finish(){
+    let right=0; const byTopic={};
+    qs.forEach((q,k)=>{ const ok=answers[k]===q.answer; if(ok) right++; record(q.id,ok,false);
+      const b=byTopic[q.topic]||(byTopic[q.topic]={r:0,n:0}); b.n++; if(ok) b.r++; });
+    const pct=Math.round(right/qs.length*100), passed=pct>=PASS_MARK;
+    S.exams.unshift({date:new Date().toISOString(),pct,right,n:qs.length}); S.exams=S.exams.slice(0,30);
+    sb.from("exam_attempts").insert({user_id:USER.id, subject_id:"met", correct:right, total:qs.length, score_pct:pct, by_topic:byTopic}).then(({error})=>dbErr(error));
+    const wrong=qs.map((q,k)=>({q,a:answers[k]})).filter(x=>x.a!==x.q.answer);
+    app.innerHTML=`
+      <section class="briefing"><p class="score ${passed?"pass":"fail"}">${pct}%</p>
+        <p>${right} of ${qs.length} correct. ${passed?"Pass.":"Below the "+PASS_MARK+"% pass mark."}</p>
+        <div class="row"><button class="primary" id="h">Back to topics</button><button class="ghost" id="again">New exam</button></div></section>
+      <h3 class="section">By topic</h3>
+      <div class="wrapx"><table><tr><th>Topic</th><th>Score</th></tr>
+        ${Object.entries(byTopic).map(([t,b])=>`<tr><td>${esc(topicName(t))}</td><td>${b.r}/${b.n}</td></tr>`).join("")}</table></div>
+      ${wrong.length?`<h3 class="section" style="margin-top:26px">Review your mistakes</h3>
+        ${wrong.map(({q,a})=>`<article class="qcard"><div class="qmeta"><span>${esc(topicName(q.topic))}</span><span>${q.id}</span></div>
+          <p class="qtext">${esc(q.q)}</p>
+          ${a!==null?`<p class="fail" style="margin:0 0 6px">Your answer: ${esc(q.options[a])}</p>`:`<p class="fail" style="margin:0 0 6px">Not answered</p>`}
+          <p class="pass" style="margin:0">Correct: ${esc(q.options[q.answer])}</p>
+          <div class="explain">${esc(q.explanation)}${inlineNotes(q, true)}</div>
+          <button class="link rep" data-id="${q.id}">Report a problem with this question</button></article>`).join("")}`:""}`;
+    $("#h").onclick=()=>home(); $("#again").onclick=examStart;
+    app.querySelectorAll(".rep").forEach(b=>b.onclick=()=>flag(b.dataset.id));
+    window.scrollTo(0,0);
+  }
+  show();
+}
+
+/* ===================== PROGRESS ===================== */
+function progress(){
+  stopTimer();
+  app.innerHTML=`<button class="link back" id="b">Back to topics</button>
+    <h3 class="section" style="margin-top:10px">Exam history</h3>
+    ${S.exams.length?`<div class="wrapx"><table><tr><th>Date</th><th>Score</th><th>Result</th></tr>
+      ${S.exams.map(e=>`<tr><td>${new Date(e.date).toLocaleDateString()}</td><td>${e.right}/${e.n} (${e.pct}%)</td><td class="${e.pct>=PASS_MARK?"pass":"fail"}">${e.pct>=PASS_MARK?"Pass":"Fail"}</td></tr>`).join("")}</table></div>`
+      :`<p class="small">No exams yet. Sit a practice exam to see your scores here.</p>`}
+    <h3 class="section" style="margin-top:26px">Reported questions</h3>
+    ${S.flags.length?`<p>${S.flags.map(esc).join(", ")}</p><p class="small">These have been sent for review.</p>`
+      :`<p class="small">Nothing reported. Use "Report a problem" on any question that looks wrong.</p>`}
+    <h3 class="section" style="margin-top:26px">Reset revision</h3>
+    <p class="small">Clears your spaced-repetition progress so every question starts fresh. Exam history is kept.</p>
+    <button class="ghost" id="reset">Reset revision progress</button>
+    <h3 class="section" style="margin-top:26px">Account</h3>
+    <p class="small">Signed in as ${esc(USER.email)}</p>
+    <button class="ghost" id="logout">Log out</button>`;
+  $("#b").onclick=()=>home();
+  $("#reset").onclick=()=>ask("Reset your revision progress? Exam history is kept.","Reset","Cancel",async ()=>{
+    const {error}=await sb.from("card_progress").delete().eq("user_id",USER.id); dbErr(error);
+    if(!error){ S.cards={}; home(); toast("Revision progress reset"); } });
+  $("#logout").onclick=()=>ask("Log out of Cleared?","Log out","Cancel",async ()=>{ await sb.auth.signOut(); });
+}
+
+/* ===================== LOGIN AND SIGN-UP ===================== */
+function authView(mode, msg){
+  stopTimer();
+  mode=mode||"login";
+  const signup=mode==="signup";
+  app.innerHTML=`<header class="top"><h1 class="brand">Cleared<small>ATPL ${SUBJECT} revision</small></h1></header>
+  <section class="briefing">
+    <h2>${signup?"Create your account":"Welcome back"}</h2>
+    <p>${signup?"Free during testing. Your progress is saved to your account on every device.":"Log in to carry on where you left off."}</p>
+    ${msg?`<p class="${msg.ok?"pass":"fail"}" style="font-weight:700">${esc(msg.text)}</p>`:""}
+    <div class="auth">
+      ${signup?`<label>Full name<input id="f-name" autocomplete="name" required></label>`:""}
+      <label>Email<input id="f-email" type="email" autocomplete="email" required></label>
+      <label>Password<input id="f-pass" type="password" autocomplete="${signup?"new-password":"current-password"}" minlength="6" required></label>
+      <button class="primary" id="f-go">${signup?"Create account":"Log in"}</button>
+    </div>
+  </section>
+  <p>${signup?`Already have an account? <button class="link" id="sw">Log in</button>`:`New here? <button class="link" id="sw">Create an account</button>`}</p>
+  ${signup?"":`<p><button class="link" id="forgot">Forgot password?</button></p>`}`;
+  $("#sw").onclick=()=>authView(signup?"login":"signup");
+  const fg=$("#forgot"); if(fg) fg.onclick=async ()=>{
+    const email=$("#f-email").value.trim(); if(!email) return authView("login",{text:"Enter your email first, then tap Forgot password."});
+    const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin});
+    authView("login", error?{text:error.message}:{ok:true,text:"Check your email for a reset link."});
+  };
+  $("#f-go").onclick=async ()=>{
+    const email=$("#f-email").value.trim(), password=$("#f-pass").value;
+    const btn=$("#f-go"); btn.disabled=true; btn.textContent="Please wait…";
+    if(signup){
+      const full_name=$("#f-name").value.trim();
+      if(!full_name) return authView("signup",{text:"Please enter your name."});
+      const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name},emailRedirectTo:location.origin}});
+      if(error) return authView("signup",{text:error.message});
+      if(!data.session) return authView("login",{ok:true,text:"Account created. Check your email to confirm it, then log in."});
+    } else {
+      const {error}=await sb.auth.signInWithPassword({email,password});
+      if(error) return authView("login",{text:error.message==="Invalid login credentials"?"Wrong email or password.":error.message});
+    }
+  };
+}
+function loading(text){ app.innerHTML=`<section class="briefing"><h2>${esc(text)}</h2><p>One moment…</p></section>`; }
+
+async function loadData(){
+  loading("Loading your revision");
+  const [q,p,e,r]=await Promise.all([
+    sb.from("questions").select("id,topic_id,question,options,answer,explanation").eq("subject_id","met").order("id"),
+    sb.from("card_progress").select("question_id,box,due_at,seen,correct"),
+    sb.from("exam_attempts").select("taken_at,correct,total,score_pct").eq("subject_id","met").order("taken_at",{ascending:false}).limit(30),
+    sb.from("question_reports").select("question_id")
+  ]);
+  const err=q.error||p.error||e.error||r.error;
+  if(err){ console.error(err); app.innerHTML=`<section class="briefing"><h2>Couldn't load</h2><p>${esc(err.message)}</p><button class="primary" id="retry">Try again</button></section>`; $("#retry").onclick=loadData; return; }
+  QUESTIONS=q.data.map(x=>({id:x.id, topic:x.topic_id.replace(/^met-/,""), q:x.question, options:x.options, answer:x.answer, explanation:x.explanation}));
+  S={cards:{},exams:[],flags:[]};
+  p.data.forEach(c=>S.cards[c.question_id]={box:c.box,due:new Date(c.due_at).getTime(),seen:c.seen,right:c.correct});
+  S.exams=e.data.map(x=>({date:x.taken_at,pct:x.score_pct,right:x.correct,n:x.total}));
+  S.flags=[...new Set(r.data.map(x=>x.question_id))];
+  home();
+}
+
+let booted=false;
+sb.auth.onAuthStateChange((event, session)=>{
+  const u=session?session.user:null;
+  if(event==="PASSWORD_RECOVERY"){ return newPassword(); }
+  if(u && (!USER || USER.id!==u.id)){ USER=u; loadData(); }
+  else if(!u){ USER=null; authView("login"); }
+  booted=true;
+});
+function newPassword(){
+  app.innerHTML=`<section class="briefing"><h2>Set a new password</h2>
+    <div class="auth"><label>New password<input id="np" type="password" minlength="6" autocomplete="new-password"></label>
+    <button class="primary" id="np-go">Save password</button></div></section>`;
+  $("#np-go").onclick=async ()=>{ const {error}=await sb.auth.updateUser({password:$("#np").value});
+    if(error) toast(error.message); else { toast("Password updated"); loadData(); } };
+}
+loading("Starting up");
+</script>
+</body>
+</html>
