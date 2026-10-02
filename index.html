@@ -397,31 +397,41 @@ function study(topic){
     queue=due.concat(fresh).slice(0,15);
   }
   let i=0, right=0;
+  const orders=queue.map(()=>shuffle([0,1,2,3])); // keep option order stable when going back
+  const picks=new Array(queue.length).fill(null); // answer chosen for each question, once answered
   function show(){
     if(i>=queue.length){ return summary(); }
-    const q=queue[i], order=shuffle([0,1,2,3]);
+    const q=queue[i], order=orders[i], done=picks[i]!==null;
     app.innerHTML=`
       <button class="link back" id="quit">Back to topics</button>
       <div class="bar"><span style="width:${i/queue.length*100}%"></span></div>
-      <div class="small">Question ${i+1} of ${queue.length}</div>
+      <div class="small">Question ${i+1} of ${queue.length}${done?" · reviewing":""}</div>
       <article class="qcard">
         <div class="qmeta"><span>${esc(topicName(q.topic))}</span><span>${q.hy?'<span class="hyb">High-yield</span>':""}${q.id}</span></div>
         <p class="qtext">${esc(q.q)}</p>
         <div class="opts">${order.map(o=>`<button class="opt" data-o="${o}">${esc(q.options[o])}</button>`).join("")}</div>
         <div id="after"></div>
-      </article>`;
+      </article>
+      <div class="row" id="navrow" style="margin-top:4px">${i>0?`<button class="ghost" id="prev">Previous</button>`:""}</div>`;
     $("#quit").onclick=()=>home();
-    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
-      const pick=+b.dataset.o, ok=pick===q.answer; if(ok) right++;
-      record(q.id, ok, true);
+    const pv=$("#prev"); if(pv) pv.onclick=()=>{ i--; show(); };
+    const reveal=(pick, fresh)=>{
+      const ok=pick===q.answer;
       app.querySelectorAll(".opt").forEach(x=>{x.disabled=true; const o=+x.dataset.o;
         if(o===q.answer) x.classList.add("right"); else if(o===pick) x.classList.add("wrong");});
       $("#after").innerHTML=`<div class="explain"><strong class="${ok?"pass":"fail"}">${ok?"Correct":"Not quite"}</strong>${esc(q.explanation)}
         ${inlineNotes(q, !ok)}</div>
-        <div class="row" style="margin-top:14px"><button class="primary" id="next">${i+1<queue.length?"Next question":"Finish session"}</button></div>
         <button class="link" id="rep" style="margin-top:8px">Report a problem with this question</button>`;
-      $("#next").onclick=()=>{i++;show();}; $("#next").focus();
+      $("#navrow").innerHTML=`${i>0?`<button class="ghost" id="prev">Previous</button>`:""}<button class="primary" id="next">${i+1<queue.length?"Next question":"Finish session"}</button>`;
+      const p2=$("#prev"); if(p2) p2.onclick=()=>{ i--; show(); };
+      $("#next").onclick=()=>{i++;show();}; if(fresh) $("#next").focus();
       $("#rep").onclick=()=>flag(q.id);
+    };
+    if(done) return reveal(picks[i], false);
+    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+      const pick=+b.dataset.o, ok=pick===q.answer; if(ok) right++;
+      picks[i]=pick; record(q.id, ok, true);
+      reveal(pick, true);
     });
   }
   function summary(){
