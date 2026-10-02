@@ -617,9 +617,9 @@ async function adminView(tab){
     el.innerHTML=`<div class="stats">
       <div><b>${t.length}</b><span>Testers</span></div><div><b>${active}</b><span>Active this week</span></div>
       <div><b>${exams}</b><span>Exams sat</span></div></div>
-      <p class="small">Tap a tester to manage their devices.</p>
+      <p class="small">Tap a tester to manage devices, block access or end a subscription.</p>
       <div class="wrapx"><table><tr><th>Name</th><th>Last active</th><th>Tried</th><th>Accuracy</th><th>Exams</th><th>Best</th><th>Devices</th></tr>
-      ${t.map((x,i)=>`<tr class="tap-row" data-i="${i}"><td><b>${esc(x.full_name||"No name")}</b><br><span class="small">${esc(x.email)}</span></td>
+      ${t.map((x,i)=>`<tr class="tap-row" data-i="${i}"><td><b>${esc(x.full_name||"No name")}</b>${x.is_blocked?'<span class="draft" style="color:var(--bad);border-color:var(--bad)">Blocked</span>':""}${Number(x.active_subscriptions)?'<span class="draft" style="color:var(--ok);border-color:var(--ok)">Subscribed</span>':""}<br><span class="small">${esc(x.email)}</span></td>
         <td>${ago(x.last_active||x.last_login)}</td><td>${x.questions_tried}</td><td>${pct(x.accuracy_pct)}</td><td>${x.exams_sat}</td><td>${pct(x.best_exam)}</td><td>${x.devices}/${x.device_limit}</td></tr>`).join("")}</table></div>`;
     el.querySelectorAll(".tap-row").forEach(r=>r.onclick=()=>testerActions(t[+r.dataset.i]));
   }
@@ -780,10 +780,16 @@ function testerActions(x){
     <div class="auth"><label>Device limit<input id="dl" type="number" min="1" max="10" value="${x.device_limit}"></label>
     <button class="primary" id="sdl">Save device limit</button>
     <button class="ghost" id="rd">Clear all their devices</button>
+    ${Number(x.active_subscriptions)?`<button class="ghost" id="es">End their subscription now</button>`:`<p class="small" style="margin:0">No active subscription.</p>`}
+    <button class="${x.is_blocked?"primary":"ghost"}" id="blk" style="${x.is_blocked?"":"color:var(--bad);border-color:var(--bad)"}">${x.is_blocked?"Unblock account":"Block account"}</button>
     <button class="link" id="cl">Close</button></div></div>`;
   document.body.appendChild(w);
   w.querySelector("#cl").onclick=()=>w.remove();
   w.querySelector("#sdl").onclick=async()=>{ await rpc("admin_set_device_limit",{p_user:x.user_id,p_limit:+w.querySelector("#dl").value}); w.remove(); toast("Device limit saved"); adminView("overview"); };
+  const es=w.querySelector("#es"); if(es) es.onclick=()=>{ w.remove(); ask(`End ${x.full_name||x.email}'s subscription now? They'll lose access to paid content immediately.`,"End subscription","Cancel",async()=>{ const n=await rpc("admin_end_subscriptions",{p_user:x.user_id}); toast(n?"Subscription ended":"No active subscription found"); adminView("overview"); }); };
+  w.querySelector("#blk").onclick=()=>{ w.remove(); const b=!x.is_blocked;
+    ask(b?`Block ${x.full_name||x.email}? They'll be locked out on all devices until you unblock them.`:`Unblock ${x.full_name||x.email}? They'll be able to log in again.`, b?"Block":"Unblock","Cancel",
+      async()=>{ await rpc("admin_set_blocked",{p_user:x.user_id,p_blocked:b}); toast(b?"Account blocked":"Account unblocked"); adminView("overview"); }); };
   w.querySelector("#rd").onclick=async()=>{ await rpc("admin_reset_devices",{p_user:x.user_id}); w.remove(); toast("Devices cleared. They can log in fresh."); adminView("overview"); };
 }
 async function editQuestion(id, back){
@@ -837,6 +843,12 @@ async function checkDevice(){
   if(error){ console.error(error); app.innerHTML=`<section class="briefing"><h2>Couldn't check this device</h2><p>${esc(error.message)}</p><button class="primary" id="retry">Try again</button></section>`; $("#retry").onclick=checkDevice; return; }
   if(data==="ok") return startApp();
   if(data==="limit") return deviceLimitView();
+  if(data==="blocked"){
+    app.innerHTML=`<header class="top"><h1 class="brand">Adrenasky<small>ATPL theory revision</small></h1></header>
+      <section class="briefing"><h2>Account suspended</h2><p>Access to this account has been suspended. If you think this is a mistake, please contact Adrenasky support.</p>
+      <div class="row"><button class="ghost" id="lo">Log out</button></div></section>`;
+    $("#lo").onclick=()=>sb.auth.signOut(); return;
+  }
   app.innerHTML=`<section class="briefing"><h2>This browser can't be registered</h2><p>Please allow site storage (turn off private browsing) and try again.</p><button class="primary" id="retry">Try again</button></section>`; $("#retry").onclick=checkDevice;
 }
 async function fetchDevices(){
