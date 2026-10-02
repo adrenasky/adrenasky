@@ -399,22 +399,32 @@ function study(topic){
   let i=0, right=0;
   const orders=queue.map(()=>shuffle([0,1,2,3])); // keep option order stable when going back
   const picks=new Array(queue.length).fill(null); // answer chosen for each question, once answered
+  const firstLen=queue.length, MAX_REVIEW=5; let reviewAdded=false, reviewRight=0;
   function show(){
-    if(i>=queue.length){ return summary(); }
-    const q=queue[i], order=orders[i], done=picks[i]!==null;
+    if(i>=queue.length){
+      // One quick review round of the questions missed this session (first attempts only)
+      if(!reviewAdded){
+        reviewAdded=true;
+        const missed=queue.slice(0,firstLen).filter((q,k)=>picks[k]!==null&&picks[k]!==q.answer).slice(0,MAX_REVIEW);
+        if(missed.length) return reviewIntro(missed);
+      }
+      return summary();
+    }
+    const q=queue[i], order=orders[i], done=picks[i]!==null, isReview=i>=firstLen;
     app.innerHTML=`
       <button class="link back" id="quit">Back to topics</button>
-      <div class="bar"><span style="width:${i/queue.length*100}%"></span></div>
-      <div class="small">Question ${i+1} of ${queue.length}${done?" · reviewing":""}</div>
+      <div class="bar"><span style="width:${Math.min(i,firstLen)/firstLen*100}%"></span></div>
+      <div class="small">${isReview?`Quick review ${i-firstLen+1} of ${queue.length-firstLen}`:`Question ${i+1} of ${firstLen}`}${done?" · reviewing":""}</div>
       <article class="qcard">
         <div class="qmeta"><span>${esc(topicName(q.topic))}</span><span>${q.hy?'<span class="hyb">High-yield</span>':""}${q.id}</span></div>
         <p class="qtext">${esc(q.q)}</p>
         <div class="opts">${order.map(o=>`<button class="opt" data-o="${o}">${esc(q.options[o])}</button>`).join("")}</div>
         <div id="after"></div>
       </article>
-      <div class="row" id="navrow" style="margin-top:4px">${i>0?`<button class="ghost" id="prev">Previous</button>`:""}</div>`;
+      <div class="row" id="navrow" style="margin-top:4px">${i>0&&i!==firstLen?`<button class="ghost" id="prev">Previous</button>`:""}${isReview&&!done?`<button class="link" id="skiprev" style="min-height:auto">Finish now</button>`:""}</div>`;
     $("#quit").onclick=()=>home();
     const pv=$("#prev"); if(pv) pv.onclick=()=>{ i--; show(); };
+    const sk=$("#skiprev"); if(sk) sk.onclick=()=>summary();
     const reveal=(pick, fresh)=>{
       const ok=pick===q.answer;
       app.querySelectorAll(".opt").forEach(x=>{x.disabled=true; const o=+x.dataset.o;
@@ -422,20 +432,31 @@ function study(topic){
       $("#after").innerHTML=`<div class="explain"><strong class="${ok?"pass":"fail"}">${ok?"Correct":"Not quite"}</strong>${esc(q.explanation)}
         ${inlineNotes(q, !ok)}</div>
         <button class="link" id="rep" style="margin-top:8px">Report a problem with this question</button>`;
-      $("#navrow").innerHTML=`${i>0?`<button class="ghost" id="prev">Previous</button>`:""}<button class="primary" id="next">${i+1<queue.length?"Next question":"Finish session"}</button>`;
+      $("#navrow").innerHTML=`${i>0&&i!==firstLen?`<button class="ghost" id="prev">Previous</button>`:""}<button class="primary" id="next">${i+1<queue.length?"Next question":"Finish session"}</button>`;
       const p2=$("#prev"); if(p2) p2.onclick=()=>{ i--; show(); };
       $("#next").onclick=()=>{i++;show();}; if(fresh) $("#next").focus();
       $("#rep").onclick=()=>flag(q.id);
     };
     if(done) return reveal(picks[i], false);
     app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
-      const pick=+b.dataset.o, ok=pick===q.answer; if(ok) right++;
-      picks[i]=pick; record(q.id, ok, true);
+      const pick=+b.dataset.o, ok=pick===q.answer;
+      picks[i]=pick;
+      if(isReview){ if(ok) reviewRight++; }          // review answers don't change scores or the schedule
+      else { if(ok) right++; record(q.id, ok, true); }
       reveal(pick, true);
     });
   }
+  function reviewIntro(missed){
+    app.innerHTML=`<section class="briefing"><h2>Quick review</h2>
+      <p>You missed ${missed.length===1?"one question":missed.length+" questions"} this session. Try ${missed.length===1?"it":"them"} once more while ${missed.length===1?"it's":"they're"} fresh. The options are reshuffled, and this round doesn't affect your score.</p>
+      <div class="row"><button class="primary" id="rv-go">Start quick review</button><button class="ghost" id="rv-skip">Finish now</button></div></section>`;
+    $("#rv-go").onclick=()=>{ missed.forEach(q=>{ queue.push(q); orders.push(shuffle([0,1,2,3])); picks.push(null); }); show(); };
+    $("#rv-skip").onclick=()=>summary();
+  }
   function summary(){
-    app.innerHTML=`<section class="briefing"><h2>${right} of ${queue.length} correct</h2>
+    const reviewed=queue.length-firstLen;
+    app.innerHTML=`<section class="briefing"><h2>${right} of ${firstLen} correct</h2>
+      ${reviewed?`<p><b>Quick review:</b> ${reviewRight} of ${reviewed} right on the second try.</p>`:""}
       <p>Questions you missed will come back first next time. Correct ones return after a longer gap each time you get them right.</p>
       <div class="row"><button class="primary" id="h">Back to topics</button></div></section>`;
     $("#h").onclick=()=>home();
