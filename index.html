@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Adrenasky: ATPL Meteorology revision</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20160%20160%22%3E%3Crect%20width%3D%22160%22%20height%3D%22160%22%20rx%3D%2236%22%20fill%3D%22%230B1622%22/%3E%3Cg%20transform%3D%22translate%2822%2022%29%20scale%281.16%29%22%3E%3Cmask%20id%3D%22cut7%22%20maskUnits%3D%22userSpaceOnUse%22%20x%3D%22-10%22%20y%3D%22-10%22%20width%3D%22120%22%20height%3D%22120%22%3E%3Crect%20x%3D%22-10%22%20y%3D%22-10%22%20width%3D%22120%22%20height%3D%22120%22%20fill%3D%22%23fff%22/%3E%3Cpath%20d%3D%22M2%2088%20C%2022%2080%2C%2038%2070%2C%2050%2066%20A%2012.5%2012.5%200%201%201%2050.04%2066%20C%2064%2062%2C%2082%2048%2C%20100%2036%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%2213.5%22%20stroke-linecap%3D%22round%22/%3E%3C/mask%3E%3Cpath%20d%3D%22M12%2092%20L50%208%20L88%2092%22%20fill%3D%22none%22%20stroke%3D%22%23EAF1F7%22%20stroke-width%3D%2215%22%20stroke-linejoin%3D%22miter%22%20stroke-miterlimit%3D%2210%22%20mask%3D%22url%28%23cut7%29%22/%3E%3Cpath%20d%3D%22M2%2088%20C%2022%2080%2C%2038%2070%2C%2050%2066%20A%2012.5%2012.5%200%201%201%2050.04%2066%20C%2064%2062%2C%2082%2048%2C%20100%2036%22%20fill%3D%22none%22%20stroke%3D%22%23F2B33D%22%20stroke-width%3D%226.5%22%20stroke-linecap%3D%22round%22/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Condensed:wght@500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#E9F0F4; --surface:#FFFFFF; --ink:#13232F; --muted:#566875;
@@ -87,6 +87,48 @@ th{color:var(--muted);font-weight:400}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:15px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
 .back{margin-bottom:6px}
+/* ---- Landing page theme: Night runway ---- */
+body.landing-on{--bg:#0B1622;--surface:#13233A;--ink:#EAF1F7;--muted:#A9BCCB;--chart:#F2B33D;--magenta:#6FC3DF;--line:#22385A;--ok:#5BC489;--bad:#F2796F;
+  background:#0B1622;color:#EAF1F7;font-family:"Source Sans 3","Segoe UI",sans-serif}
+body.landing-on main{max-width:1040px}
+body.landing-on .primary{background:#F2B33D;color:#0B1622}
+body.landing-on .ghost{color:#EAF1F7;border-color:#EAF1F7}
+body.landing-on .link{color:#F2B33D}
+body.landing-on .brand,body.landing-on .hero h2,body.landing-on h3.section,body.landing-on .briefing h2,body.landing-on .note h2{font-family:"Bricolage Grotesque","Arial Black",sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+body.landing-on .brand{color:#EAF1F7;font-size:26px;letter-spacing:.04em}
+body.landing-on .hero h2{font-size:clamp(44px,9vw,84px);line-height:.98}
+body.landing-on .hero h2 span{color:#F2B33D}
+body.landing-on .stats3 b,body.landing-on .plan b{font-family:"Bricolage Grotesque","Arial Black",sans-serif;color:#F2B33D}
+body.landing-on .briefing{outline:none;border:1px solid #22385A}
+body.landing-on .stats3 div,body.landing-on .feat div,body.landing-on .plan,body.landing-on .faq details{border:1px solid #22385A}
+body.landing-on .plan.best{border:2px solid #F2B33D}
+body.landing-on .auth input{background:#0B1622;color:#EAF1F7;border-color:#22385A}
+.stripes{display:flex;gap:9px;margin:4px 0 26px}.stripes i{display:block;width:12px;height:52px;background:#EAF1F7;opacity:.9}
+@media (max-width:520px){.stripes i{width:9px;height:40px}}
+.hero{padding:8px 0 4px;position:relative}
+.hero .eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.hero h2{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:clamp(46px,11vw,72px);line-height:.95;margin:0 0 14px}
+.hero h2 span{color:var(--magenta)}
+.hero .lead{font-size:18px;margin:0 0 20px;max-width:34em}
+.stats3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:26px 0 30px}
+.stats3 div{background:var(--surface);border-radius:12px;padding:14px}
+.stats3 b{display:block;font-family:"Barlow Condensed",sans-serif;font-size:32px;color:var(--chart);line-height:1}
+.stats3 span{font-size:13px;color:var(--muted)}
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px;margin-bottom:28px}
+.feat div{background:var(--surface);border-radius:12px;padding:16px}
+.feat p{margin:6px 0 0;font-size:15px;color:var(--muted)}
+.steps{padding-left:22px;margin:0 0 28px}.steps li{margin-bottom:10px}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px}
+.plan{background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:18px}
+.plan.best{border-color:var(--chart)}
+.plan .pl{display:block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.plan b{display:block;font-family:"Barlow Condensed",sans-serif;font-size:40px;color:var(--chart);line-height:1.1;margin-top:6px}
+.plan p{font-size:15px;margin:8px 0 0}
+.faq details{background:var(--surface);border-radius:10px;padding:12px 16px;margin-bottom:8px}
+.faq summary{cursor:pointer;font-weight:700}
+.faq p{margin:8px 0 0;color:var(--muted)}
+.foot{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.foot .link{font-size:13px}
 h4.nsec{font-family:"Barlow Condensed",sans-serif;font-size:19px;font-weight:600;color:var(--chart);margin:18px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
 .chrow{display:flex;gap:8px;align-items:center;margin-bottom:8px}
 .chrow input{font:inherit;padding:10px 12px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);flex:1;min-width:0}
@@ -286,11 +328,13 @@ function home(tab){
       return `<li class="tap"><button class="trow" data-t="${t.id}"><span class="name">${TOPICS.indexOf(t)+1}. ${esc(t.name)}</span>
         <span class="lamps" aria-label="Mastery ${s.level} of 5">${[1,2,3,4,5].map(i=>`<span class="lamp ${i<=s.level?"on":""}"></span>`).join("")}</span>
         <span class="acc">${!s.count?"Questions coming soon":s.count+(s.count===1?" question, ":" questions, ")+(s.acc===null?"not started":s.acc+"% correct")}</span></button></li>`}).join("")}</ul>
-    <p style="margin-top:22px"><button class="link" id="go-progress">Exam history and reported questions</button></p>`;
+    <p style="margin-top:22px"><button class="link" id="go-progress">Exam history and reported questions</button></p>
+    ${footerHTML()}`;
     $("#go-study").onclick=()=>study();
     $("#go-exam").onclick=()=>examStart();
     const gh=$("#go-hy"); if(gh) gh.onclick=()=>study("__hy");
     $("#go-progress").onclick=()=>progress();
+    wireFooter();
     app.querySelectorAll(".trow").forEach(b=>b.onclick=()=>noteView(b.dataset.t));
   }
   const ga=$("#go-admin"); if(ga) ga.onclick=()=>adminView("overview");
@@ -486,13 +530,84 @@ function progress(){
   $("#logout").onclick=()=>ask("Log out of Adrenasky?","Log out","Cancel",async ()=>{ await sb.auth.signOut(); });
 }
 
+/* ===================== LANDING, PRICING AND LEGAL PAGES ===================== */
+// Set live:true and the real prices when payments go live.
+const PRICING={live:false, subject:{price:"KSh 1,500", period:"3 months", label:"One subject"}, all:{price:"KSh 2,500", period:"month", label:"All subjects"}};
+const DISCLAIMER="Adrenasky is an independent study aid. It is not affiliated with, endorsed by or approved by the Kenya Civil Aviation Authority (KCAA) or any examining body. Always check current regulations and use approved training material.";
+function footerHTML(){
+  return `<footer class="foot"><p>${esc(DISCLAIMER)}</p>
+    <p><button class="link" data-legal="terms">Terms of use</button> · <button class="link" data-legal="privacy">Privacy</button> · <button class="link" data-legal="disclaimer">Disclaimer</button></p></footer>`;
+}
+function wireFooter(){ app.querySelectorAll("[data-legal]").forEach(b=>b.onclick=()=>legalView(b.dataset.legal)); }
+const LEGAL={
+ terms:{title:"Terms of use (testing phase)",body:[
+  "Adrenasky is an online revision tool for ATPL theory. During testing it is free. Full terms will be published before paid subscriptions start.",
+  "An account is for one person. Each account can be used on up to two devices, and devices can be removed up to twice in 30 days.",
+  "Don't share your account, or copy, scrape or republish the questions, explanations or notes. They are Adrenasky's original work.",
+  "We may suspend accounts that break these rules, especially for account sharing or copying content.",
+  "Content is checked carefully but may contain errors. Use 'Report a problem' to tell us. Never use Adrenasky for real flight planning or operations.",
+  "These terms are governed by the laws of Kenya."]},
+ privacy:{title:"Privacy (testing phase)",body:[
+  "We collect your name, email and password (stored securely by our login provider), your answers, scores and reported questions, and a random ID for each device you use.",
+  "We use this only to run Adrenasky: to save your progress, apply the device limit and improve the questions. We don't sell your data or use it for advertising.",
+  "Data is stored with Supabase (database and login, servers in Europe) and the site is hosted by Vercel. Connections are encrypted.",
+  "Under the Kenya Data Protection Act 2019 you can ask to see, correct or delete your data. Contact the Adrenasky team through the channel you were invited by, and we'll respond promptly.",
+  "A full privacy policy will be published before paid subscriptions start."]},
+ disclaimer:{title:"Study-aid disclaimer",body:[
+  DISCLAIMER,
+  "Questions are written by Adrenasky in its own words. They are not official examination questions, and the real exam may word questions and answers differently.",
+  "Aviation rules change. Where Adrenasky and an official source differ, the official source is correct. Kenya-specific content should be checked against current KCAA regulations.",
+  "Using Adrenasky does not guarantee that you will pass any examination."]}
+};
+function legalView(kind){
+  stopTimer(); const d=LEGAL[kind]; document.body.classList.toggle("landing-on", !USER);
+  app.innerHTML=`<button class="link back" id="lb">Back</button>
+    <article class="qcard note"><h2>${esc(d.title)}</h2>${d.body.map(p=>`<p>${esc(p)}</p>`).join("")}</article>`;
+  $("#lb").onclick=()=>USER&&SUBJ?home():authView(); window.scrollTo(0,0);
+}
+function landingHTML(){
+  const feat=[["Built from real exam banks","We analysed over 7,000 Meteorology and Air Law exam-bank questions and grouped them by the fact each one tests."],
+    ["Top 100 per subject","A high-yield set of the concepts that come up most, so your first hours count most."],
+    ["Every question explained","A short key point after every answer, plus full chapter notes for quick revision."],
+    ["Learns what you miss","Spaced repetition brings back the questions you get wrong until they stick."],
+    ["Exams like the real thing","Timed practice exams, weighted by how often each chapter appears in the real exam."],
+    ["Made for Kenya","Nairobi FIR, KCAA rules and East African weather, covered in detail."]];
+  const plans=[PRICING.subject,PRICING.all];
+  return `<section class="hero">
+      <div class="stripes" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <p class="eyebrow">ATPL theory revision</p>
+      <h2>Pass ATPL theory.<br><span>Revise smarter.</span></h2>
+      <p class="lead">The questions that actually come up, each one explained. Meteorology and Air Law live now.</p>
+      <div class="row"><button class="primary" id="cta-su">Create a free account</button><button class="ghost" id="cta-li">Log in</button></div>
+    </section>
+    <section class="stats3"><div><b>7,000+</b><span>exam-bank questions analysed</span></div><div><b>840+</b><span>original questions explained</span></div><div><b>2</b><span>subjects live, more coming</span></div></section>
+    <h3 class="section">Why Adrenasky</h3>
+    <div class="feat">${feat.map(([t,d])=>`<div><b>${esc(t)}</b><p>${esc(d)}</p></div>`).join("")}</div>
+    <h3 class="section">How it works</h3>
+    <ol class="steps"><li><b>Pick a subject</b> and start with the free questions in every chapter.</li><li><b>Revise daily.</b> Adrenasky brings back what you got wrong, and the notes fill the gaps.</li><li><b>Sit practice exams</b> weighted like the real one, and watch your weak chapters shrink.</li></ol>
+    <h3 class="section" id="pricing">Pricing</h3>
+    ${PRICING.live?"":`<p class="small" style="margin-top:0"><b>Free while we test.</b> These are the planned launch prices; you won't be charged during testing.</p>`}
+    <div class="plans">${plans.map((p,i)=>`<div class="${i?"plan best":"plan"}"><span class="pl">${esc(p.label)}</span><b>${esc(p.price)}</b><span>per ${esc(p.period)}</span>
+      <p>${i?"Every live subject, plus new subjects as they launch.":"Full access to one subject's questions, notes and exams."}</p></div>`).join("")}</div>
+    <p class="small">Pay by M-Pesa. The first questions in every chapter stay free. Use on up to two devices.</p>
+    <h3 class="section">Questions</h3>
+    <div class="faq">
+      <details><summary>Are these the real KCAA exam questions?</summary><p>No. Every question is written by Adrenasky to test the facts that come up most often, based on an analysis of exam-bank questions. That way you understand the topic rather than memorising wording.</p></details>
+      <details><summary>Which subjects are available?</summary><p>Meteorology and Air Law are live. The remaining ATPL theory subjects are being added one by one.</p></details>
+      <details><summary>Can I use it on my phone?</summary><p>Yes. It works in any modern browser on phone or laptop, and your progress syncs across up to two devices.</p></details>
+      <details><summary>Who writes and checks the content?</summary><p>Practising flight instructors in Nairobi write every question and note, and check them against the current syllabus. If you spot a mistake, tap "Report a problem" and we'll correct it.</p></details>
+    </div>`;
+}
+
 /* ===================== LOGIN AND SIGN-UP ===================== */
 function authView(mode, msg){
-  stopTimer();
+  stopTimer(); document.body.classList.add("landing-on");
   mode=mode||"login";
   const signup=mode==="signup";
-  app.innerHTML=`<header class="top"><h1 class="brand">Adrenasky<small>ATPL ${SUBJECT} revision</small></h1></header>
-  <section class="briefing">
+  app.innerHTML=`<header class="top"><h1 class="brand">Adrenasky<small>ATPL theory revision</small></h1>
+    <button class="link" id="hdr-price" style="font-size:15px">Pricing</button></header>
+  ${landingHTML()}
+  <section class="briefing" id="authcard" style="margin-top:28px">
     <h2>${signup?"Create your account":"Welcome back"}</h2>
     <p>${signup?"Free during testing. Your progress is saved to your account on every device.":"Log in to carry on where you left off."}</p>
     ${msg?`<p class="${msg.ok?"pass":"fail"}" style="font-weight:700">${esc(msg.text)}</p>`:""}
@@ -504,8 +619,14 @@ function authView(mode, msg){
     </div>
   </section>
   <p>${signup?`Already have an account? <button class="link" id="sw">Log in</button>`:`New here? <button class="link" id="sw">Create an account</button>`}</p>
-  ${signup?"":`<p><button class="link" id="forgot">Forgot password?</button></p>`}`;
-  $("#sw").onclick=()=>authView(signup?"login":"signup");
+  ${signup?"":`<p><button class="link" id="forgot">Forgot password?</button></p>`}
+  ${footerHTML()}`;
+  wireFooter();
+  const go=(m)=>{ authView(m); const c=$("#authcard"); if(c) c.scrollIntoView({behavior:"smooth"}); const f=$(m==="signup"?"#f-name":"#f-email"); if(f) setTimeout(()=>f.focus(),300); };
+  $("#cta-su").onclick=()=>go("signup"); $("#cta-li").onclick=()=>go("login");
+  $("#hdr-price").onclick=()=>{ const el=$("#pricing"); if(el) el.scrollIntoView({behavior:"smooth"}); };
+  if(msg){ const c=$("#authcard"); if(c) c.scrollIntoView(); }
+  $("#sw").onclick=()=>go(signup?"login":"signup");
   const fg=$("#forgot"); if(fg) fg.onclick=async ()=>{
     const email=$("#f-email").value.trim(); if(!email) return authView("login",{text:"Enter your email first, then tap Forgot password."});
     const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin});
@@ -838,6 +959,7 @@ async function editQuestion(id, back){
 /* ===================== DEVICE LIMIT ===================== */
 const fmtDate=d=>new Date(d).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
 async function checkDevice(){
+  document.body.classList.remove("landing-on");
   loading("Checking your device");
   const {data,error}=await sb.rpc("register_device",{p_label:deviceLabel()});
   if(error){ console.error(error); app.innerHTML=`<section class="briefing"><h2>Couldn't check this device</h2><p>${esc(error.message)}</p><button class="primary" id="retry">Try again</button></section>`; $("#retry").onclick=checkDevice; return; }
