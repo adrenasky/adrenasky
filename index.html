@@ -86,7 +86,66 @@ th{color:var(--muted);font-weight:400}
 .wrapx{overflow-x:auto}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:15px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
-.back{margin-bottom:6px}
+.back{margin-bottom:6px;display:inline-flex;align-items:center;gap:4px}
+/* ---- App shell ---- */
+body.has-tabs main{padding-bottom:110px}
+#tabbar{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;background:var(--surface);border-top:1px solid var(--line);padding:4px 6px calc(8px + env(safe-area-inset-bottom,0px))}
+#tabbar[hidden]{display:none}
+#tabbar .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:56px;justify-content:center;background:none;border:0;color:var(--muted);font:inherit;font-size:12px;font-weight:600;padding:4px 0;border-radius:10px}
+#tabbar .tab.on{color:var(--chart);font-weight:700}
+@media (min-width:760px){#tabbar{left:50%;transform:translateX(-50%);max-width:680px;border-radius:16px 16px 0 0;border:1px solid var(--line);border-bottom:0}}
+.apphead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:-4px 0 16px}
+.brandrow{display:flex;align-items:center;gap:8px;color:var(--ink)}
+.brandword{font-family:"Bricolage Grotesque","Arial Black",sans-serif;font-weight:800;font-size:18px;letter-spacing:.05em}
+.subjpill{display:flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border-radius:22px;background:var(--surface);border:1px solid var(--line);color:var(--ink);font:inherit;font-weight:600;font-size:15px}
+.disp{font-family:"Bricolage Grotesque","Arial Black",sans-serif;font-weight:800;text-transform:uppercase;font-size:17px;letter-spacing:.02em;margin:0;display:block}
+.disp.big{font-size:28px;line-height:1.05;margin:4px 0 12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.eyebrow{display:block;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.readycard{display:flex;align-items:center;gap:16px}.readycard>div{display:flex;flex-direction:column;gap:4px}
+.ringtxt{font-family:"Bricolage Grotesque","Arial Black",sans-serif;font-weight:800;font-size:20px;fill:var(--ink)}
+.charttxt{font-family:"Source Sans 3",sans-serif;font-size:12px;font-weight:700;fill:var(--ink)}
+.stat3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stat3 .card{padding:14px}
+.statn{display:flex;align-items:center;gap:6px;font-family:"Bricolage Grotesque","Arial Black",sans-serif;font-weight:800;font-size:22px;color:var(--ink)}
+.statn svg{color:var(--chart)}
+.statn.fail{color:var(--bad)}.statn.mid{color:var(--chart)}.statn.pass{color:var(--ok)}
+button.full{width:100%}
+.chaprow{all:unset;cursor:pointer;display:flex;align-items:center;gap:12px;width:100%;box-sizing:border-box;padding:12px 0;border-bottom:1px solid var(--line);color:var(--ink)}
+.chaprow:last-child{border-bottom:0}.chaprow:focus-visible{outline:3px solid var(--magenta);outline-offset:2px}
+.chaprow svg{color:var(--muted);flex-shrink:0}
+.cr-main{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}
+.cr-top{display:flex;justify-content:space-between;gap:8px}.cr-name{font-weight:600;font-size:15px}
+.cr-acc{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}.cr-acc.fail{color:var(--bad)}.cr-acc.mid{color:var(--chart)}.cr-acc.pass{color:var(--ok)}
+.qrow{all:unset;cursor:pointer;display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px;line-height:1.35;color:var(--ink);width:100%;box-sizing:border-box}
+.qrow svg.bad,.qrow svg{color:var(--bad);flex-shrink:0;margin-top:2px}
+.keyl{margin:8px 0;padding-left:18px;line-height:1.45}
+.seg3{display:flex;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:5px;margin-bottom:12px}
+.seg3 button{flex:1;min-height:44px;border-radius:10px;border:0;background:transparent;color:var(--muted);font:inherit;font-weight:700;font-size:14px;padding:0 4px}
+.seg3 button[aria-selected="true"]{background:var(--chart);color:var(--bg)}
+.qitem{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:6px;width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}
+.qitem .qi{font-weight:600;font-size:15px;line-height:1.35}
+.iconbtn{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:0;color:var(--muted);border-radius:10px;padding:0;min-height:44px}
+.iconbtn.on{color:var(--chart)}.iconbtn.star.on svg{fill:var(--chart)}.iconbtn.flagb.on{color:var(--magenta)}
+fieldset.opts2{border:0;padding:0;margin:0 0 16px;display:flex;flex-direction:column;gap:10px}
+fieldset.opts2 legend{font-weight:700;margin-bottom:8px;padding:0}
+.radcard{display:flex;gap:12px;align-items:center;padding:14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);cursor:pointer}
+.radcard.on{border:2px solid var(--chart)}.radcard input{width:22px;height:22px;accent-color:var(--chart)}
+.radcard b{display:block}.chklist{display:grid;gap:8px;max-height:280px;overflow:auto;padding:4px 2px}
+.chklist label{display:flex;gap:10px;align-items:center}.chklist input{width:20px;height:20px}
+.exrow{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.exrow:last-child{border-bottom:0}
+.exhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.small-btn{min-height:40px;padding:6px 14px}
+.exmeta{display:flex;justify-content:space-between;margin:4px 0 2px}
+.grid button.mk{position:relative}.grid button.mk::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--magenta)}
+.resultcard{text-align:left}
+.toggle{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:44px}
+.toggle input{width:22px;height:22px;accent-color:var(--chart)}
+.sheetwrap{align-items:flex-end;padding:0}
+.sheet{background:var(--surface);border-top:1px solid var(--line);border-radius:22px 22px 0 0;padding:12px 18px calc(24px + env(safe-area-inset-bottom,0px));width:100%;max-width:680px;box-sizing:border-box;color:var(--ink);display:flex;flex-direction:column;gap:8px}
+.grab{width:44px;height:5px;border-radius:3px;background:var(--line);align-self:center;margin-bottom:8px}
+.subjopt{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;padding:10px 14px;border-radius:14px;background:transparent;border:1px solid var(--line);color:var(--ink);font:inherit;text-align:left}
+.subjopt>span{display:flex;flex-direction:column;gap:2px}.subjopt.cur{border:2px solid var(--chart)}.subjopt:disabled{opacity:.5}
 .reportcard{display:flex;gap:14px;align-items:center;background:var(--surface);border-radius:14px;padding:16px 18px;margin-top:26px}
 .reportcard>div{flex:1}.reportcard b{display:block}.reportcard span{font-size:14px;color:var(--muted)}
 fieldset.seg{border:0;padding:0;margin:0;display:flex;gap:18px;flex-wrap:wrap}
@@ -96,21 +155,21 @@ fieldset.seg input{width:20px;height:20px;min-height:auto}
 blockquote.quote{margin:10px 0 6px;padding:8px 14px;border-left:3px solid var(--chart);font-style:italic}
 a.btn{min-height:48px;padding:12px 18px;border-radius:10px;font-weight:700}
 /* ---- Landing page theme: Night runway ---- */
-body.landing-on{--bg:#0B1622;--surface:#13233A;--ink:#EAF1F7;--muted:#A9BCCB;--chart:#F2B33D;--magenta:#6FC3DF;--line:#22385A;--ok:#5BC489;--bad:#F2796F;
+body.nr{--bg:#0B1622;--surface:#13233A;--ink:#EAF1F7;--muted:#A9BCCB;--chart:#F2B33D;--magenta:#6FC3DF;--line:#22385A;--ok:#5BC489;--bad:#F2796F;
   background:#0B1622;color:#EAF1F7;font-family:"Source Sans 3","Segoe UI",sans-serif}
 body.landing-on main{max-width:1040px}
-body.landing-on .primary{background:#F2B33D;color:#0B1622}
-body.landing-on .ghost{color:#EAF1F7;border-color:#EAF1F7}
-body.landing-on .link{color:#F2B33D}
-body.landing-on .brand,body.landing-on .hero h2,body.landing-on h3.section,body.landing-on .briefing h2,body.landing-on .note h2{font-family:"Bricolage Grotesque","Arial Black",sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:.01em}
-body.landing-on .brand{color:#EAF1F7;font-size:26px;letter-spacing:.04em}
-body.landing-on .hero h2{font-size:clamp(44px,9vw,84px);line-height:.98}
-body.landing-on .hero h2 span{color:#F2B33D}
-body.landing-on .stats3 b,body.landing-on .plan b{font-family:"Bricolage Grotesque","Arial Black",sans-serif;color:#F2B33D}
-body.landing-on .briefing{outline:none;border:1px solid #22385A}
-body.landing-on .stats3 div,body.landing-on .feat div,body.landing-on .plan,body.landing-on .faq details{border:1px solid #22385A}
-body.landing-on .plan.best{border:2px solid #F2B33D}
-body.landing-on .auth input{background:#0B1622;color:#EAF1F7;border-color:#22385A}
+body.nr .primary{background:#F2B33D;color:#0B1622}
+body.nr .ghost{color:#EAF1F7;border-color:#EAF1F7}
+body.nr .link{color:#F2B33D}
+body.nr .brand,body.nr .hero h2,body.nr h3.section,body.nr .briefing h2,body.nr .note h2{font-family:"Bricolage Grotesque","Arial Black",sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+body.nr .brand{color:#EAF1F7;font-size:26px;letter-spacing:.04em}
+body.nr .hero h2{font-size:clamp(44px,9vw,84px);line-height:.98}
+body.nr .hero h2 span{color:#F2B33D}
+body.nr .stats3 b,body.nr .plan b{font-family:"Bricolage Grotesque","Arial Black",sans-serif;color:#F2B33D}
+body.nr .briefing{outline:none;border:1px solid #22385A}
+body.nr .stats3 div,body.nr .feat div,body.nr .plan,body.nr .faq details{border:1px solid #22385A}
+body.nr .plan.best{border:2px solid #F2B33D}
+body.nr .auth input{background:#0B1622;color:#EAF1F7;border-color:#22385A}
 .stripes{display:flex;gap:9px;margin:4px 0 26px}.stripes i{display:block;width:12px;height:52px;background:#EAF1F7;opacity:.9}
 @media (max-width:520px){.stripes i{width:9px;height:40px}}
 .hero{padding:8px 0 4px;position:relative}
@@ -194,6 +253,7 @@ table.cmp th[scope=row]{color:var(--muted);font-weight:700;width:22%}
 </head>
 <body>
 <main id="app" aria-live="polite"></main>
+<nav id="tabbar" aria-label="Main" hidden></nav>
 <div class="toast" id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
@@ -251,14 +311,15 @@ const KEY = "cleared-met-v1";
 const INTERVALS = [0, 1, 2, 4, 8, 16]; // days for Leitner boxes 0..5
 const DAY = 86400000;
 function save(){} // progress is saved to the database as it happens
-let S = {cards:{},exams:[],flags:[]};
+let S = {cards:{},exams:[],flags:[],saved:new Set(),days:new Set()};
 function dbErr(error){ if(error){ console.error(error); toast("Couldn't save. Check your connection."); } }
 function card(id){ return S.cards[id] || (S.cards[id]={box:0,due:0,seen:0,right:0}); }
 function record(id, ok, schedule){
-  const c=card(id); c.seen++; if(ok) c.right++;
+  const c=card(id); c.seen++; if(ok) c.right++; c.last=ok;
   if(schedule){ c.box = ok ? Math.min(c.box+1,5) : 1; c.due = Date.now() + INTERVALS[c.box]*DAY; }
+  markStudyDay();
   if(USER) sb.from("card_progress").upsert({user_id:USER.id, question_id:id, box:c.box,
-    due_at:new Date(c.due||Date.now()).toISOString(), seen:c.seen, correct:c.right, updated_at:new Date().toISOString()})
+    due_at:new Date(c.due||Date.now()).toISOString(), seen:c.seen, correct:c.right, last_correct:ok, updated_at:new Date().toISOString()})
     .then(({error})=>dbErr(error));
 }
 
@@ -291,69 +352,6 @@ function flag(id){
   sb.from("question_reports").insert({user_id:USER.id, question_id:id}).then(({error})=>{ dbErr(error); if(!error) toast("Question "+id+" reported. Thank you."); });
 }
 
-/* ===================== HOME ===================== */
-function home(tab){
-  stopTimer();
-  tab = tab || home.tab || "practice"; home.tab = tab;
-  const tabs = `<div class="tabs" role="tablist">
-    <button role="tab" aria-selected="${tab==="practice"}" id="t-p">Practice</button>
-    <button role="tab" aria-selected="${tab==="notes"}" id="t-n">Notes</button></div>`;
-  const head = `<header class="top"><h1 class="brand">Adrenasky<small>ATPL ${esc(SUBJECT)} · <button class="link" id="chg-subj" style="font-size:14px;padding:0">Change subject</button></small></h1>${IS_ADMIN?'<button class="ghost" id="go-admin" style="min-height:40px;padding:8px 14px">Admin</button>':""}</header>`;
-  if(tab==="notes"){
-    app.innerHTML = head + tabs + `
-    <h3 class="section">Summary notes</h3>
-    <p class="small" style="margin-top:0">Short notes for quick reference before a session or an exam.</p>
-    <ul class="topics">${TOPICS.map(t=>`<li class="tap"><button class="trow" data-t="${t.id}">
-      <span class="name">${TOPICS.indexOf(t)+1}. ${esc(t.name)}${NOTES[t.id]&&NOTES[t.id].is_draft?'<span class="draft">Draft</span>':''}</span>
-      <span class="chev" aria-hidden="true">›</span>
-      <span class="acc">${NOTES[t.id]?NOTES[t.id].points.filter(x=>!/^##\s/.test(x)).length+" key points":"Notes coming soon"}</span></button></li>`).join("")}</ul>`;
-    app.querySelectorAll(".trow").forEach(b=>b.onclick=()=>noteView(b.dataset.t));
-  } else {
-    const now=Date.now();
-    const due=QUESTIONS.filter(q=>{const c=S.cards[q.id]; return c&&c.box>0&&c.due<=now;}).length;
-    const fresh=QUESTIONS.filter(q=>!S.cards[q.id]||S.cards[q.id].box===0).length;
-    const headline = due ? `${due} to review` : fresh ? `${fresh} new questions` : "All caught up";
-    const sub = due && fresh ? `Plus ${fresh} you haven't seen yet.` : due ? "Reviewing now keeps them in long-term memory." : fresh ? "Start a session of up to 15 questions." : "Come back tomorrow, or sit a practice exam.";
-    app.innerHTML = head + tabs + `
-    <section class="briefing">
-      <h2>${headline}</h2><p>${sub}</p>
-      <div class="row">
-        <button class="primary" id="go-study" ${!due&&!fresh?"disabled":""}>Start revision</button>
-        <button class="ghost" id="go-exam">Sit practice exam</button>
-      </div>
-    </section>
-    ${(()=>{ const hy=QUESTIONS.filter(q=>q.hy); if(!hy.length) return "";
-      const cd=q=>S.cards[q.id]||{box:0,seen:0,right:0};
-      const tried=hy.filter(q=>cd(q).seen>0).length, right=hy.filter(q=>cd(q).right>0).length, strong=hy.filter(q=>cd(q).box>=3).length;
-      return `<section class="hypanel"><div><b>High-yield: Top 100</b><span>The concepts that come up most in real exams.</span>
-        <div class="hysteps"><span><b>${tried}</b>practised</span><span><b>${right}</b>got right</span><span><b>${strong}</b>mastered</span><span><b>${hy.length}</b>total</span></div>
-        <div class="bar"><span style="width:${hy.length?right/hy.length*100:0}%"></span></div>
-        <span class="small">Mastered = right three times on separate days.</span></div>
-        <button class="primary" id="go-hy">Practise</button></section>`; })()}
-    <h3 class="section">Topics</h3>
-    <p class="small" style="margin-top:0">Lamps light up as you get questions right on repeat visits. Tap a topic to read its notes.</p>
-    <ul class="topics">${TOPICS.map(t=>{const s=topicStats(t.id);
-      return `<li class="tap"><button class="trow" data-t="${t.id}"><span class="name">${TOPICS.indexOf(t)+1}. ${esc(t.name)}</span>
-        <span class="lamps" aria-label="Mastery ${s.level} of 5">${[1,2,3,4,5].map(i=>`<span class="lamp ${i<=s.level?"on":""}"></span>`).join("")}</span>
-        <span class="acc">${!s.count?"Questions coming soon":s.count+(s.count===1?" question, ":" questions, ")+(s.acc===null?"not started":s.acc+"% correct")}</span></button></li>`}).join("")}</ul>
-    <section class="reportcard"><div><b>Sat your KCAA exam?</b><span>Tell us how it went. It helps us improve and helps future students.</span></div>
-      <button class="ghost" id="go-result">Report result</button></section>
-    <p style="margin-top:22px"><button class="link" id="go-progress">Exam history and reported questions</button></p>
-    ${footerHTML()}`;
-    $("#go-study").onclick=()=>study();
-    $("#go-exam").onclick=()=>examStart();
-    const gh=$("#go-hy"); if(gh) gh.onclick=()=>study("__hy");
-    $("#go-progress").onclick=()=>progress();
-    $("#go-result").onclick=()=>resultForm();
-    wireFooter();
-    app.querySelectorAll(".trow").forEach(b=>b.onclick=()=>noteView(b.dataset.t));
-  }
-  const ga=$("#go-admin"); if(ga) ga.onclick=()=>adminView("overview");
-  $("#chg-subj").onclick=()=>subjectPicker();
-  $("#t-p").onclick=()=>home("practice");
-  $("#t-n").onclick=()=>home("notes");
-}
-
 /* ===================== NOTES ===================== */
 function noteBody(tid){
   const n=NOTES[tid]; if(!n) return `<p class="small">Notes for this topic are coming soon.</p>`;
@@ -367,23 +365,13 @@ function noteBody(tid){
   return html+(n.aid?`<div class="aid"><strong>Memory aid</strong>${esc(n.aid)}</div>`:"")
     +(n.trap?`<div class="trapbox"><strong>Exam trap</strong>${esc(n.trap)}</div>`:"");
 }
-function noteView(tid){
-  stopTimer();
-  const count=QUESTIONS.filter(q=>q.topic===tid).length;
-  app.innerHTML=`<button class="link back" id="b">Back</button>
-    <article class="qcard note"><div class="qmeta"><span>${SUBJECT}</span>${NOTES[tid]&&NOTES[tid].is_draft?'<span class="draft">Draft</span>':''}</div>
-    <h2>${esc(topicName(tid))}</h2>${noteBody(tid)}</article>
-    ${count?`<div class="row"><button class="primary" id="quiz">Test me on this topic (${count})</button></div>`:""}`;
-  $("#b").onclick=()=>home();
-  const qz=$("#quiz"); if(qz) qz.onclick=()=>study(tid);
-  window.scrollTo(0,0);
-}
-
 /* ===================== REVISION (spaced repetition) ===================== */
-function study(topic){
-  const now=Date.now();
+function study(topic, custom, back){
+  hideTabs(); stopTimer();
+  const now=Date.now(); back=back||home;
   let queue;
-  if(topic==="__hy"){
+  if(custom){ queue=shuffle(custom).slice(0,20); }
+  else if(topic==="__hy"){
     // High-yield: due first, then unseen, then the weakest ones
     const hy=QUESTIONS.filter(q=>q.hy), box=q=>(S.cards[q.id]||{box:0}).box;
     const due=shuffle(hy.filter(q=>{const c=S.cards[q.id]; return c&&c.box>0&&c.due<=now;}));
@@ -412,17 +400,18 @@ function study(topic){
     }
     const q=queue[i], order=orders[i], done=picks[i]!==null, isReview=i>=firstLen;
     app.innerHTML=`
-      <button class="link back" id="quit">Back to topics</button>
+      <button class="link back" id="quit">${icon("back",18)} Finish later</button>
       <div class="bar"><span style="width:${Math.min(i,firstLen)/firstLen*100}%"></span></div>
       <div class="small">${isReview?`Quick review ${i-firstLen+1} of ${queue.length-firstLen}`:`Question ${i+1} of ${firstLen}`}${done?" · reviewing":""}</div>
       <article class="qcard">
-        <div class="qmeta"><span>${esc(topicName(q.topic))}</span><span>${q.hy?'<span class="hyb">High-yield</span>':""}${q.id}</span></div>
+        <div class="qmeta" style="align-items:center"><span>${esc(topicName(q.topic))}</span><span style="display:flex;align-items:center;gap:4px">${q.hy?'<span class="hyb">High-yield</span>':""}${q.id}${starBtn(q)}</span></div>
         <p class="qtext">${esc(q.q)}</p>
         <div class="opts">${order.map(o=>`<button class="opt" data-o="${o}">${esc(q.options[o])}</button>`).join("")}</div>
         <div id="after"></div>
       </article>
       <div class="row" id="navrow" style="margin-top:4px">${i>0&&i!==firstLen?`<button class="ghost" id="prev">Previous</button>`:""}${isReview&&!done?`<button class="link" id="skiprev" style="min-height:auto">Finish now</button>`:""}</div>`;
-    $("#quit").onclick=()=>home();
+    $("#quit").onclick=()=>back();
+    wireStars();
     const pv=$("#prev"); if(pv) pv.onclick=()=>{ i--; show(); };
     const sk=$("#skiprev"); if(sk) sk.onclick=()=>summary();
     const reveal=(pick, fresh)=>{
@@ -458,125 +447,320 @@ function study(topic){
     app.innerHTML=`<section class="briefing"><h2>${right} of ${firstLen} correct</h2>
       ${reviewed?`<p><b>Quick review:</b> ${reviewRight} of ${reviewed} right on the second try.</p>`:""}
       <p>Questions you missed will come back first next time. Correct ones return after a longer gap each time you get them right.</p>
-      <div class="row"><button class="primary" id="h">Back to topics</button></div></section>`;
-    $("#h").onclick=()=>home();
+      <div class="row"><button class="primary" id="h">Done</button></div></section>`;
+    $("#h").onclick=()=>back();
   }
   show();
 }
 
 /* ===================== PRACTICE EXAM ===================== */
-function pickExam(n){
-  // weighted pick across topics, no repeats
-  const pool=shuffle(QUESTIONS), out=[];
+function pickExam(n, only){
+  // weighted pick across topics, no repeats; "only" = optional set of chapter ids
+  const base=only?QUESTIONS.filter(q=>only.has(q.topic)):QUESTIONS;
+  const pool=shuffle(base), out=[];
   // Each chapter's share of the exam follows its real-exam weight, however many questions it holds
-  const counts={}; QUESTIONS.forEach(q=>counts[q.topic]=(counts[q.topic]||0)+1);
+  const counts={}; base.forEach(q=>counts[q.topic]=(counts[q.topic]||0)+1);
   const weightOf=q=>((TOPICS.find(t=>t.id===q.topic)||{weight:1}).weight)/(counts[q.topic]||1);
-  while(out.length<Math.min(n,QUESTIONS.length)){
+  while(out.length<Math.min(n,base.length)){
     const left=pool.filter(q=>!out.includes(q)); const total=left.reduce((s,q)=>s+weightOf(q),0);
     let r=Math.random()*total; for(const q of left){ r-=weightOf(q); if(r<=0){out.push(q);break;} }
   }
   return out;
 }
-function examStart(){
-  const N=20, qs=pickExam(N);
-  app.innerHTML=`<button class="link back" id="quit">Back to topics</button>
-    <section class="briefing"><h2>Practice exam</h2>
-    <p>${qs.length} questions, ${Math.round(qs.length*1.5)} minutes. Answers are revealed at the end. Pass mark ${PASS_MARK}%.</p>
-    <div class="row"><button class="primary" id="begin">Start exam</button></div></section>`;
-  $("#quit").onclick=()=>home(); $("#begin").onclick=()=>exam(qs);
+/* ===================== THEME, NAVIGATION AND SHARED PIECES ===================== */
+function themePref(){ try{ return localStorage.getItem("adrenasky-theme")||"night"; }catch(e){ return "night"; } }
+function applyTheme(){ document.body.classList.toggle("nr", document.body.classList.contains("landing-on") || themePref()==="night"); }
+function setTheme(t){ try{ localStorage.setItem("adrenasky-theme",t); }catch(e){} applyTheme(); }
+const ICONS={home:'<path d="M3 11l9-7 9 7"></path><path d="M5 10v10h14V10"></path>',
+ study:'<path d="M4 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H4z"></path><path d="M20 5h-5a3 3 0 0 0-3 3"></path><path d="M20 5v13h-6"></path>',
+ exam:'<rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h5"></path>',
+ review:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path>',
+ progress:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path>', down:'<path d="M6 9l6 6 6-6"></path>',
+ flame:'<path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-3 2-4 2-7 2 1 3 3 3 3"></path>', chev:'<path d="M9 6l6 6-6 6"></path>',
+ x:'<path d="M6 6l12 12M18 6L6 18"></path>', flag:'<path d="M5 21V4h11l-2 4 2 4H5"></path>', back:'<path d="M15 6l-6 6 6 6"></path>'};
+const icon=(k,s=22,extra="")=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${ICONS[k]}</svg>`;
+const PLANE='<svg viewBox="0 0 100 100" width="30" height="30" aria-hidden="true"><g transform="rotate(40 50 50)"><path d="M50 95 C 50 106, 46 115, 37 121 C 28 127, 16 129, 2 127" fill="none" stroke="#F2B33D" stroke-width="6" stroke-linecap="round"/><path d="M44.5 30 L9 33 C6.5 33.3 5.5 35 5.8 37 L6.4 41.5 C6.6 43 7.8 44 9.4 44 L44.5 45 Z M55.5 30 L91 33 C93.5 33.3 94.5 35 94.2 37 L93.6 41.5 C93.4 43 92.2 44 90.6 44 L55.5 45 Z M47.5 77 L30 80 C28.6 80.3 28 81.4 28.2 82.6 L28.6 85 C28.8 86 29.6 86.6 30.6 86.6 L47.5 86.5 Z M52.5 77 L70 80 C71.4 80.3 72 81.4 71.8 82.6 L71.4 85 C71.2 86 70.4 86.6 69.4 86.6 L52.5 86.5 Z M50 6 C53.6 6 55 10 55.2 16 L55.3 46 C55 60 53.4 74 52.4 86 L47.6 86 C46.6 74 45 60 44.7 46 L44.8 16 C45 10 46.4 6 50 6 Z" fill="currentColor"/><rect x="38" y="5" width="24" height="2.4" rx="1.2" fill="#F2B33D"/></g></svg>';
+function renderTabs(active){
+  const nav=$("#tabbar"); if(!nav) return;
+  const items=[["home","Home",home],["study","Study",studyHub],["exam","Exams",examHub],["review","Review",reviewHub],["progress","Progress",progress]];
+  nav.innerHTML=items.map(([k,l])=>`<button class="tab ${k===active?"on":""}" data-tab="${k}" ${k===active?'aria-current="page"':""}>${icon(k)}<span>${l}</span></button>`).join("");
+  nav.hidden=false; document.body.classList.add("has-tabs");
+  nav.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{ const it=items.find(x=>x[0]===b.dataset.tab); it[2](); window.scrollTo(0,0); });
 }
-function exam(qs){
-  const answers=new Array(qs.length).fill(null);
+function hideTabs(){ const nav=$("#tabbar"); if(nav){ nav.hidden=true; nav.innerHTML=""; } document.body.classList.remove("has-tabs"); }
+function appHeader(){
+  return `<header class="apphead"><div class="brandrow">${PLANE}<span class="brandword">ADRENASKY</span></div>
+    <button class="subjpill" id="subjpill" aria-label="Change subject, current ${esc(SUBJECT)}">${esc(SUBJECT)}${icon("down",18)}</button></header>`;
+}
+function wireHeader(){ const p=$("#subjpill"); if(p) p.onclick=subjectSheet; }
+function screen(tab, html){ stopTimer(); app.innerHTML=appHeader()+html; wireHeader(); renderTabs(tab); }
+function subjectSheet(){
+  const w=document.createElement("div"); w.className="modal sheetwrap";
+  w.innerHTML=`<section class="sheet" role="dialog" aria-modal="true" aria-label="Choose a subject"><div class="grab"></div>
+    <h2 class="disp" style="margin:0 0 4px">Choose subject</h2><p class="small" style="margin:0 0 10px">Your progress is kept separately for each subject.</p>
+    ${SUBJECTS.filter(x=>x.status!=="hidden").map(x=>{ const live=x.status==="live", cur=SUBJ&&SUBJ.id===x.id;
+      return `<button class="subjopt ${cur?"cur":""}" data-s="${x.id}" ${live?"":"disabled"}><span><b>${esc(x.name)}</b><span class="small">${live?(cur?readiness()+"% exam-ready":x.topics.length+" chapters"):"Coming soon"}</span></span>${cur?'<span class="small" style="color:var(--chart);font-weight:700">Current</span>':""}</button>`; }).join("")}
+  </section>`;
+  document.body.appendChild(w);
+  w.onclick=e=>{ if(e.target===w) w.remove(); };
+  w.querySelectorAll(".subjopt:not([disabled])").forEach(b=>b.onclick=()=>{ w.remove(); if(SUBJ&&b.dataset.s===SUBJ.id) return; setSubject(b.dataset.s); loadData(); });
+}
+/* ---- stats ---- */
+function chapterStats(tid){
+  const qs=QUESTIONS.filter(q=>q.topic===tid); let seenQ=0, seen=0, right=0, mastered=0, wrong=0;
+  qs.forEach(q=>{ const c=S.cards[q.id]; if(c&&c.seen>0){ seenQ++; seen+=c.seen; right+=c.right; if(c.box>=3) mastered++; if(isMistake(q)) wrong++; } });
+  const acc=seen?right/seen:null, n=qs.length;
+  const score=n?0.6*(seenQ/n)*(acc||0)+0.4*(mastered/n):0;
+  return {n, seenQ, acc, mastered, wrong, score};
+}
+function readiness(){
+  let ws=0, tot=0; TOPICS.forEach(t=>{ const st=chapterStats(t.id); if(!st.n) return; ws+=t.weight; tot+=t.weight*st.score; });
+  return ws?Math.round(100*tot/ws):0;
+}
+function isMistake(q){ const c=S.cards[q.id]; if(!c||!c.seen) return false; if(c.last===false) return true; if(c.last==null) return c.box===1&&c.right<c.seen; return false; }
+function localDay(d){ d=d||new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function markStudyDay(){ const k=localDay(); if(S.days.has(k)) return; S.days.add(k);
+  if(USER) sb.from("study_days").upsert({user_id:USER.id, day:k}).then(({error})=>{ if(error) console.warn(error); }); }
+function streak(){ let n=0, d=new Date(); if(!S.days.has(localDay(d))) d.setDate(d.getDate()-1);
+  while(S.days.has(localDay(d))){ n++; d.setDate(d.getDate()-1); } return n; }
+async function toggleSave(qid, btn){
+  const on=S.saved.has(qid);
+  if(on){ S.saved.delete(qid); const {error}=await sb.from("saved_questions").delete().eq("question_id",qid); if(error){ S.saved.add(qid); return dbErr(error); } }
+  else { S.saved.add(qid); const {error}=await sb.from("saved_questions").insert({user_id:USER.id, question_id:qid}); if(error){ S.saved.delete(qid); return dbErr(error); } }
+  if(btn){ btn.classList.toggle("on",!on); btn.setAttribute("aria-pressed",String(!on)); btn.setAttribute("aria-label",!on?"Remove from saved":"Save question"); }
+  toast(on?"Removed from saved":"Saved for later");
+}
+const starBtn=q=>`<button class="iconbtn star ${S.saved.has(q.id)?"on":""}" data-star="${q.id}" aria-pressed="${S.saved.has(q.id)}" aria-label="${S.saved.has(q.id)?"Remove from saved":"Save question"}">${icon("review",20)}</button>`;
+function wireStars(){ app.querySelectorAll("[data-star]").forEach(b=>b.onclick=()=>toggleSave(b.dataset.star,b)); }
+function ringSVG(p){ const r=34, c=2*Math.PI*r, off=c*(1-p/100);
+  return `<svg width="88" height="88" viewBox="0 0 88 88" role="img" aria-label="${p}% exam-ready"><circle cx="44" cy="44" r="${r}" fill="none" stroke="var(--line)" stroke-width="9"></circle><circle cx="44" cy="44" r="${r}" fill="none" stroke="var(--chart)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 44 44)"></circle><text x="44" y="50" text-anchor="middle" class="ringtxt">${p}%</text></svg>`; }
+const accCls=a=>a===null?"":(a<0.6?"fail":(a<0.75?"mid":"pass"));
+function chapRow(t, chev=true){ const st=chapterStats(t.id);
+  return `<button class="chaprow" data-ch="${t.id}"><span class="cr-main"><span class="cr-top"><span class="cr-name">${esc(t.name)}</span><span class="cr-acc ${accCls(st.acc)}">${st.acc===null?"Not started":Math.round(st.acc*100)+"% correct"}</span></span>
+    <span class="bar"><span style="width:${st.n?Math.round(100*st.mastered/st.n):0}%;background:var(--magenta)"></span></span></span>${chev?icon("chev",18):""}</button>`; }
+function wireChapRows(){ app.querySelectorAll("[data-ch]").forEach(b=>b.onclick=()=>chapterView(b.dataset.ch)); }
+
+/* ===================== HOME ===================== */
+function home(){
+  if(!SUBJ) return subjectPicker();
+  const now=Date.now();
+  const due=QUESTIONS.filter(q=>{const c=S.cards[q.id]; return c&&c.box>0&&c.due<=now;}).length;
+  const fresh=QUESTIONS.filter(q=>!S.cards[q.id]||!S.cards[q.id].seen).length;
+  const started=TOPICS.map(t=>({t,st:chapterStats(t.id)})).filter(x=>x.st.n);
+  let weak=started.filter(x=>x.st.acc!==null).sort((a,b)=>a.st.acc-b.st.acc).slice(0,3);
+  if(weak.length<3) weak=weak.concat(started.filter(x=>x.st.acc===null).sort((a,b)=>b.t.weight-a.t.weight).slice(0,3-weak.length));
+  const plan=due||fresh?`${due?due+" review"+(due===1?"":"s"):""}${due&&fresh?", then ":""}${fresh?Math.min(fresh,15-Math.min(due,15))+" new questions":""}.`:"You're all caught up. Sit a practice exam or drill your weakest chapter.";
+  const hy=QUESTIONS.filter(q=>q.hy), hyRight=hy.filter(q=>(S.cards[q.id]||{}).right>0).length;
+  screen("home",`
+    <section class="card readycard">${ringSVG(readiness())}<div><span class="eyebrow">Exam readiness</span><span class="disp" style="font-size:20px">${esc(SUBJECT)}</span><span class="small">Weighted by how often each chapter is examined.</span></div></section>
+    <div class="stat3"><div class="card"><span class="statn">${icon("flame",20)}${streak()}</span><span class="small">day streak</span></div>
+      <div class="card"><span class="statn">${due}</span><span class="small">due today</span></div><div class="card"><span class="statn">${fresh}</span><span class="small">not yet seen</span></div></div>
+    <section class="card"><h2 class="disp">Today's plan</h2><p class="small" style="margin:6px 0 12px">${plan}</p>
+      <button class="primary full" id="go-study" ${!due&&!fresh?"disabled":""}>Continue revision</button></section>
+    ${hy.length?`<section class="card"><h2 class="disp">High-yield Top 100</h2><p class="small" style="margin:6px 0 10px">${hyRight} of ${hy.length} answered correctly at least once.</p>
+      <div class="bar" style="margin-bottom:12px"><span style="width:${Math.round(100*hyRight/hy.length)}%"></span></div><button class="ghost full" id="go-hy">Practise high-yield</button></section>`:""}
+    <section class="card"><h2 class="disp">${weak.some(x=>x.st.acc!==null)?"Your weakest chapters":"Good places to start"}</h2>${weak.map(x=>chapRow(x.t)).join("")}</section>
+    <section class="reportcard"><div><b>Sat your KCAA exam?</b><span>Tell us how it went. It helps us improve and helps future students.</span></div><button class="ghost" id="go-result">Report result</button></section>
+    ${footerHTML()}`);
+  $("#go-study").onclick=()=>study();
+  const gh=$("#go-hy"); if(gh) gh.onclick=()=>study("__hy");
+  $("#go-result").onclick=()=>resultForm();
+  wireChapRows(); wireFooter();
+}
+
+/* ===================== STUDY HUB AND CHAPTERS ===================== */
+function studyHub(){
+  screen("study",`<h1 class="disp big">Study</h1>
+    <div class="row"><button class="primary" id="s-rev">Start revision</button>${QUESTIONS.some(q=>q.hy)?`<button class="ghost" id="s-hy">High-yield</button>`:""}</div>
+    <section class="card"><h2 class="disp">Chapters</h2><p class="small" style="margin:4px 0 6px">Tap a chapter for its notes, a quiz and your mistakes. The bar shows how much you've mastered.</p>
+      ${TOPICS.map((t,i)=>chapRow({...t,name:(i+1)+". "+t.name})).join("")}</section>`);
+  $("#s-rev").onclick=()=>study(); const h=$("#s-hy"); if(h) h.onclick=()=>study("__hy"); wireChapRows();
+}
+function chapterView(tid){
+  const t=TOPICS.find(x=>x.id===tid); if(!t) return studyHub();
+  const st=chapterStats(tid), idx=TOPICS.indexOf(t)+1;
+  const mist=QUESTIONS.filter(q=>q.topic===tid&&isMistake(q)); const n=NOTES[tid];
+  const pts=n?(n.points||[]).filter(p=>!/^##\s/.test(p)).slice(0,3):[];
+  screen("study",`<button class="link back" id="cb">${icon("back",18)} Study</button>
+    <span class="small">${esc(SUBJECT)} · Chapter ${idx}</span><h1 class="disp big">${esc(t.name)}</h1>
+    <div class="stat3"><div class="card"><span class="statn ${accCls(st.acc)}">${st.acc===null?"–":Math.round(st.acc*100)+"%"}</span><span class="small">accuracy</span></div>
+      <div class="card"><span class="statn">${st.n?Math.round(100*st.mastered/st.n):0}%</span><span class="small">mastered</span></div><div class="card"><span class="statn">${st.n}</span><span class="small">questions</span></div></div>
+    <div class="row">${st.n?`<button class="primary" id="c-quiz">Quiz me (${Math.min(10,st.n)})</button>`:""}<button class="ghost" id="c-notes">Read notes</button></div>
+    ${mist.length?`<section class="card"><h2 class="disp">Your mistakes here (${mist.length})</h2>${mist.slice(0,5).map(q=>`<button class="qrow" data-q="${q.id}">${icon("x",18,'class="bad"')}<span>${esc(q.q)}</span></button>`).join("")}
+      <button class="ghost full" id="c-mist" style="margin-top:10px">Practise ${mist.length===1?"this one":"these "+mist.length}</button></section>`:""}
+    ${pts.length?`<section class="card"><h2 class="disp">Key notes</h2><ul class="keyl">${pts.map(p=>`<li>${esc(p)}</li>`).join("")}</ul><button class="link" id="c-notes2">Open full notes</button></section>`:""}`);
+  $("#cb").onclick=studyHub;
+  const qz=$("#c-quiz"); if(qz) qz.onclick=()=>study(tid);
+  $("#c-notes").onclick=()=>noteView(tid); const n2=$("#c-notes2"); if(n2) n2.onclick=()=>noteView(tid);
+  const cm=$("#c-mist"); if(cm) cm.onclick=()=>study(null, mist, ()=>chapterView(tid));
+  app.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>questionView(b.dataset.q, ()=>chapterView(tid)));
+}
+function noteView(tid){
+  stopTimer(); const t=TOPICS.find(x=>x.id===tid);
+  screen("study",`<button class="link back" id="b">${icon("back",18)} ${esc(t?t.name:"Back")}</button>
+    <article class="qcard note"><div class="qmeta"><span>${esc(SUBJECT)}</span>${NOTES[tid]&&NOTES[tid].is_draft?'<span class="draft">Draft</span>':''}</div>
+    <h2>${esc(topicName(tid))}</h2>${noteBody(tid)}</article>`);
+  $("#b").onclick=()=>chapterView(tid); window.scrollTo(0,0);
+}
+function questionView(qid, back){
+  const q=QUESTIONS.find(x=>x.id===qid); if(!q) return back();
+  hideTabs(); stopTimer();
+  app.innerHTML=`<button class="link back" id="qb">${icon("back",18)} Back</button>
+    <article class="qcard"><div class="qmeta"><span>${esc(topicName(q.topic))}</span><span style="display:flex;align-items:center;gap:4px">${q.id}${starBtn(q)}</span></div>
+      <p class="qtext">${esc(q.q)}</p><div class="opts">${q.options.map((o,k)=>`<button class="opt ${k===q.answer?"right":""}" disabled>${esc(o)}</button>`).join("")}</div>
+      <div class="explain"><strong>Explanation</strong>${esc(q.explanation)}${inlineNotes(q,true)}</div>
+      <button class="link" id="rep" style="margin-top:8px">Report a problem with this question</button></article>`;
+  $("#qb").onclick=back; $("#rep").onclick=()=>flag(q.id); wireStars(); window.scrollTo(0,0);
+}
+
+/* ===================== REVIEW: MISTAKES, SAVED, REPORTED ===================== */
+function reviewHub(tab){
+  tab=tab||reviewHub.tab||"mistakes"; reviewHub.tab=tab;
+  const lists={mistakes:QUESTIONS.filter(isMistake), saved:QUESTIONS.filter(q=>S.saved.has(q.id)), reported:QUESTIONS.filter(q=>S.flags.includes(q.id))};
+  const blurb={mistakes:"Questions you got wrong last time. Get one right and it leaves this list.",saved:"Questions you starred to come back to. Tap the star on any question to save it.",reported:"Questions you reported as possibly wrong. We check every report."};
+  const list=lists[tab];
+  screen("review",`<h1 class="disp big">Review</h1>
+    <div class="seg3" role="tablist">${[["mistakes","Mistakes"],["saved","Saved"],["reported","Reported"]].map(([k,l])=>`<button role="tab" aria-selected="${k===tab}" data-rt="${k}">${l} ${lists[k].length}</button>`).join("")}</div>
+    <p class="small">${blurb[tab]}</p>
+    ${list.length&&tab!=="reported"?`<button class="primary full" id="rv-all">Practise ${list.length>20?"20 of these":"all "+list.length}</button>`:""}
+    ${list.length?list.slice(0,60).map(q=>`<button class="card qitem" data-q="${q.id}"><span class="small">${esc(topicName(q.topic))}</span><span class="qi">${esc(q.q)}</span></button>`).join("")
+      :`<section class="card"><p class="small" style="margin:0">${tab==="mistakes"?"No mistakes to review right now. Nice work.":tab==="saved"?"Nothing saved yet.":"You haven't reported any questions."}</p></section>`}`);
+  app.querySelectorAll("[data-rt]").forEach(b=>b.onclick=()=>reviewHub(b.dataset.rt));
+  const all=$("#rv-all"); if(all) all.onclick=()=>study(null, list, ()=>reviewHub(tab));
+  app.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>questionView(b.dataset.q, ()=>reviewHub(tab)));
+}
+
+/* ===================== EXAMS ===================== */
+const EXAM_FORMATS={full:{n:40,min:60,label:"Full exam"},quick:{n:20,min:30,label:"Quick test"}};
+function examHub(){
+  const st=examHub.st||(examHub.st={fmt:"full",mode:"all",chs:new Set()});
+  screen("exam",`<h1 class="disp big">Practice exam</h1>
+    <p class="small">Questions come from every chapter in proportion to how often it appears in the real exam. Pass mark ${PASS_MARK}%.</p>
+    <fieldset class="opts2"><legend>Format</legend>${Object.entries(EXAM_FORMATS).map(([k,f])=>`<label class="radcard ${st.fmt===k?"on":""}"><input type="radio" name="fmt" value="${k}" ${st.fmt===k?"checked":""}><span><b>${f.label}</b><span class="small">${f.n} questions · ${f.min} minutes</span></span></label>`).join("")}</fieldset>
+    <fieldset class="opts2"><legend>Chapters</legend><div class="row"><button class="${st.mode==="all"?"primary":"ghost"}" id="m-all">All chapters</button><button class="${st.mode==="pick"?"primary":"ghost"}" id="m-pick">Choose chapters</button></div>
+      ${st.mode==="pick"?`<div class="chklist">${TOPICS.filter(t=>QUESTIONS.some(q=>q.topic===t.id)).map(t=>`<label><input type="checkbox" value="${t.id}" ${st.chs.has(t.id)?"checked":""}> ${esc(t.name)}</label>`).join("")}</div>`:""}</fieldset>
+    <button class="primary full" id="go-exam">Start exam</button>
+    ${S.exams.length?`<section class="card"><h2 class="disp">Recent exams</h2>${S.exams.slice(0,5).map(e=>`<div class="exrow"><span>${fmtDate(e.date)} · ${e.n} questions</span><b class="${e.pct>=PASS_MARK?"pass":"fail"}">${e.pct}% ${e.pct>=PASS_MARK?"Pass":"Fail"}</b></div>`).join("")}</section>`:""}`);
+  app.querySelectorAll('input[name="fmt"]').forEach(r=>r.onchange=()=>{ st.fmt=r.value; examHub(); });
+  $("#m-all").onclick=()=>{ st.mode="all"; examHub(); }; $("#m-pick").onclick=()=>{ st.mode="pick"; examHub(); };
+  app.querySelectorAll(".chklist input").forEach(c=>c.onchange=()=>{ c.checked?st.chs.add(c.value):st.chs.delete(c.value); });
+  $("#go-exam").onclick=()=>{
+    if(st.mode==="pick"&&!st.chs.size) return toast("Choose at least one chapter.");
+    const f=EXAM_FORMATS[st.fmt]; const qs=pickExam(f.n, st.mode==="pick"?st.chs:null);
+    if(!qs.length) return toast("No questions available for that selection.");
+    ask(`Start a ${f.label.toLowerCase()}: ${qs.length} questions in ${f.min} minutes? The timer starts straight away.`,"Start exam","Not yet",()=>exam(qs, f.min));
+  };
+}
+function examStart(){ examHub(); }
+function exam(qs, minutes){
+  hideTabs();
+  minutes=minutes||Math.round(qs.length*1.5);
+  const answers=new Array(qs.length).fill(null), marked=new Set();
   const orders=qs.map(()=>shuffle([0,1,2,3]));
-  let i=0, left=Math.round(qs.length*90); // seconds
+  let i=0, left=minutes*60;
   stopTimer();
-  timerId=setInterval(()=>{ left--; const t=$("#timer"); if(t){t.textContent=fmt(left); t.classList.toggle("low",left<120);} if(left<=0){stopTimer(); finish();} },1000);
+  timerId=setInterval(()=>{ left--; const t=$("#timer"); if(t){t.textContent=fmt(left); t.classList.toggle("low",left<300);} if(left<=0){stopTimer(); toast("Time's up"); finish();} },1000);
   function fmt(s){ s=Math.max(0,s); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); }
   function show(){
-    const q=qs[i];
+    const q=qs[i], answered=answers.filter(a=>a!==null).length;
     app.innerHTML=`
-      <div class="qmeta" style="align-items:center"><button class="link" id="quit">Leave exam</button><span class="timer" id="timer" aria-label="Time left">${fmt(left)}</span></div>
+      <div class="exhead"><button class="link" id="quit">Leave</button><span class="timer" id="timer" aria-label="Time left">${fmt(left)}</span><button class="ghost small-btn" id="sub">Submit</button></div>
+      <div class="bar"><span style="width:${(i+1)/qs.length*100}%"></span></div><div class="exmeta small"><span>Question ${i+1} of ${qs.length}</span><span>${answered} answered${marked.size?" · "+marked.size+" flagged":""}</span></div>
       <article class="qcard">
-        <div class="qmeta"><span>Question ${i+1} of ${qs.length}</span><span>${q.hy?'<span class="hyb">High-yield</span>':""}${q.id}</span></div>
+        <div class="qmeta" style="align-items:center"><span>${esc(topicName(q.topic))}</span><span style="display:flex;align-items:center;gap:2px">${starBtn(q)}<button class="iconbtn flagb ${marked.has(i)?"on":""}" id="mark" aria-pressed="${marked.has(i)}" aria-label="${marked.has(i)?"Remove flag":"Flag to come back to"}">${icon("flag",20)}</button></span></div>
         <p class="qtext">${esc(q.q)}</p>
         <div class="opts">${orders[i].map(o=>`<button class="opt ${answers[i]===o?"sel":""}" data-o="${o}">${esc(q.options[o])}</button>`).join("")}</div>
       </article>
       <div class="row"><button class="ghost" id="prev" ${i===0?"disabled":""}>Previous</button>
-        ${i<qs.length-1?`<button class="primary" id="nx">Next</button>`:`<button class="primary" id="sub">Submit exam</button>`}</div>
-      <div class="grid" aria-label="Jump to question">${qs.map((_,k)=>`<button class="${answers[k]!==null?"done":""} ${k===i?"cur":""}" data-k="${k}">${k+1}</button>`).join("")}</div>
-      ${i<qs.length-1?`<button class="link" id="sub">Submit exam now</button>`:""}`;
+        ${i<qs.length-1?`<button class="primary" id="nx">Next</button>`:`<button class="primary" id="sub2">Submit exam</button>`}</div>
+      <div class="grid" aria-label="Jump to question">${qs.map((_,k)=>`<button class="${answers[k]!==null?"done":""} ${k===i?"cur":""} ${marked.has(k)?"mk":""}" data-k="${k}" aria-label="Question ${k+1}${answers[k]!==null?", answered":""}${marked.has(k)?", flagged":""}">${k+1}</button>`).join("")}</div>
+      <p class="small">Filled: answered · outlined: current · dot: flagged</p>`;
     app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{answers[i]=+b.dataset.o; show();});
     app.querySelectorAll(".grid button").forEach(b=>b.onclick=()=>{i=+b.dataset.k; show();});
     $("#prev").onclick=()=>{if(i>0){i--;show();}};
     const nx=$("#nx"); if(nx) nx.onclick=()=>{i++;show();};
-    $("#sub").onclick=()=>{ const blank=answers.filter(a=>a===null).length;
+    $("#mark").onclick=()=>{ marked.has(i)?marked.delete(i):marked.add(i); show(); };
+    const submit=()=>{ const blank=answers.filter(a=>a===null).length;
       const go=()=>{stopTimer(); finish();};
-      if(blank) ask(`${blank} ${blank===1?"question is":"questions are"} unanswered. Submit anyway?`,"Submit exam","Keep going",go); else ask("Submit your exam now?","Submit exam","Keep going",go); };
-    $("#quit").onclick=()=>ask("Leave the exam? Your answers won't be saved.","Leave exam","Stay",()=>{stopTimer(); home();});
+      ask(blank?`${blank} ${blank===1?"question is":"questions are"} unanswered${marked.size?" and "+marked.size+" flagged":""}. Submit anyway?`:(marked.size?`${marked.size} flagged ${marked.size===1?"question":"questions"} to check. Submit anyway?`:"Submit your exam now?"),"Submit exam","Keep going",go); };
+    $("#sub").onclick=submit; const s2=$("#sub2"); if(s2) s2.onclick=submit;
+    $("#quit").onclick=()=>ask("Leave the exam? Your answers won't be saved.","Leave exam","Stay",()=>{stopTimer(); examHub();});
+    wireStars();
   }
   function finish(){
     let right=0; const byTopic={};
-    qs.forEach((q,k)=>{ const ok=answers[k]===q.answer; if(ok) right++; record(q.id,ok,false);
+    qs.forEach((q,k)=>{ const ok=answers[k]===q.answer; if(ok) right++; if(answers[k]!==null) record(q.id,ok,false);
       const b=byTopic[q.topic]||(byTopic[q.topic]={r:0,n:0}); b.n++; if(ok) b.r++; });
     const pct=Math.round(right/qs.length*100), passed=pct>=PASS_MARK;
     S.exams.unshift({date:new Date().toISOString(),pct,right,n:qs.length}); S.exams=S.exams.slice(0,30);
     sb.from("exam_attempts").insert({user_id:USER.id, subject_id:SUBJ.id, correct:right, total:qs.length, score_pct:pct, by_topic:byTopic}).then(({error})=>dbErr(error));
     const wrong=qs.map((q,k)=>({q,a:answers[k]})).filter(x=>x.a!==x.q.answer);
     app.innerHTML=`
-      <section class="briefing"><p class="score ${passed?"pass":"fail"}">${pct}%</p>
+      <section class="card resultcard"><p class="score ${passed?"pass":"fail"}">${pct}%</p>
         <p>${right} of ${qs.length} correct. ${passed?"Pass.":"Below the "+PASS_MARK+"% pass mark."}</p>
-        <div class="row"><button class="primary" id="h">Back to topics</button><button class="ghost" id="again">New exam</button></div></section>
-      <h3 class="section">By topic</h3>
-      <div class="wrapx"><table><tr><th>Topic</th><th>Score</th></tr>
-        ${Object.entries(byTopic).map(([t,b])=>`<tr><td>${esc(topicName(t))}</td><td>${b.r}/${b.n}</td></tr>`).join("")}</table></div>
+        <div class="row"><button class="primary" id="h">Done</button><button class="ghost" id="again">New exam</button></div></section>
+      <h3 class="section">By chapter</h3>
+      <div class="wrapx"><table><tr><th>Chapter</th><th>Score</th></tr>
+        ${Object.entries(byTopic).sort((a,b)=>a[1].r/a[1].n-b[1].r/b[1].n).map(([t,b])=>`<tr><td>${esc(topicName(t))}</td><td class="${b.r/b.n>=0.75?"pass":"fail"}">${b.r}/${b.n}</td></tr>`).join("")}</table></div>
       ${wrong.length?`<h3 class="section" style="margin-top:26px">Review your mistakes</h3>
-        ${wrong.map(({q,a})=>`<article class="qcard"><div class="qmeta"><span>${esc(topicName(q.topic))}</span><span>${q.id}</span></div>
+        ${wrong.map(({q,a})=>`<article class="qcard"><div class="qmeta"><span>${esc(topicName(q.topic))}</span><span style="display:flex;align-items:center;gap:4px">${q.id}${starBtn(q)}</span></div>
           <p class="qtext">${esc(q.q)}</p>
           ${a!==null?`<p class="fail" style="margin:0 0 6px">Your answer: ${esc(q.options[a])}</p>`:`<p class="fail" style="margin:0 0 6px">Not answered</p>`}
           <p class="pass" style="margin:0">Correct: ${esc(q.options[q.answer])}</p>
           <div class="explain">${esc(q.explanation)}${inlineNotes(q, true)}</div>
           <button class="link rep" data-id="${q.id}">Report a problem with this question</button></article>`).join("")}`:""}`;
-    $("#h").onclick=()=>home(); $("#again").onclick=examStart;
+    $("#h").onclick=()=>examHub(); $("#again").onclick=examHub;
     app.querySelectorAll(".rep").forEach(b=>b.onclick=()=>flag(b.dataset.id));
-    window.scrollTo(0,0);
+    wireStars(); window.scrollTo(0,0);
   }
   show();
 }
 
 /* ===================== PROGRESS ===================== */
-function progress(){
-  stopTimer();
-  app.innerHTML=`<button class="link back" id="b">Back to topics</button>
-    <h3 class="section" style="margin-top:10px">Exam history</h3>
-    ${S.exams.length?`<div class="wrapx"><table><tr><th>Date</th><th>Score</th><th>Result</th></tr>
-      ${S.exams.map(e=>`<tr><td>${new Date(e.date).toLocaleDateString()}</td><td>${e.right}/${e.n} (${e.pct}%)</td><td class="${e.pct>=PASS_MARK?"pass":"fail"}">${e.pct>=PASS_MARK?"Pass":"Fail"}</td></tr>`).join("")}</table></div>`
-      :`<p class="small">No exams yet. Sit a practice exam to see your scores here.</p>`}
-    <h3 class="section" style="margin-top:26px">Reported questions</h3>
-    ${S.flags.length?`<p>${S.flags.map(esc).join(", ")}</p><p class="small">These have been sent for review.</p>`
-      :`<p class="small">Nothing reported. Use "Report a problem" on any question that looks wrong.</p>`}
-    <h3 class="section" style="margin-top:26px">Reset revision</h3>
-    <p class="small">Clears your spaced-repetition progress so every question starts fresh. Exam history is kept.</p>
-    <button class="ghost" id="reset">Reset revision progress</button>
-    <h3 class="section" style="margin-top:26px">Your KCAA exam results</h3>
-    <div id="myres"><p class="small">Loading…</p></div>
-    <p><button class="link" id="add-res">Report an exam result</button></p>
-    <h3 class="section" style="margin-top:26px">Your devices</h3>
-    <div id="devs"><p class="small">Loading…</p></div>
-    <h3 class="section" style="margin-top:26px">Account</h3>
-    <p class="small">Signed in as ${esc(USER.email)}</p>
-    <button class="ghost" id="logout">Log out</button>`;
-  $("#b").onclick=()=>home();
-  $("#reset").onclick=()=>ask("Reset your revision progress? Exam history is kept.","Reset","Cancel",async ()=>{
-    const {error}=await sb.from("card_progress").delete().eq("user_id",USER.id); dbErr(error);
-    if(!error){ S.cards={}; home(); toast("Revision progress reset"); } });
-  $("#add-res").onclick=()=>resultForm();
-  const loadRes=()=>myResultsHTML().then(h=>{ const el=$("#myres"); if(!el) return; el.innerHTML=h;
-    el.querySelectorAll(".rdel").forEach(b=>b.onclick=()=>ask("Remove this result?","Remove","Cancel",async()=>{ const {error}=await sb.from("exam_results").delete().eq("id",+b.dataset.id); if(error) toast(error.message); loadRes(); })); });
-  loadRes();
-  fetchDevices().then(({list,limit})=>{ const el=$("#devs"); if(!el) return;
-    el.innerHTML=`<p class="small" style="margin-top:0">${list.length} of ${limit} devices in use. Each browser counts as a device.</p>${deviceRows(list,false)}`;
-    el.querySelectorAll(".rm").forEach(b=>b.onclick=()=>removeDevice(b.dataset.id,b.dataset.l,()=>progress())); });
-  $("#logout").onclick=()=>ask("Log out of Adrenasky?","Log out","Cancel",async ()=>{ await sb.auth.signOut(); });
+function scoreChart(){
+  const ex=S.exams.slice(0,8).reverse(); if(!ex.length) return `<p class="small">No exams yet. Sit a practice exam to see your trend.</p>`;
+  const bw=300/Math.max(ex.length,5), y=v=>118-v; 
+  return `<svg viewBox="0 0 300 130" width="100%" height="140" role="img" aria-label="Recent exam scores: ${ex.map(e=>e.pct+"%").join(", ")}">
+    <line x1="0" x2="300" y1="${y(PASS_MARK)}" y2="${y(PASS_MARK)}" stroke="var(--magenta)" stroke-dasharray="4 4"></line><text x="300" y="${y(PASS_MARK)-5}" text-anchor="end" class="charttxt" fill="var(--magenta)">${PASS_MARK}% pass</text>
+    ${ex.map((e,k)=>{ const x=k*bw+bw*0.2, w=bw*0.6, hgt=Math.max(2,e.pct); return `<rect x="${x.toFixed(1)}" y="${y(hgt)}" width="${w.toFixed(1)}" height="${hgt}" rx="5" fill="${e.pct>=PASS_MARK?"var(--ok)":"var(--chart)"}"></rect><text x="${(x+w/2).toFixed(1)}" y="${y(hgt)-5}" text-anchor="middle" class="charttxt">${e.pct}</text>`; }).join("")}</svg>`;
+}
+function progress(tab){
+  tab=tab||progress.tab||"stats"; progress.tab=tab;
+  const tabs=[["stats","Stats"],["exams","Exams"],["kcaa","KCAA"],["account","Account"]];
+  let body="";
+  if(tab==="stats") body=`<section class="card"><h2 class="disp">Exam scores</h2>${scoreChart()}</section>
+    <section class="card"><h2 class="disp">Chapters</h2>${TOPICS.filter(t=>QUESTIONS.some(q=>q.topic===t.id)).map(t=>chapRow(t)).join("")}</section>`;
+  if(tab==="exams") body=S.exams.length?`<div class="wrapx"><table><tr><th>Date</th><th>Score</th><th>Result</th></tr>${S.exams.map(e=>`<tr><td>${fmtDate(e.date)}</td><td>${e.right}/${e.n} (${e.pct}%)</td><td class="${e.pct>=PASS_MARK?"pass":"fail"}">${e.pct>=PASS_MARK?"Pass":"Fail"}</td></tr>`).join("")}</table></div>`
+    :`<section class="card"><p class="small" style="margin:0">No exams yet.</p></section>`;
+  if(tab==="exams") body+=`<button class="primary full" id="p-ex" style="margin-top:12px">Sit a practice exam</button>`;
+  if(tab==="kcaa") body=`<p class="small">Results you've reported from real KCAA exams. Only you and the Adrenasky team can see them.</p><div id="myres"><p class="small">Loading…</p></div><button class="primary full" id="add-res">Report an exam result</button>`;
+  if(tab==="account") body=`<section class="card"><h2 class="disp">Account</h2><p class="small">Signed in as ${esc(USER.email)}</p>
+      <label class="toggle"><span>Night theme</span><input type="checkbox" id="th" ${themePref()==="night"?"checked":""}></label>
+      ${IS_ADMIN?`<button class="ghost full" id="go-admin" style="margin-top:10px">Open admin</button>`:""}</section>
+    <section class="card"><h2 class="disp">Your devices</h2><div id="devs"><p class="small">Loading…</p></div></section>
+    <section class="card"><h2 class="disp">Reset revision</h2><p class="small">Clears your spaced-repetition progress so every question starts fresh. Exam history is kept.</p><button class="ghost full" id="reset">Reset revision progress</button></section>
+    <div class="row"><button class="ghost" id="sup">Contact support</button><button class="ghost" id="logout">Log out</button></div>${footerHTML()}`;
+  screen("progress",`<h1 class="disp big">Progress</h1><div class="seg3" role="tablist">${tabs.map(([k,l])=>`<button role="tab" aria-selected="${k===tab}" data-pt="${k}">${l}</button>`).join("")}</div>${body}`);
+  app.querySelectorAll("[data-pt]").forEach(b=>b.onclick=()=>progress(b.dataset.pt));
+  wireChapRows();
+  const pe=$("#p-ex"); if(pe) pe.onclick=examHub;
+  if(tab==="kcaa"){ $("#add-res").onclick=()=>resultForm();
+    const loadRes=()=>myResultsHTML().then(h=>{ const el=$("#myres"); if(!el) return; el.innerHTML=h;
+      el.querySelectorAll(".rdel").forEach(b=>b.onclick=()=>ask("Remove this result?","Remove","Cancel",async()=>{ const {error}=await sb.from("exam_results").delete().eq("id",+b.dataset.id); if(error) toast(error.message); loadRes(); })); });
+    loadRes(); }
+  if(tab==="account"){
+    $("#th").onchange=e=>setTheme(e.target.checked?"night":"light");
+    const ga=$("#go-admin"); if(ga) ga.onclick=()=>{ hideTabs(); adminView("overview"); };
+    $("#reset").onclick=()=>ask("Reset your revision progress? Exam history is kept.","Reset","Cancel",async ()=>{
+      const {error}=await sb.from("card_progress").delete().eq("user_id",USER.id); dbErr(error);
+      if(!error){ S.cards={}; home(); toast("Revision progress reset"); } });
+    $("#sup").onclick=()=>legalView("support");
+    $("#logout").onclick=()=>ask("Log out of Adrenasky?","Log out","Cancel",async ()=>{ hideTabs(); await sb.auth.signOut(); });
+    wireFooter();
+    fetchDevices().then(({list,limit})=>{ const el=$("#devs"); if(!el) return;
+      el.innerHTML=`<p class="small" style="margin-top:0">${list.length} of ${limit} devices in use. Each browser counts as a device.</p>${deviceRows(list,false)}`;
+      el.querySelectorAll(".rm").forEach(b=>b.onclick=()=>removeDevice(b.dataset.id,b.dataset.l,()=>progress("account"))); });
+  }
 }
 
 /* ===================== LANDING, PRICING AND LEGAL PAGES ===================== */
@@ -621,7 +805,7 @@ const LEGAL={
 };
 LEGAL.support={title:"Contact support",body:["Questions about your account, a device you can't remove, a payment, or a mistake in a question? Get in touch and we'll help."]};
 function legalView(kind){
-  stopTimer(); const d=LEGAL[kind]; document.body.classList.toggle("landing-on", !USER);
+  stopTimer(); const d=LEGAL[kind]; document.body.classList.toggle("landing-on", !USER); applyTheme(); if(!USER) hideTabs();
   app.innerHTML=`<button class="link back" id="lb">Back</button>
     <article class="qcard note"><h2>${esc(d.title)}</h2>${d.body.map(p=>`<p>${esc(p)}</p>`).join("")}${kind==="support"?supportLinks():""}</article>`;
   $("#lb").onclick=()=>USER&&SUBJ?home():authView(); window.scrollTo(0,0);
@@ -662,7 +846,7 @@ function landingHTML(){
 
 /* ===================== LOGIN AND SIGN-UP ===================== */
 function authView(mode, msg){
-  stopTimer(); document.body.classList.add("landing-on");
+  stopTimer(); hideTabs(); document.body.classList.add("landing-on"); applyTheme();
   mode=mode||"login";
   const signup=mode==="signup";
   app.innerHTML=`<header class="top"><h1 class="brand">Adrenasky<small>ATPL theory revision</small></h1>
@@ -731,23 +915,24 @@ async function startApp(){
   subjectPicker();
 }
 function subjectPicker(){
-  stopTimer();
+  stopTimer(); hideTabs();
   app.innerHTML=`<header class="top"><h1 class="brand">Adrenasky<small>ATPL theory revision</small></h1></header>
     <h3 class="section">What are you studying today?</h3>
     <ul class="topics">${SUBJECTS.map((x,i)=>{ const live=x.status==="live";
       return `<li class="tap"><button class="trow subj" data-s="${x.id}" ${live?"":"disabled"} style="${live?"":"opacity:.55;cursor:default"}">
         <span class="name">${esc(x.name)}${live?"":'<span class="draft" style="color:var(--muted);border-color:var(--line)">Coming soon</span>'}${SUBJ&&SUBJ.id===x.id?'<span class="draft" style="color:var(--chart);border-color:var(--chart)">Current</span>':""}</span>
         <span class="chev">${live?"›":""}</span><span class="acc">${esc(x.description||(x.topics.length+" chapters"))}</span></button></li>`; }).join("")}</ul>`;
-  app.querySelectorAll(".subj:not([disabled])").forEach(b=>b.onclick=()=>{ setSubject(b.dataset.s); home.tab="practice"; loadData(); });
+  app.querySelectorAll(".subj:not([disabled])").forEach(b=>b.onclick=()=>{ setSubject(b.dataset.s); loadData(); });
 }
 async function loadData(next){
   loading("Loading "+(SUBJECT||"your revision"));
   const [q,p,e,r]=await Promise.all([
     sb.from("questions").select("id,topic_id,question,options,answer,explanation,is_active,key_points,compare,is_high_yield").eq("subject_id",SUBJ.id).order("id"),
-    sb.from("card_progress").select("question_id,box,due_at,seen,correct"),
+    sb.from("card_progress").select("question_id,box,due_at,seen,correct,last_correct"),
     sb.from("exam_attempts").select("taken_at,correct,total,score_pct").eq("subject_id",SUBJ.id).order("taken_at",{ascending:false}).limit(30),
     sb.from("question_reports").select("question_id")
   ]);
+  const [sv,dy]=await Promise.all([sb.from("saved_questions").select("question_id"), sb.from("study_days").select("day").order("day",{ascending:false}).limit(400)]);
   const nt=await sb.from("notes").select("topic_id,points,aid,trap,is_draft").in("topic_id",TOPICS.map(t=>t.id).concat(["-"]));
   NOTES={}; (nt.data||[]).forEach(n=>NOTES[n.topic_id]=n);
   const pr=await sb.from("profiles").select("is_admin").eq("id",USER.id).maybeSingle();
@@ -757,8 +942,8 @@ async function loadData(next){
   FOCUS={}; COMPARE={};
   q.data.forEach(x=>{ if(x.key_points&&x.key_points.length) FOCUS[x.id]=x.key_points; if(x.compare) COMPARE[x.id]=x.compare; });
   QUESTIONS=q.data.filter(x=>x.is_active!==false).map(x=>({id:x.id, topic:x.topic_id, q:x.question, options:x.options, answer:x.answer, explanation:x.explanation, hy:!!x.is_high_yield}));
-  S={cards:{},exams:[],flags:[]};
-  p.data.forEach(c=>S.cards[c.question_id]={box:c.box,due:new Date(c.due_at).getTime(),seen:c.seen,right:c.correct});
+  S={cards:{},exams:[],flags:[],saved:new Set(((sv&&sv.data)||[]).map(x=>x.question_id)),days:new Set(((dy&&dy.data)||[]).map(x=>String(x.day).slice(0,10)))};
+  p.data.forEach(c=>S.cards[c.question_id]={box:c.box,due:new Date(c.due_at).getTime(),seen:c.seen,right:c.correct,last:c.last_correct});
   S.exams=e.data.map(x=>({date:x.taken_at,pct:x.score_pct,right:x.correct,n:x.total}));
   S.flags=[...new Set(r.data.map(x=>x.question_id))];
   (next||home)();
@@ -788,7 +973,7 @@ function adminShell(tab, body){
 }
 async function rpc(name,args){ const {data,error}=await sb.rpc(name,args||{}); if(error){ toast(error.message); throw error; } return data; }
 async function adminView(tab){
-  stopTimer(); tab=tab||"overview"; adminShell(tab); window.scrollTo(0,0);
+  stopTimer(); hideTabs(); tab=tab||"overview"; adminShell(tab); window.scrollTo(0,0);
   const el=$("#adm");
   try{
   if(tab==="overview"){
@@ -1080,7 +1265,7 @@ async function resultsAdmin(){
 /* ===================== DEVICE LIMIT ===================== */
 const fmtDate=d=>new Date(d).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
 async function checkDevice(){
-  document.body.classList.remove("landing-on");
+  document.body.classList.remove("landing-on"); applyTheme(); hideTabs();
   loading("Checking your device");
   const {data,error}=await sb.rpc("register_device",{p_label:deviceLabel()});
   if(error){ console.error(error); app.innerHTML=`<section class="briefing"><h2>Couldn't check this device</h2><p>${esc(error.message)}</p><button class="primary" id="retry">Try again</button></section>`; $("#retry").onclick=checkDevice; return; }
