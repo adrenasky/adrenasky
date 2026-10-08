@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0B1622">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Adrenasky">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <title>Adrenasky: ATPL Meteorology revision</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20240%20240%22%20xmlns%3Ac2pa%3D%22http%3A//c2pa.org/manifest%22%3E%3Cmetadata%3E%3Cc2pa%3Amanifest%3EAAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTo3NzIxZDMwMy0yMTY3LTQ5Y2QtOTk1My0wMjdiYjc3ODIxYjcAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaGyFjW%2Bip92QIM8OcWx5X4QAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo3MDU5YjczZS00Y2I1LTQwYmMtODQ3NC1lODNjMTQ5YmExMzlscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoL9Gux27Gi2WnkY0BX5NF/gAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggT4/jusPOtUJVcn0A9HfOhT/LlxFXydMmB7%2BqC6CJugqkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaDAkEXhn0WuysmsLYDGihfcAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCBKNT6/hgV9hEaLuVNMPejV6KdbPE%2B5l/gxkasuqtN7Z2RuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBiYZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjc3MjFkMzAzLTIxNjctNDljZC05OTUzLTAyN2JiNzc4MjFiNy9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOmNkZjNkNzcyLTQwY2ItNDdmMS1hZjdkLTU4ZDJhZTgxNDI0MXJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCBPj%2BO6w861QlVyfQD0d86FP8uXEVfJ0yYHv6oLoIm6CqJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggQOu6mM74tG/l8Ign7A/68uzAYMYgnw29mmgPxGwUGouiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggPtGobPyGIS1t3Y/g%2By8hwc0PfzBNvYtT5Ibg2c/2Fqd0Y2xhaW1fZ2VuZXJhdG9yX2luZm%2BjZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj%2BOPEz5o%2BnMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1%2BUCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9%2B1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQIP8arAGZsQtpWxhXUvr2V%2BtVz9hY%2BNHmEAae6juqrQeocEjuXblSdtRddOt9SyGMkiFWOXMxwU1csonDdv1Iwc%3D%3C/c2pa%3Amanifest%3E%3C/metadata%3E%3Crect%20width%3D%22240%22%20height%3D%22240%22%20rx%3D%2254%22%20fill%3D%22%230B1622%22/%3E%3Cg%20transform%3D%22translate%2818%2014%29%20scale%280.98%29%22%3E%3Cdefs%3E%3CclipPath%20id%3D%22gclipi%22%3E%3Ccircle%20cx%3D%2296%22%20cy%3D%22104%22%20r%3D%2267%22/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path%3D%22url%28%23gclipi%29%22%20opacity%3D%220.55%22%3E%3Cellipse%20cx%3D%2296%22%20cy%3D%22104%22%20rx%3D%2260.6%22%20ry%3D%2270%22%20fill%3D%22none%22%20stroke%3D%22%236FC3DF%22%20stroke-width%3D%221.7%22/%3E%3Cellipse%20cx%3D%2296%22%20cy%3D%22104%22%20rx%3D%2235.0%22%20ry%3D%2270%22%20fill%3D%22none%22%20stroke%3D%22%236FC3DF%22%20stroke-width%3D%221.7%22/%3E%3Cellipse%20cx%3D%2296%22%20cy%3D%22104%22%20rx%3D%2235.0%22%20ry%3D%2270%22%20fill%3D%22none%22%20stroke%3D%22%236FC3DF%22%20stroke-width%3D%221.7%22/%3E%3Cellipse%20cx%3D%2296%22%20cy%3D%22104%22%20rx%3D%2260.6%22%20ry%3D%2270%22%20fill%3D%22none%22%20stroke%3D%22%236FC3DF%22%20stroke-width%3D%221.7%22/%3E%3Cline%20x1%3D%2296%22%20y1%3D%2234%22%20x2%3D%2296%22%20y2%3D%22174%22%20stroke%3D%22%236FC3DF%22%20stroke-width%3D%221.7%22/%3E%3Cline%20x1%3D%2251.0%22%20y1%3D%22157.6%22%20x2%3D%22141.0%22%20y2%3D%22157.6%22%20stroke%3D%22%236FC3DF%22%20stroke-width%3D%221.7%22/%3E%3Cline%20x1%3D%2232.6%22%20y1%3D%22133.6%22%20x2%3D%22159.4%22%20y2%3D%22133.6%22%20stroke%3D%22%236FC3DF%22%20stroke-width%3D%221.7%22/%3E%3Cline%20x1%3D%2226.0%22%20y1%3D%22104.0%22%20x2%3D%22166.0%22%20y2%3D%22104.0%22%20stroke%3D%22%236FC3DF%22%20stroke-width%3D%221.7%22/%3E%3Cline%20x1%3D%2232.6%22%20y1%3D%2274.4%22%20x2%3D%22159.4%22%20y2%3D%2274.4%22%20stroke%3D%22%236FC3DF%22%20stroke-width%3D%221.7%22/%3E%3Cline%20x1%3D%2251.0%22%20y1%3D%2250.4%22%20x2%3D%22141.0%22%20y2%3D%2250.4%22%20stroke%3D%22%236FC3DF%22%20stroke-width%3D%221.7%22/%3E%3C/g%3E%3Ccircle%20cx%3D%2296%22%20cy%3D%22104%22%20r%3D%2270%22%20fill%3D%22none%22%20stroke%3D%22%236FC3DF%22%20stroke-width%3D%229%22/%3E%3Cpath%20d%3D%22M%2014%20136%20C%2036%20198%2C%20112%20182%2C%20150%20100%20C%20108%20166%2C%2044%20178%2C%2014%20136%20Z%22%20fill%3D%22%23F2B33D%22/%3E%3Cg%20transform%3D%22translate%28134.6%2032.6%29%20scale%280.8%29%20rotate%2842%2050%2050%29%22%3E%3Cg%20stroke%3D%22%230B1622%22%20stroke-width%3D%227%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M54.2%2033%20L%2064%2038%20L%2096%2058%20C%2097.2%2058.8%2C%2097.4%2060.4%2C%2096.4%2061%20L%2094%2061.4%20L%2054.3%2050.5%20Z%20M45.8%2033%20L%2036%2038%20L%204%2058%20C%202.8%2058.8%2C%202.6%2060.4%2C%203.6%2061%20L%206%2061.4%20L%2045.7%2050.5%20Z%22%20fill%3D%22%230B1622%22/%3E%3Cpath%20d%3D%22M52.6%2080%20L%2068%2088.6%20C%2068.8%2089.1%2C%2068.8%2090.4%2C%2068%2090.6%20L%2052%2089.4%20Z%20M47.4%2080%20L%2032%2088.6%20C%2031.2%2089.1%2C%2031.2%2090.4%2C%2032%2090.6%20L%2048%2089.4%20Z%22%20fill%3D%22%230B1622%22/%3E%3Cpath%20d%3D%22M66.6%2034.5%20C%2068.4%2034.2%2C%2070.2%2034.8%2C%2070.3%2036.6%20L%2070.6%2046.5%20C%2070.6%2047.8%2C%2066.6%2048%2C%2066.3%2046.7%20L%2065.6%2036.4%20C%2065.6%2035.4%2C%2065.9%2034.7%2C%2066.6%2034.5%20Z%20M33.4%2034.5%20C%2031.6%2034.2%2C%2029.8%2034.8%2C%2029.7%2036.6%20L%2029.4%2046.5%20C%2029.4%2047.8%2C%2033.4%2048%2C%2033.7%2046.7%20L%2034.4%2036.4%20C%2034.4%2035.4%2C%2034.1%2034.7%2C%2033.4%2034.5%20Z%22%20fill%3D%22%230B1622%22%20stroke%3D%22none%22%20stroke-width%3D%221.1%22/%3E%3Cpath%20d%3D%22M50%202.5%20C%2053.2%202.5%2C%2054.7%207%2C%2054.9%2013%20L%2055%2062%20C%2055%2072%2C%2053.8%2082%2C%2051.8%2090%20L%2050.9%2096.5%20L%2049.1%2096.5%20L%2048.2%2090%20C%2046.2%2082%2C%2045%2072%2C%2045%2062%20L%2045.1%2013%20C%2045.3%207%2C%2046.8%202.5%2C%2050%202.5%20Z%22%20fill%3D%22%230B1622%22/%3E%3C/g%3E%3Cpath%20d%3D%22M54.2%2033%20L%2064%2038%20L%2096%2058%20C%2097.2%2058.8%2C%2097.4%2060.4%2C%2096.4%2061%20L%2094%2061.4%20L%2054.3%2050.5%20Z%20M45.8%2033%20L%2036%2038%20L%204%2058%20C%202.8%2058.8%2C%202.6%2060.4%2C%203.6%2061%20L%206%2061.4%20L%2045.7%2050.5%20Z%22%20fill%3D%22%23EAF1F7%22/%3E%3Cpath%20d%3D%22M52.6%2080%20L%2068%2088.6%20C%2068.8%2089.1%2C%2068.8%2090.4%2C%2068%2090.6%20L%2052%2089.4%20Z%20M47.4%2080%20L%2032%2088.6%20C%2031.2%2089.1%2C%2031.2%2090.4%2C%2032%2090.6%20L%2048%2089.4%20Z%22%20fill%3D%22%23EAF1F7%22/%3E%3Cpath%20d%3D%22M66.6%2034.5%20C%2068.4%2034.2%2C%2070.2%2034.8%2C%2070.3%2036.6%20L%2070.6%2046.5%20C%2070.6%2047.8%2C%2066.6%2048%2C%2066.3%2046.7%20L%2065.6%2036.4%20C%2065.6%2035.4%2C%2065.9%2034.7%2C%2066.6%2034.5%20Z%20M33.4%2034.5%20C%2031.6%2034.2%2C%2029.8%2034.8%2C%2029.7%2036.6%20L%2029.4%2046.5%20C%2029.4%2047.8%2C%2033.4%2048%2C%2033.7%2046.7%20L%2034.4%2036.4%20C%2034.4%2035.4%2C%2034.1%2034.7%2C%2033.4%2034.5%20Z%22%20fill%3D%22%23EAF1F7%22%20stroke%3D%22%230B1622%22%20stroke-width%3D%221.1%22/%3E%3Cpath%20d%3D%22M50%202.5%20C%2053.2%202.5%2C%2054.7%207%2C%2054.9%2013%20L%2055%2062%20C%2055%2072%2C%2053.8%2082%2C%2051.8%2090%20L%2050.9%2096.5%20L%2049.1%2096.5%20L%2048.2%2090%20C%2046.2%2082%2C%2045%2072%2C%2045%2062%20L%2045.1%2013%20C%2045.3%207%2C%2046.8%202.5%2C%2050%202.5%20Z%22%20fill%3D%22%23EAF1F7%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -92,6 +99,25 @@ body.nr{--lg-ring:#6FC3DF;--lg-grid:#6FC3DF;--lg-plane:#EAF1F7;--lg-sw:#F2B33D;-
 .lgm [fill="#A00001"]{fill:var(--lg-ring)}.lgm [stroke="#A00001"]{stroke:var(--lg-ring)}.lgm [fill="#A00002"]{fill:var(--lg-grid)}.lgm [stroke="#A00002"]{stroke:var(--lg-grid)}.lgm [fill="#A00003"]{fill:var(--lg-plane)}.lgm [stroke="#A00003"]{stroke:var(--lg-plane)}.lgm [fill="#A00004"]{fill:var(--lg-sw)}.lgm [stroke="#A00004"]{stroke:var(--lg-sw)}.lgm [fill="#A00005"]{fill:var(--lg-knock)}.lgm [stroke="#A00005"]{stroke:var(--lg-knock)}
 .lgm{flex-shrink:0;display:block}
 .brandlogo{display:flex;align-items:center;gap:10px}.brandlogo .lgm{width:48px;height:48px}
+/* ---- Text size, search, calculator ---- */
+body.ts-l #app{zoom:1.1} body.ts-xl #app{zoom:1.22}
+.searchbar{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:0 14px;margin-bottom:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:inherit;text-align:left}
+.miniselect{font:inherit;padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+.readycard{width:100%;text-align:left;color:var(--ink);font:inherit;cursor:pointer}
+.reportcard .iconbtn{width:36px;height:36px;min-height:36px}
+.calcfab{position:fixed;right:16px;bottom:calc(20px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-radius:50%;border:0;background:var(--chart);color:var(--bg);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.35);z-index:4}
+.calc .calcdisp{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 14px;text-align:right}
+.calc #cout{font-family:"Bricolage Grotesque","Arial Black",sans-serif;font-weight:800;font-size:30px;overflow-x:auto}
+.ckeys{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.ckeys button{min-height:52px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:19px;font-weight:700;padding:0}
+.ckeys .cfn{color:var(--bad)} .ckeys .ceq{background:var(--chart);color:var(--bg);border:0;grid-column:span 2}
+/* ---- 1 to 5 rating as tappable boxes ---- */
+.rate5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;width:100%}
+.rate5 label{position:relative;display:block}
+.rate5 input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.rate5 span{display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:12px;border:1px solid var(--line);font-weight:800;font-size:18px;color:var(--ink);background:var(--bg)}
+.rate5 input:checked+span{border:2px solid var(--chart);color:var(--chart)}
+.rate5 input:focus-visible+span{outline:3px solid var(--magenta);outline-offset:2px}
 .back{margin-bottom:6px;display:inline-flex;align-items:center;gap:4px}
 /* ---- App shell ---- */
 body.has-tabs main{padding-bottom:110px}
@@ -378,26 +404,34 @@ function study(topic, custom, back){
   hideTabs(); stopTimer();
   const now=Date.now(); back=back||home;
   let queue;
-  if(custom){ queue=shuffle(custom).slice(0,20); }
+  const N=sessionSize();
+  if(custom){ queue=shuffle(custom).slice(0,Math.max(N,10)); }
   else if(topic==="__hy"){
     // High-yield: due first, then unseen, then the weakest ones
     const hy=QUESTIONS.filter(q=>q.hy), box=q=>(S.cards[q.id]||{box:0}).box;
     const due=shuffle(hy.filter(q=>{const c=S.cards[q.id]; return c&&c.box>0&&c.due<=now;}));
     const rest=shuffle(hy.filter(q=>!due.includes(q))).sort((a,b)=>box(a)-box(b));
-    queue=due.concat(rest).slice(0,20);
+    queue=due.concat(rest).slice(0,N);
   }
   else if(topic){ queue=shuffle(QUESTIONS.filter(q=>q.topic===topic)).slice(0,10); }
   else {
     const due=shuffle(QUESTIONS.filter(q=>{const c=S.cards[q.id]; return c&&c.box>0&&c.due<=now;}));
     const fresh=shuffle(QUESTIONS.filter(q=>!S.cards[q.id]||S.cards[q.id].box===0));
-    queue=due.concat(fresh).slice(0,15);
+    queue=due.concat(fresh).slice(0,N);
   }
   let i=0, right=0;
   const orders=queue.map(()=>shuffle([0,1,2,3])); // keep option order stable when going back
   const picks=new Array(queue.length).fill(null); // answer chosen for each question, once answered
-  const firstLen=queue.length, MAX_REVIEW=5; let reviewAdded=false, reviewRight=0;
+  const firstLen=queue.length, MAX_REVIEW=5; let reviewAdded=false, reviewRight=0, skipPrompted=false, skipMode=false;
+  // Next question: in "answer skipped" mode, jump only to questions still unanswered
+  const nextIndex=()=>{ if(skipMode&&i<firstLen){ for(let k=i+1;k<firstLen;k++) if(picks[k]===null) return k; return queue.length; } return i+1; };
   function show(){
     if(i>=queue.length){
+      // Questions skipped in the main session come back first
+      if(!skipPrompted){
+        const sk=picks.slice(0,firstLen).map((p,k)=>p===null?k:-1).filter(k=>k>=0);
+        if(sk.length){ skipPrompted=true; return skippedIntro(sk); }
+      }
       // One quick review round of the questions missed this session (first attempts only)
       if(!reviewAdded){
         reviewAdded=true;
@@ -412,26 +446,30 @@ function study(topic, custom, back){
       <div class="bar"><span style="width:${Math.min(i,firstLen)/firstLen*100}%"></span></div>
       <div class="small">${isReview?`Quick review ${i-firstLen+1} of ${queue.length-firstLen}`:`Question ${i+1} of ${firstLen}`}${done?" · reviewing":""}</div>
       <article class="qcard">
-        <div class="qmeta" style="align-items:center"><span>${esc(topicName(q.topic))}</span><span style="display:flex;align-items:center;gap:4px">${q.hy?'<span class="hyb">High-yield</span>':""}${q.id}${starBtn(q)}</span></div>
+        <div class="qmeta" style="align-items:center"><span>${esc(topicName(q.topic))}</span><span style="display:flex;align-items:center;gap:4px">${q.hy&&topic!=="__hy"?'<span class="hyb">High-yield</span>':""}${q.id}${starBtn(q)}</span></div>
         <p class="qtext">${esc(q.q)}</p>
         <div class="opts">${order.map(o=>`<button class="opt" data-o="${o}">${esc(q.options[o])}</button>`).join("")}</div>
         <div id="after"></div>
       </article>
-      <div class="row" id="navrow" style="margin-top:4px">${i>0&&i!==firstLen?`<button class="ghost" id="prev">Previous</button>`:""}${isReview&&!done?`<button class="link" id="skiprev" style="min-height:auto">Finish now</button>`:""}</div>`;
+      <div class="row" id="navrow" style="margin-top:4px">${i>0&&i!==firstLen?`<button class="ghost" id="prev">Previous</button>`:""}${!done&&!isReview?`<button class="ghost" id="skipq">Skip for now</button>`:""}${isReview&&!done?`<button class="link" id="skiprev" style="min-height:auto">Finish now</button>`:""}</div>`;
     $("#quit").onclick=()=>back();
-    wireStars();
+    wireStars(); app.insertAdjacentHTML("beforeend",calcFab()); wireCalcFab();
     const pv=$("#prev"); if(pv) pv.onclick=()=>{ i--; show(); };
     const sk=$("#skiprev"); if(sk) sk.onclick=()=>summary();
+    const sq=$("#skipq"); if(sq) sq.onclick=()=>{ i=nextIndex(); show(); };
     const reveal=(pick, fresh)=>{
       const ok=pick===q.answer;
       app.querySelectorAll(".opt").forEach(x=>{x.disabled=true; const o=+x.dataset.o;
         if(o===q.answer) x.classList.add("right"); else if(o===pick) x.classList.add("wrong");});
       $("#after").innerHTML=`<div class="explain"><strong class="${ok?"pass":"fail"}">${ok?"Correct":"Not quite"}</strong>${esc(q.explanation)}
         ${inlineNotes(q, !ok)}</div>
-        <button class="link" id="rep" style="margin-top:8px">Report a problem with this question</button>`;
+        ${ok&&fresh&&!isReview?`<button class="link" id="guess" style="margin-top:8px;margin-right:16px">I guessed this</button>`:""}<button class="link" id="rep" style="margin-top:8px">Report a problem with this question</button>`;
+      const gs=$("#guess"); if(gs) gs.onclick=()=>{ const c=S.cards[q.id]; if(c){ c.box=1; c.due=Date.now()+DAY; c.last=false;
+        if(USER) sb.from("card_progress").upsert({user_id:USER.id, question_id:q.id, box:1, due_at:new Date(c.due).toISOString(), seen:c.seen, correct:c.right, last_correct:false, updated_at:new Date().toISOString()}).then(({error})=>dbErr(error)); }
+        gs.disabled=true; gs.textContent="Marked as a guess: it will come back tomorrow"; };
       $("#navrow").innerHTML=`${i>0&&i!==firstLen?`<button class="ghost" id="prev">Previous</button>`:""}<button class="primary" id="next">${i+1<queue.length?"Next question":"Finish session"}</button>`;
       const p2=$("#prev"); if(p2) p2.onclick=()=>{ i--; show(); };
-      $("#next").onclick=()=>{i++;show();}; if(fresh) $("#next").focus();
+      $("#next").onclick=()=>{ i=nextIndex(); show(); }; if(fresh) $("#next").focus();
       $("#rep").onclick=()=>flag(q.id);
     };
     if(done) return reveal(picks[i], false);
@@ -443,6 +481,13 @@ function study(topic, custom, back){
       reveal(pick, true);
     });
   }
+  function skippedIntro(sk){
+    app.innerHTML=`<section class="briefing"><h2>${sk.length===1?"One question":sk.length+" questions"} skipped</h2>
+      <p>Answer ${sk.length===1?"it":"them"} now to complete the session. Skipped questions don't count until you answer them.</p>
+      <div class="row"><button class="primary" id="sk-go">Answer them now</button><button class="ghost" id="sk-fin">Finish</button></div></section>`;
+    $("#sk-go").onclick=()=>{ skipMode=true; i=sk[0]; show(); };
+    $("#sk-fin").onclick=()=>{ i=queue.length; show(); };
+  }
   function reviewIntro(missed){
     app.innerHTML=`<section class="briefing"><h2>Quick review</h2>
       <p>You missed ${missed.length===1?"one question":missed.length+" questions"} this session. Try ${missed.length===1?"it":"them"} once more while ${missed.length===1?"it's":"they're"} fresh. The options are reshuffled, and this round doesn't affect your score.</p>
@@ -451,9 +496,10 @@ function study(topic, custom, back){
     $("#rv-skip").onclick=()=>summary();
   }
   function summary(){
-    const reviewed=queue.length-firstLen;
+    const reviewed=queue.length-firstLen, unanswered=picks.slice(0,firstLen).filter(p=>p===null).length;
     app.innerHTML=`<section class="briefing"><h2>${right} of ${firstLen} correct</h2>
       ${reviewed?`<p><b>Quick review:</b> ${reviewRight} of ${reviewed} right on the second try.</p>`:""}
+      ${unanswered?`<p class="small">${unanswered} skipped ${unanswered===1?"question wasn't":"questions weren't"} answered and will come up again another time.</p>`:""}
       <p>Questions you missed will come back first next time. Correct ones return after a longer gap each time you get them right.</p>
       <div class="row"><button class="primary" id="h">Done</button></div></section>`;
     $("#h").onclick=()=>back();
@@ -485,7 +531,7 @@ const ICONS={home:'<path d="M3 11l9-7 9 7"></path><path d="M5 10v10h14V10"></pat
  review:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path>',
  progress:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path>', user:'<circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path>', down:'<path d="M6 9l6 6 6-6"></path>',
  flame:'<path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-3 2-4 2-7 2 1 3 3 3 3"></path>', chev:'<path d="M9 6l6 6-6 6"></path>',
- x:'<path d="M6 6l12 12M18 6L6 18"></path>', flag:'<path d="M5 21V4h11l-2 4 2 4H5"></path>', back:'<path d="M15 6l-6 6 6 6"></path>'};
+ x:'<path d="M6 6l12 12M18 6L6 18"></path>', calc:'<rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M8 18h2M12 18h2M16 14v4"></path>', search:'<circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path>', info:'<circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7.5v.5"></path>', dl:'<path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path>', flag:'<path d="M5 21V4h11l-2 4 2 4H5"></path>', back:'<path d="M15 6l-6 6 6 6"></path>'};
 const icon=(k,s=22,extra="")=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${ICONS[k]}</svg>`;
 const LOGO_MARK='<svg class="lgm" viewBox="0 0 210 210" width="40" height="40" aria-hidden="true"><defs><clipPath id="gclipapp"><circle cx="96" cy="104" r="67"/></clipPath></defs><g clip-path="url(#gclipapp)" opacity="0.55"><ellipse cx="96" cy="104" rx="60.6" ry="70" fill="none" stroke="#A00002" stroke-width="1.7"/><ellipse cx="96" cy="104" rx="35.0" ry="70" fill="none" stroke="#A00002" stroke-width="1.7"/><ellipse cx="96" cy="104" rx="35.0" ry="70" fill="none" stroke="#A00002" stroke-width="1.7"/><ellipse cx="96" cy="104" rx="60.6" ry="70" fill="none" stroke="#A00002" stroke-width="1.7"/><line x1="96" y1="34" x2="96" y2="174" stroke="#A00002" stroke-width="1.7"/><line x1="51.0" y1="157.6" x2="141.0" y2="157.6" stroke="#A00002" stroke-width="1.7"/><line x1="32.6" y1="133.6" x2="159.4" y2="133.6" stroke="#A00002" stroke-width="1.7"/><line x1="26.0" y1="104.0" x2="166.0" y2="104.0" stroke="#A00002" stroke-width="1.7"/><line x1="32.6" y1="74.4" x2="159.4" y2="74.4" stroke="#A00002" stroke-width="1.7"/><line x1="51.0" y1="50.4" x2="141.0" y2="50.4" stroke="#A00002" stroke-width="1.7"/></g><circle cx="96" cy="104" r="70" fill="none" stroke="#A00001" stroke-width="9"/><path d="M 14 136 C 36 198, 112 182, 150 100 C 108 166, 44 178, 14 136 Z" fill="#A00004"/><g transform="translate(134.6 32.6) scale(0.8) rotate(42 50 50)"><g stroke="#A00005" stroke-width="7" stroke-linejoin="round"><path d="M54.2 33 L 64 38 L 96 58 C 97.2 58.8, 97.4 60.4, 96.4 61 L 94 61.4 L 54.3 50.5 Z M45.8 33 L 36 38 L 4 58 C 2.8 58.8, 2.6 60.4, 3.6 61 L 6 61.4 L 45.7 50.5 Z" fill="#A00005"/><path d="M52.6 80 L 68 88.6 C 68.8 89.1, 68.8 90.4, 68 90.6 L 52 89.4 Z M47.4 80 L 32 88.6 C 31.2 89.1, 31.2 90.4, 32 90.6 L 48 89.4 Z" fill="#A00005"/><path d="M66.6 34.5 C 68.4 34.2, 70.2 34.8, 70.3 36.6 L 70.6 46.5 C 70.6 47.8, 66.6 48, 66.3 46.7 L 65.6 36.4 C 65.6 35.4, 65.9 34.7, 66.6 34.5 Z M33.4 34.5 C 31.6 34.2, 29.8 34.8, 29.7 36.6 L 29.4 46.5 C 29.4 47.8, 33.4 48, 33.7 46.7 L 34.4 36.4 C 34.4 35.4, 34.1 34.7, 33.4 34.5 Z" fill="#A00005" stroke="none" stroke-width="1.1"/><path d="M50 2.5 C 53.2 2.5, 54.7 7, 54.9 13 L 55 62 C 55 72, 53.8 82, 51.8 90 L 50.9 96.5 L 49.1 96.5 L 48.2 90 C 46.2 82, 45 72, 45 62 L 45.1 13 C 45.3 7, 46.8 2.5, 50 2.5 Z" fill="#A00005"/></g><path d="M54.2 33 L 64 38 L 96 58 C 97.2 58.8, 97.4 60.4, 96.4 61 L 94 61.4 L 54.3 50.5 Z M45.8 33 L 36 38 L 4 58 C 2.8 58.8, 2.6 60.4, 3.6 61 L 6 61.4 L 45.7 50.5 Z" fill="#A00003"/><path d="M52.6 80 L 68 88.6 C 68.8 89.1, 68.8 90.4, 68 90.6 L 52 89.4 Z M47.4 80 L 32 88.6 C 31.2 89.1, 31.2 90.4, 32 90.6 L 48 89.4 Z" fill="#A00003"/><path d="M66.6 34.5 C 68.4 34.2, 70.2 34.8, 70.3 36.6 L 70.6 46.5 C 70.6 47.8, 66.6 48, 66.3 46.7 L 65.6 36.4 C 65.6 35.4, 65.9 34.7, 66.6 34.5 Z M33.4 34.5 C 31.6 34.2, 29.8 34.8, 29.7 36.6 L 29.4 46.5 C 29.4 47.8, 33.4 48, 33.7 46.7 L 34.4 36.4 C 34.4 35.4, 34.1 34.7, 33.4 34.5 Z" fill="#A00003" stroke="#A00005" stroke-width="1.1"/><path d="M50 2.5 C 53.2 2.5, 54.7 7, 54.9 13 L 55 62 C 55 72, 53.8 82, 51.8 90 L 50.9 96.5 L 49.1 96.5 L 48.2 90 C 46.2 82, 45 72, 45 62 L 45.1 13 C 45.3 7, 46.8 2.5, 50 2.5 Z" fill="#A00003"/></g></svg>';
 function renderTabs(active){
@@ -576,7 +622,7 @@ function home(){
   const plan=due||fresh?`${due?due+" review"+(due===1?"":"s"):""}${due&&fresh?", then ":""}${fresh?Math.min(fresh,15-Math.min(due,15))+" new questions":""}.`:"You're all caught up. Sit a practice exam or drill your weakest chapter.";
   const hy=QUESTIONS.filter(q=>q.hy), hyRight=hy.filter(q=>(S.cards[q.id]||{}).right>0).length;
   screen("home",`
-    <section class="card readycard">${ringSVG(readiness())}<div><span class="eyebrow">Exam readiness</span><span class="disp" style="font-size:20px">${esc(SUBJECT)}</span><span class="small">Weighted by how often each chapter is examined.</span></div></section>
+    <button class="card readycard" id="ready" aria-label="Exam readiness ${readiness()}%. How is this worked out?">${ringSVG(readiness())}<div><span class="eyebrow">Exam readiness ${icon("info",15,'style="vertical-align:-2px"')}</span><span class="disp" style="font-size:20px">${esc(SUBJECT)}</span><span class="small">Tap to see how it's worked out and where to gain most.</span></div></button>
     <div class="stat3"><div class="card"><span class="statn">${icon("flame",20)}${streak()}</span><span class="small">day streak</span></div>
       <div class="card"><span class="statn">${due}</span><span class="small">due today</span></div><div class="card"><span class="statn">${fresh}</span><span class="small">not yet seen</span></div></div>
     <section class="card"><h2 class="disp">Today's plan</h2><p class="small" style="margin:6px 0 12px">${plan}</p>
@@ -584,21 +630,31 @@ function home(){
     ${hy.length?`<section class="card"><h2 class="disp">High-yield Top 100</h2><p class="small" style="margin:6px 0 10px">${hyRight} of ${hy.length} answered correctly at least once.</p>
       <div class="bar" style="margin-bottom:12px"><span style="width:${Math.round(100*hyRight/hy.length)}%"></span></div><button class="ghost full" id="go-hy">Practise high-yield</button></section>`:""}
     <section class="card"><h2 class="disp">${weak.some(x=>x.st.acc!==null)?"Your weakest chapters":"Good places to start"}</h2>${weak.map(x=>chapRow(x.t)).join("")}</section>
-    <section class="reportcard"><div><b>Sat your KCAA exam?</b><span>Tell us how it went. It helps us improve and helps future students.</span></div><button class="ghost" id="go-result">Report result</button></section>
-    ${footerHTML()}`);
+    ${showInstallCard()?`<section class="reportcard"><div><b>Install Adrenasky</b><span>Add it to your home screen and open it like any other app.</span></div><button class="ghost" id="go-install">Install</button><button class="iconbtn" id="x-install" aria-label="Dismiss">${icon("x",18)}</button></section>`:""}
+    ${showReportCard()?`<section class="reportcard"><div><b>Sat your KCAA exam?</b><span>Tell us how it went. It helps us improve and helps future students.</span></div><button class="ghost" id="go-result">Report result</button><button class="iconbtn" id="x-result" aria-label="Dismiss">${icon("x",18)}</button></section>`:""}`);
   $("#go-study").onclick=()=>study();
   const gh=$("#go-hy"); if(gh) gh.onclick=()=>study("__hy");
-  $("#go-result").onclick=()=>resultForm();
-  wireChapRows(); wireFooter();
+  const gr=$("#go-result"); if(gr) gr.onclick=()=>resultForm();
+  const xr=$("#x-result"); if(xr) xr.onclick=()=>{ setPref("hide-report","1"); home(); };
+  const gi=$("#go-install"); if(gi) gi.onclick=installSheet;
+  const xi=$("#x-install"); if(xi) xi.onclick=()=>{ setPref("hide-install","1"); home(); };
+  $("#ready").onclick=readinessSheet;
+  wireChapRows();
 }
+function showReportCard(){ if(pref("hide-report","")) return false; let seen=0; Object.values(S.cards).forEach(c=>seen+=c.seen||0); return seen>=100; }
+function showInstallCard(){ return !isStandalone() && !pref("hide-install",""); }
 
 /* ===================== STUDY HUB AND CHAPTERS ===================== */
 function studyHub(){
   screen("study",`<h1 class="disp big">Study</h1>
+    <button class="searchbar" id="s-find">${icon("search",18)}<span>Search questions and notes</span></button>
     <div class="row"><button class="primary" id="s-rev">Start revision</button>${QUESTIONS.some(q=>q.hy)?`<button class="ghost" id="s-hy">High-yield</button>`:""}</div>
+    ${FORMULAS[SUBJ.id]?`<div class="row" style="margin-top:10px"><button class="ghost" id="s-form">Formula sheet</button>${["gnav","rnav"].includes(SUBJ.id)?`<button class="ghost" id="s-calc">${icon("calc",18,'style="vertical-align:-3px"')} Calculator</button>`:""}</div>`:""}
     <section class="card"><h2 class="disp">Chapters</h2><p class="small" style="margin:4px 0 6px">Tap a chapter for its notes, a quiz and your mistakes. The bar shows how much you've mastered.</p>
       ${TOPICS.map((t,i)=>chapRow({...t,name:(i+1)+". "+t.name})).join("")}</section>`);
   $("#s-rev").onclick=()=>study(); const h=$("#s-hy"); if(h) h.onclick=()=>study("__hy"); wireChapRows();
+  $("#s-find").onclick=()=>searchView("");
+  const sf=$("#s-form"); if(sf) sf.onclick=formulaSheet; const sc=$("#s-calc"); if(sc) sc.onclick=calculator;
 }
 function chapterView(tid){
   const t=TOPICS.find(x=>x.id===tid); if(!t) return studyHub();
@@ -664,8 +720,10 @@ function examHub(){
     <fieldset class="opts2"><legend>Chapters</legend><div class="row"><button class="${st.mode==="all"?"primary":"ghost"}" id="m-all">All chapters</button><button class="${st.mode==="pick"?"primary":"ghost"}" id="m-pick">Choose chapters</button></div>
       ${st.mode==="pick"?`<div class="chklist">${TOPICS.filter(t=>QUESTIONS.some(q=>q.topic===t.id)).map(t=>`<label><input type="checkbox" value="${t.id}" ${st.chs.has(t.id)?"checked":""}> ${esc(t.name)}</label>`).join("")}</div>`:""}</fieldset>
     <button class="primary full" id="go-exam">Start exam</button>
+    <section class="reportcard"><div><b>Sat the real KCAA exam?</b><span>Report your result and tell other students how Adrenasky helped. You can add a result any time.</span></div><button class="ghost" id="go-result2">Report result</button></section>
     ${S.exams.length?`<section class="card"><h2 class="disp">Recent exams</h2>${S.exams.slice(0,5).map(e=>`<div class="exrow"><span>${fmtDate(e.date)} · ${e.n} questions</span><b class="${e.pct>=PASS_MARK?"pass":"fail"}">${e.pct}% ${e.pct>=PASS_MARK?"Pass":"Fail"}</b></div>`).join("")}</section>`:""}`);
   app.querySelectorAll('input[name="fmt"]').forEach(r=>r.onchange=()=>{ st.fmt=r.value; examHub(); });
+  $("#go-result2").onclick=()=>resultForm();
   $("#m-all").onclick=()=>{ st.mode="all"; examHub(); }; $("#m-pick").onclick=()=>{ st.mode="pick"; examHub(); };
   app.querySelectorAll(".chklist input").forEach(c=>c.onchange=()=>{ c.checked?st.chs.add(c.value):st.chs.delete(c.value); });
   $("#go-exam").onclick=()=>{
@@ -709,7 +767,7 @@ function exam(qs, minutes){
       ask(blank?`${blank} ${blank===1?"question is":"questions are"} unanswered${marked.size?" and "+marked.size+" flagged":""}. Submit anyway?`:(marked.size?`${marked.size} flagged ${marked.size===1?"question":"questions"} to check. Submit anyway?`:"Submit your exam now?"),"Submit exam","Keep going",go); };
     $("#sub").onclick=submit; const s2=$("#sub2"); if(s2) s2.onclick=submit;
     $("#quit").onclick=()=>ask("Leave the exam? Your answers won't be saved.","Leave exam","Stay",()=>{stopTimer(); examHub();});
-    wireStars();
+    wireStars(); app.insertAdjacentHTML("beforeend",calcFab()); wireCalcFab();
   }
   function finish(){
     let right=0; const byTopic={};
@@ -717,25 +775,10 @@ function exam(qs, minutes){
       const b=byTopic[q.topic]||(byTopic[q.topic]={r:0,n:0}); b.n++; if(ok) b.r++; });
     const pct=Math.round(right/qs.length*100), passed=pct>=PASS_MARK;
     S.exams.unshift({date:new Date().toISOString(),pct,right,n:qs.length}); S.exams=S.exams.slice(0,30);
-    sb.from("exam_attempts").insert({user_id:USER.id, subject_id:SUBJ.id, correct:right, total:qs.length, score_pct:pct, by_topic:byTopic}).then(({error})=>dbErr(error));
-    const wrong=qs.map((q,k)=>({q,a:answers[k]})).filter(x=>x.a!==x.q.answer);
-    app.innerHTML=`
-      <section class="card resultcard"><p class="score ${passed?"pass":"fail"}">${pct}%</p>
-        <p>${right} of ${qs.length} correct. ${passed?"Pass.":"Below the "+PASS_MARK+"% pass mark."}</p>
-        <div class="row"><button class="primary" id="h">Done</button><button class="ghost" id="again">New exam</button></div></section>
-      <h3 class="section">By chapter</h3>
-      <div class="wrapx"><table><tr><th>Chapter</th><th>Score</th></tr>
-        ${Object.entries(byTopic).sort((a,b)=>a[1].r/a[1].n-b[1].r/b[1].n).map(([t,b])=>`<tr><td>${esc(topicName(t))}</td><td class="${b.r/b.n>=0.75?"pass":"fail"}">${b.r}/${b.n}</td></tr>`).join("")}</table></div>
-      ${wrong.length?`<h3 class="section" style="margin-top:26px">Review your mistakes</h3>
-        ${wrong.map(({q,a})=>`<article class="qcard"><div class="qmeta"><span>${esc(topicName(q.topic))}</span><span style="display:flex;align-items:center;gap:4px">${q.id}${starBtn(q)}</span></div>
-          <p class="qtext">${esc(q.q)}</p>
-          ${a!==null?`<p class="fail" style="margin:0 0 6px">Your answer: ${esc(q.options[a])}</p>`:`<p class="fail" style="margin:0 0 6px">Not answered</p>`}
-          <p class="pass" style="margin:0">Correct: ${esc(q.options[q.answer])}</p>
-          <div class="explain">${esc(q.explanation)}${inlineNotes(q, true)}</div>
-          <button class="link rep" data-id="${q.id}">Report a problem with this question</button></article>`).join("")}`:""}`;
-    $("#h").onclick=()=>examHub(); $("#again").onclick=examHub;
-    app.querySelectorAll(".rep").forEach(b=>b.onclick=()=>flag(b.dataset.id));
-    wireStars(); window.scrollTo(0,0);
+    const saved=qs.map((q,k)=>({id:q.id,a:answers[k]}));
+    S.exams[0].answers=saved;
+    sb.from("exam_attempts").insert({user_id:USER.id, subject_id:SUBJ.id, correct:right, total:qs.length, score_pct:pct, by_topic:byTopic, answers:saved}).then(({error})=>dbErr(error));
+    return examReview(qs, answers, ()=>examHub(), true);
   }
   show();
 }
@@ -750,41 +793,200 @@ function scoreChart(){
 }
 function progress(tab){
   tab=tab||progress.tab||"stats"; progress.tab=tab;
-  const tabs=[["stats","Stats"],["exams","Exams"],["kcaa","KCAA"],["account","Account"]];
+  const tabs=[["stats","Stats"],["exams","Exams"],["kcaa","KCAA results"],["account","Account"]];
   let body="";
   if(tab==="stats") body=`<section class="card"><h2 class="disp">Exam scores</h2>${scoreChart()}</section>
     <section class="card"><h2 class="disp">Chapters</h2>${TOPICS.filter(t=>QUESTIONS.some(q=>q.topic===t.id)).map(t=>chapRow(t)).join("")}</section>`;
-  if(tab==="exams") body=S.exams.length?`<div class="wrapx"><table><tr><th>Date</th><th>Score</th><th>Result</th></tr>${S.exams.map(e=>`<tr><td>${fmtDate(e.date)}</td><td>${e.right}/${e.n} (${e.pct}%)</td><td class="${e.pct>=PASS_MARK?"pass":"fail"}">${e.pct>=PASS_MARK?"Pass":"Fail"}</td></tr>`).join("")}</table></div>`
+  if(tab==="exams") body=S.exams.length?`<p class="small">Tap an exam to review your answers.</p>${S.exams.map((e,k)=>`<button class="card qitem exitem" data-ex="${k}"><span class="exrow" style="border:0;padding:0"><span>${fmtDate(e.date)} · ${e.n} questions</span><b class="${e.pct>=PASS_MARK?"pass":"fail"}">${e.pct}% ${e.pct>=PASS_MARK?"Pass":"Fail"}</b></span>${e.answers?"":`<span class="small">Review not available for older exams</span>`}</button>`).join("")}`
     :`<section class="card"><p class="small" style="margin:0">No exams yet.</p></section>`;
   if(tab==="exams") body+=`<button class="primary full" id="p-ex" style="margin-top:12px">Sit a practice exam</button>`;
-  if(tab==="kcaa") body=`<p class="small">Results you've reported from real KCAA exams. Only you and the Adrenasky team can see them.</p><div id="myres"><p class="small">Loading…</p></div><button class="primary full" id="add-res">Report an exam result</button>`;
-  if(tab==="account") body=`<section class="card"><h2 class="disp">Account</h2><p class="small">Signed in as ${esc(USER.email)}</p>
+  if(tab==="kcaa") body=`<p class="small">Your real KCAA exam results, including any you sat before using Adrenasky. Add feedback to a result whenever you're ready.</p><div id="myres"><p class="small">Loading…</p></div><button class="primary full" id="add-res">Report an exam result</button>`;
+  if(tab==="account") body=`<section class="card"><h2 class="disp">Settings</h2><p class="small">Signed in as ${esc(USER.email)}</p>
       <label class="toggle"><span>Night theme</span><input type="checkbox" id="th" ${themePref()==="night"?"checked":""}></label>
-      ${IS_ADMIN?`<button class="ghost full" id="go-admin" style="margin-top:10px">Open admin</button>`:""}</section>
+      <label class="toggle"><span>Text size</span><select id="tsz" class="miniselect"><option value="normal">Normal</option><option value="large" ${pref("textsize","normal")==="large"?"selected":""}>Large</option><option value="xl" ${pref("textsize","normal")==="xl"?"selected":""}>Extra large</option></select></label>
+      <label class="toggle"><span>Questions per revision session</span><select id="ssz" class="miniselect">${[10,15,20,30].map(n=>`<option value="${n}" ${sessionSize()===n?"selected":""}>${n}</option>`).join("")}</select></label>
+      ${isStandalone()?"":`<button class="ghost full" id="inst" style="margin-top:10px">Install the app</button>`}</section>
     <section class="card"><h2 class="disp">Your devices</h2><div id="devs"><p class="small">Loading…</p></div></section>
     <section class="card"><h2 class="disp">Reset revision</h2><p class="small">Clears your spaced-repetition progress so every question starts fresh. Exam history is kept.</p><button class="ghost full" id="reset">Reset revision progress</button></section>
-    <div class="row"><button class="ghost" id="sup">Contact support</button><button class="ghost" id="logout">Log out</button></div>${footerHTML()}`;
+    <p class="small">Admin, support and log out are in the account menu at the top right.</p>${footerHTML()}`;
   screen("progress",`<h1 class="disp big">Progress</h1><div class="seg3" role="tablist">${tabs.map(([k,l])=>`<button role="tab" aria-selected="${k===tab}" data-pt="${k}">${l}</button>`).join("")}</div>${body}`);
   app.querySelectorAll("[data-pt]").forEach(b=>b.onclick=()=>progress(b.dataset.pt));
   wireChapRows();
   const pe=$("#p-ex"); if(pe) pe.onclick=examHub;
-  if(tab==="kcaa"){ $("#add-res").onclick=()=>resultForm();
+  app.querySelectorAll("[data-ex]").forEach(b=>b.onclick=()=>openPastExam(S.exams[+b.dataset.ex]));
+  if(tab==="kcaa"){ $("#add-res").onclick=()=>resultForm(null,()=>progress("kcaa"));
     const loadRes=()=>myResultsHTML().then(h=>{ const el=$("#myres"); if(!el) return; el.innerHTML=h;
-      el.querySelectorAll(".rdel").forEach(b=>b.onclick=()=>ask("Remove this result?","Remove","Cancel",async()=>{ const {error}=await sb.from("exam_results").delete().eq("id",+b.dataset.id); if(error) toast(error.message); loadRes(); })); });
+      el.querySelectorAll(".rdel").forEach(b=>b.onclick=()=>ask("Remove this result?","Remove","Cancel",async()=>{ const {error}=await sb.from("exam_results").delete().eq("id",+b.dataset.id); if(error) toast(error.message); loadRes(); }));
+      el.querySelectorAll(".redit").forEach(b=>b.onclick=()=>resultForm(myResultsHTML.rows[+b.dataset.k],()=>progress("kcaa"))); });
     loadRes(); }
   if(tab==="account"){
     $("#th").onchange=e=>setTheme(e.target.checked?"night":"light");
-    const ga=$("#go-admin"); if(ga) ga.onclick=()=>{ hideTabs(); adminView("overview"); };
+    $("#tsz").onchange=e=>{ setPref("textsize",e.target.value); applyTextSize(); };
+    $("#ssz").onchange=e=>{ setPref("session",e.target.value); toast("Sessions will have "+e.target.value+" questions"); };
+    const ins=$("#inst"); if(ins) ins.onclick=installSheet;
     $("#reset").onclick=()=>ask("Reset your revision progress? Exam history is kept.","Reset","Cancel",async ()=>{
       const {error}=await sb.from("card_progress").delete().eq("user_id",USER.id); dbErr(error);
       if(!error){ S.cards={}; home(); toast("Revision progress reset"); } });
-    $("#sup").onclick=()=>legalView("support");
-    $("#logout").onclick=()=>ask("Log out of Adrenasky?","Log out","Cancel",async ()=>{ hideTabs(); await sb.auth.signOut(); });
     wireFooter();
     fetchDevices().then(({list,limit})=>{ const el=$("#devs"); if(!el) return;
       el.innerHTML=`<p class="small" style="margin-top:0">${list.length} of ${limit} devices in use. Each browser counts as a device.</p>${deviceRows(list,false)}`;
       el.querySelectorAll(".rm").forEach(b=>b.onclick=()=>removeDevice(b.dataset.id,b.dataset.l,()=>progress("account"))); });
   }
+}
+
+/* ===================== SETTINGS (per device) ===================== */
+function pref(k,d){ try{ const v=localStorage.getItem("adrenasky-"+k); return v===null?d:v; }catch(e){ return d; } }
+function setPref(k,v){ try{ localStorage.setItem("adrenasky-"+k,v); }catch(e){} }
+const sessionSize=()=>+pref("session","15");
+function applyTextSize(){ const t=pref("textsize","normal"); document.body.classList.toggle("ts-l",t==="large"); document.body.classList.toggle("ts-xl",t==="xl"); }
+
+/* ===================== INSTALL AS AN APP ===================== */
+let installEvt=null;
+window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); installEvt=e; });
+const isStandalone=()=>window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches || navigator.standalone===true;
+const isIOS=()=>/iPhone|iPad|iPod/.test(navigator.userAgent);
+function installSheet(){
+  const w=document.createElement("div"); w.className="modal sheetwrap";
+  const body=isStandalone()?`<p>Adrenasky is already installed on this device.</p>`
+    :installEvt?`<p>Add Adrenasky to your home screen. It opens full-screen, like any other app.</p><button class="primary full" id="in-go">Install Adrenasky</button>`
+    :isIOS()?`<ol class="keyl"><li>Open adrenasky.com in <b>Safari</b>.</li><li>Tap the <b>Share</b> button (the square with an arrow).</li><li>Scroll down and tap <b>Add to Home Screen</b>, then <b>Add</b>.</li></ol>`
+    :`<ol class="keyl"><li>Open adrenasky.com in <b>Chrome</b>.</li><li>Tap the <b>⋮</b> menu.</li><li>Tap <b>Install app</b> (or <b>Add to Home screen</b>).</li></ol>`;
+  w.innerHTML=`<section class="sheet" role="dialog" aria-modal="true" aria-label="Install the app"><div class="grab"></div><h2 class="disp" style="margin:0 0 6px">Install the app</h2>${body}
+    <button class="ghost full" id="in-close" style="margin-top:8px">Close</button></section>`;
+  document.body.appendChild(w);
+  w.onclick=e=>{ if(e.target===w) w.remove(); }; w.querySelector("#in-close").onclick=()=>w.remove();
+  const g=w.querySelector("#in-go"); if(g) g.onclick=async()=>{ installEvt.prompt(); await installEvt.userChoice; installEvt=null; w.remove(); };
+}
+
+/* ===================== FORMULA SHEETS ===================== */
+const FORMULAS={
+ gnav:[["Speed, time and distance",["Time (min) = distance ÷ GS × 60","Distance = GS × time (min) ÷ 60","Fuel = flow × time; endurance = fuel ÷ flow"]],
+  ["1 in 60 rule",["Track error (°) = off track × 60 ÷ distance flown","Closing angle (°) = off track × 60 ÷ distance to go","Heading change = track error + closing angle"]],
+  ["Wind",["Crosswind = wind speed × sin(angle)","Headwind = wind speed × cos(angle)","ATIS and tower winds are magnetic; METAR and TAF winds are true"]],
+  ["Speed of sound and Mach",["Temperature (K) = °C + 273","LSS (kt) = 38.95 × √K","TAS = Mach × LSS"]],
+  ["Climb and descent",["Descent distance = (height ÷ ROD) × GS ÷ 60","3° glide path: ROD ≈ GS × 5; height ≈ 300 ft per NM","ROD = GS × 101 × tan(angle)"]],
+  ["Altitude",["Density altitude ≈ PA + 120 ft × ISA deviation","ISA temp = 15 − 1.98 × (altitude ÷ 1,000)","Altitude ≈ FL − (1013 − QNH) × 27 ft"]],
+  ["Earth and charts",["Departure (NM) = Δlong (min) × cos lat","Δlong = departure ÷ (60 × cos lat)","Earth convergency = Δlong × sin mean lat","Conversion angle = ½ × convergency","Lambert: n = sin(parallel of origin); chart convergence = Δlong × n","Mercator scale ∝ sec lat (doubles at 60°)","Polar stereographic: n = 1"]],
+  ["PET and PSR",["PET distance = D × GS home ÷ (GS out + GS home)","PSR time = endurance × GS home ÷ (GS out + GS home)","PSR distance = PSR time × GS out"]],
+  ["Time",["15° = 1 hour; 1° = 4 minutes","East: LMT = UTC + 4 min per °; West: subtract"]],
+  ["Conversions",["1 NM = 1.852 km = 6,076 ft; 1 statute mile = 1.609 km","1 m/s ≈ 1.94 kt; 1 ft = 0.3048 m","1 US gal = 3.785 L; 1 imp gal = 4.546 L ≈ 1.2 US gal","Mass (kg) = litres × SG; 1 kg = 2.205 lb"]]],
+ rnav:[["Waves",["Wavelength (m) = 300 ÷ frequency (MHz)","Frequency (MHz) = 300 ÷ wavelength (m)","LF 30–300 kHz · MF 300–3,000 kHz · HF 3–30 MHz · VHF 30–300 MHz · UHF 300–3,000 MHz · SHF 3–30 GHz"]],
+  ["Line of sight",["Range (NM) ≈ 1.23 × (√h₁ + √h₂), heights in feet"]],
+  ["Radar",["Max unambiguous range (NM) ≈ 81,000 ÷ PRF","Range (NM) ≈ echo time (µs) ÷ 12.36","Pulse length → minimum range; PRF → maximum range"]],
+  ["DME",["Height (NM) = feet ÷ 6,076","Ground range = √(slant range² − height²)","GS = change in DME ÷ time × 60 (flying to or from the station)"]],
+  ["VOR and ADF",["Off track (NM) = degrees off × distance ÷ 60","Time to station (min) = elapsed time × 60 ÷ bearing change","QDM = MH + relative bearing","ADF true bearing: use the aircraft's variation; VOR radial: use the station's variation"]],
+  ["ILS",["ROD = GS × 101 × tan(angle); 3° ≈ GS × 5","Localiser 0.5° per dot (2.5° full scale); glide slope ≈ 0.7° full scale"]]],
+ met:[["ISA",["MSL: +15°C, 1013.25 hPa, 1.225 kg/m³","Lapse 1.98°C per 1,000 ft to 36,090 ft; then −56.5°C"]],
+  ["Altimetry",["1 hPa ≈ 27 ft near MSL","Altitude ≈ FL ± (1013 − QNH) × 27 ft","True altitude correction: 4 ft per 1,000 ft per °C ISA deviation","Density altitude ≈ PA + 120 ft × ISA deviation"]],
+  ["Stability and cloud",["DALR 3°C per 1,000 ft; SALR ≈ 1.5°C per 1,000 ft","Convective cloud base ≈ 400 ft × (temperature − dew point)"]]]
+};
+function formulaSheet(){
+  const f=FORMULAS[SUBJ.id]; if(!f) return;
+  screen("study",`<button class="link back" id="fb">${icon("back",18)} Study</button><h1 class="disp big">Formula sheet</h1>
+    <p class="small">${esc(SUBJECT)}: the formulas the exam keeps reusing.</p>
+    ${f.map(([h,items])=>`<section class="card"><h2 class="disp">${esc(h)}</h2><ul class="keyl">${items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>`).join("")}
+    <button class="primary full" id="fcalc">Open calculator</button>`);
+  $("#fb").onclick=studyHub; $("#fcalc").onclick=calculator;
+}
+
+/* ===================== CALCULATOR ===================== */
+function calculator(){
+  if($("#calcw")) return;
+  const w=document.createElement("div"); w.className="modal sheetwrap"; w.id="calcw";
+  const keys=["sin","cos","tan","√","(",")","7","8","9","÷","4","5","6","×","1","2","3","−","0",".","π","+"];
+  w.innerHTML=`<section class="sheet calc" role="dialog" aria-modal="true" aria-label="Calculator"><div class="grab"></div>
+    <div class="calcdisp"><div class="small" id="cexpr">&nbsp;</div><div id="cout" aria-live="polite">0</div></div>
+    <p class="small" style="margin:0">Trig functions use degrees.</p>
+    <div class="ckeys">${keys.map(k=>`<button data-k="${k}">${k}</button>`).join("")}<button data-k="C" class="cfn">C</button><button data-k="⌫" class="cfn">⌫</button><button data-k="=" class="ceq">=</button></div>
+    <button class="ghost full" id="cclose">Close</button></section>`;
+  document.body.appendChild(w);
+  let ex="";
+  const show=()=>{ $("#cexpr").textContent=ex||"\u00a0"; };
+  const evaluate=()=>{
+    let s=ex.replace(/×/g,"*").replace(/÷/g,"/").replace(/−/g,"-").replace(/π/g,"(PI)").replace(/√/g,"S")
+      .replace(/sin/g,"N").replace(/cos/g,"O").replace(/tan/g,"T");
+    if(!/^[0-9+\-*/().\sNOTSPI]*$/.test(s)) return "Error";
+    s=s.replace(/PI/g,"Math.PI").replace(/N\(/g,"Math.sin(D*").replace(/O\(/g,"Math.cos(D*").replace(/T\(/g,"Math.tan(D*").replace(/S\(/g,"Math.sqrt(");
+    try{ const v=Function("D","return ("+s+")")(Math.PI/180); return isFinite(v)?String(+v.toFixed(6)):"Error"; }catch(e){ return "Error"; }
+  };
+  w.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{
+    const k=b.dataset.k;
+    if(k==="C"){ ex=""; $("#cout").textContent="0"; }
+    else if(k==="⌫"){ ex=ex.replace(/(sin\(|cos\(|tan\(|√\(|.)$/,""); }
+    else if(k==="="){ const r=evaluate(); $("#cout").textContent=r; if(r!=="Error") ex=r; }
+    else if(["sin","cos","tan","√"].includes(k)){ ex+=k+"("; }
+    else ex+=k;
+    show();
+  });
+  w.onclick=e=>{ if(e.target===w) w.remove(); }; $("#cclose").onclick=()=>w.remove();
+}
+const calcFab=()=>FORMULAS[SUBJ&&SUBJ.id]&&["gnav","rnav"].includes(SUBJ.id)?`<button class="calcfab" id="calcfab" aria-label="Calculator">${icon("calc",22)}</button>`:"";
+function wireCalcFab(){ const c=$("#calcfab"); if(c) c.onclick=calculator; }
+
+/* ===================== READINESS EXPLAINED ===================== */
+function readinessSheet(){
+  const rows=TOPICS.map(t=>({t,st:chapterStats(t.id)})).filter(x=>x.st.n).map(x=>({...x,lost:x.t.weight*(1-x.st.score)})).sort((a,b)=>b.lost-a.lost).slice(0,3);
+  const w=document.createElement("div"); w.className="modal sheetwrap";
+  w.innerHTML=`<section class="sheet" role="dialog" aria-modal="true" aria-label="About exam readiness"><div class="grab"></div>
+    <h2 class="disp" style="margin:0 0 6px">Exam readiness: ${readiness()}%</h2>
+    <p class="small" style="margin:0 0 8px">A score for each chapter combines how much of it you've covered and how accurately you answer (60%) with how many questions you've mastered (40%). Chapters are weighted by how often they appear in the real exam, so heavily examined chapters count most.</p>
+    <h3 class="disp" style="font-size:15px;margin:6px 0">Biggest gains available</h3>
+    ${rows.map(x=>`<button class="chaprow" data-ch2="${x.t.id}"><span class="cr-main"><span class="cr-top"><span class="cr-name">${esc(x.t.name)}</span><span class="cr-acc">${Math.round(x.st.score*100)}% ready</span></span></span>${icon("chev",18)}</button>`).join("")}
+    <button class="ghost full" id="rd-close" style="margin-top:10px">Close</button></section>`;
+  document.body.appendChild(w);
+  w.onclick=e=>{ if(e.target===w) w.remove(); }; w.querySelector("#rd-close").onclick=()=>w.remove();
+  w.querySelectorAll("[data-ch2]").forEach(b=>b.onclick=()=>{ w.remove(); chapterView(b.dataset.ch2); });
+}
+
+/* ===================== SEARCH ===================== */
+function searchView(term){
+  term=(term||"").trim();
+  const t=term.toLowerCase();
+  const qs=t.length<2?[]:QUESTIONS.filter(q=>(q.q+" "+q.options.join(" ")+" "+q.explanation).toLowerCase().includes(t)).slice(0,40);
+  const ns=t.length<2?[]:TOPICS.filter(tp=>{ const n=NOTES[tp.id]; return n&&((n.points||[]).join(" ")+" "+(n.aid||"")+" "+(n.trap||"")).toLowerCase().includes(t); });
+  screen("study",`<button class="link back" id="sb2">${icon("back",18)} Study</button><h1 class="disp big">Search ${esc(SUBJECT)}</h1>
+    <div class="auth"><label>Search questions and notes<input id="sq" type="search" value="${esc(term)}" placeholder="e.g. QFE, radiation fog, DME" autocomplete="off"></label></div>
+    ${t.length<2?`<p class="small">Type at least two letters.</p>`:`
+      ${ns.length?`<section class="card"><h2 class="disp">Notes (${ns.length})</h2>${ns.map(tp=>`<button class="chaprow" data-n="${tp.id}"><span class="cr-main"><span class="cr-name">${esc(tp.name)}</span></span>${icon("chev",18)}</button>`).join("")}</section>`:""}
+      <p class="small">${qs.length?qs.length+(qs.length===40?"+":"")+" questions":"No questions found"}</p>
+      ${qs.map(q=>`<button class="card qitem" data-q="${q.id}"><span class="small">${esc(topicName(q.topic))}</span><span class="qi">${esc(q.q)}</span></button>`).join("")}`}`);
+  $("#sb2").onclick=studyHub;
+  const inp=$("#sq"); inp.focus(); inp.setSelectionRange(inp.value.length,inp.value.length);
+  let tm; inp.oninput=()=>{ clearTimeout(tm); tm=setTimeout(()=>searchView(inp.value),300); };
+  app.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>noteView(b.dataset.n));
+  app.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>questionView(b.dataset.q,()=>searchView(term)));
+}
+
+/* ===================== EXAM REVIEW (current and past) ===================== */
+function examReview(qs, answers, back, isNew){
+  let right=0; const byTopic={};
+  qs.forEach((q,k)=>{ const ok=answers[k]===q.answer; if(ok) right++; const b=byTopic[q.topic]||(byTopic[q.topic]={r:0,n:0}); b.n++; if(ok) b.r++; });
+  const pct=Math.round(right/qs.length*100), passed=pct>=PASS_MARK;
+  const wrong=qs.map((q,k)=>({q,a:answers[k]})).filter(x=>x.a!==x.q.answer);
+  hideTabs();
+  app.innerHTML=`${isNew?"":`<button class="link back" id="erb">${icon("back",18)} Back</button>`}
+    <section class="card resultcard"><p class="score ${passed?"pass":"fail"}">${pct}%</p>
+      <p>${right} of ${qs.length} correct. ${passed?"Pass.":"Below the "+PASS_MARK+"% pass mark."}</p>
+      <div class="row"><button class="primary" id="h">Done</button>${isNew?`<button class="ghost" id="again">New exam</button>`:""}</div></section>
+    <h3 class="section">By chapter</h3>
+    <div class="wrapx"><table><tr><th>Chapter</th><th>Score</th></tr>
+      ${Object.entries(byTopic).sort((a,b)=>a[1].r/a[1].n-b[1].r/b[1].n).map(([t,b])=>`<tr><td>${esc(topicName(t))}</td><td class="${b.r/b.n>=0.75?"pass":"fail"}">${b.r}/${b.n}</td></tr>`).join("")}</table></div>
+    ${wrong.length?`<h3 class="section" style="margin-top:26px">Review your mistakes (${wrong.length})</h3>
+      ${wrong.map(({q,a})=>`<article class="qcard"><div class="qmeta"><span>${esc(topicName(q.topic))}</span><span style="display:flex;align-items:center;gap:4px">${q.id}${starBtn(q)}</span></div>
+        <p class="qtext">${esc(q.q)}</p>
+        ${a!==null&&a!==undefined?`<p class="fail" style="margin:0 0 6px">Your answer: ${esc(q.options[a])}</p>`:`<p class="fail" style="margin:0 0 6px">Not answered</p>`}
+        <p class="pass" style="margin:0">Correct: ${esc(q.options[q.answer])}</p>
+        <div class="explain">${esc(q.explanation)}${inlineNotes(q, true)}</div>
+        <button class="link rep" data-id="${q.id}">Report a problem with this question</button></article>`).join("")}`:`<p class="small">No mistakes. Excellent.</p>`}`;
+  $("#h").onclick=back; const ag=$("#again"); if(ag) ag.onclick=examHub; const eb=$("#erb"); if(eb) eb.onclick=back;
+  app.querySelectorAll(".rep").forEach(b=>b.onclick=()=>flag(b.dataset.id));
+  wireStars(); window.scrollTo(0,0);
+}
+function openPastExam(e){
+  const qs=[], ans=[];
+  (e.answers||[]).forEach(x=>{ const q=QUESTIONS.find(y=>y.id===x.id); if(q){ qs.push(q); ans.push(x.a); } });
+  if(!qs.length) return toast("This exam can't be reviewed (it was taken before reviews were saved).");
+  examReview(qs, ans, ()=>progress("exams"), false);
 }
 
 /* ===================== LANDING, PRICING AND LEGAL PAGES ===================== */
@@ -953,7 +1155,7 @@ async function loadData(next){
   const [q,p,e,r]=await Promise.all([
     sb.from("questions").select("id,topic_id,question,options,answer,explanation,is_active,key_points,compare,is_high_yield").eq("subject_id",SUBJ.id).order("id"),
     sb.from("card_progress").select("question_id,box,due_at,seen,correct,last_correct"),
-    sb.from("exam_attempts").select("taken_at,correct,total,score_pct").eq("subject_id",SUBJ.id).order("taken_at",{ascending:false}).limit(30),
+    sb.from("exam_attempts").select("id,taken_at,correct,total,score_pct,answers").eq("subject_id",SUBJ.id).order("taken_at",{ascending:false}).limit(30),
     sb.from("question_reports").select("question_id")
   ]);
   const [sv,dy]=await Promise.all([sb.from("saved_questions").select("question_id"), sb.from("study_days").select("day").order("day",{ascending:false}).limit(400)]);
@@ -968,7 +1170,7 @@ async function loadData(next){
   QUESTIONS=q.data.filter(x=>x.is_active!==false).map(x=>({id:x.id, topic:x.topic_id, q:x.question, options:x.options, answer:x.answer, explanation:x.explanation, hy:!!x.is_high_yield}));
   S={cards:{},exams:[],flags:[],saved:new Set(((sv&&sv.data)||[]).map(x=>x.question_id)),days:new Set(((dy&&dy.data)||[]).map(x=>String(x.day).slice(0,10)))};
   p.data.forEach(c=>S.cards[c.question_id]={box:c.box,due:new Date(c.due_at).getTime(),seen:c.seen,right:c.correct,last:c.last_correct});
-  S.exams=e.data.map(x=>({date:x.taken_at,pct:x.score_pct,right:x.correct,n:x.total}));
+  S.exams=e.data.map(x=>({id:x.id,date:x.taken_at,pct:x.score_pct,right:x.correct,n:x.total,answers:x.answers}));
   S.flags=[...new Set(r.data.map(x=>x.question_id))];
   (next||home)();
 }
@@ -1228,61 +1430,81 @@ async function editQuestion(id, back){
 }
 
 /* ===================== KCAA EXAM RESULTS ===================== */
-function resultForm(){
-  stopTimer();
+function resultForm(existing, back){
+  stopTimer(); hideTabs();
+  back=back||(()=>examHub());
+  const e=existing||{}; const editing=!!existing;
   const live=SUBJECTS.filter(x=>x.status==="live");
   const today=new Date().toISOString().slice(0,10);
-  app.innerHTML=`<button class="link back" id="rb">Back</button>
-    <h2 class="cond" style="font-size:32px;margin:6px 0 6px;color:var(--chart)">Report your KCAA exam</h2>
-    <p class="small" style="margin-top:0">Your result helps us improve the questions and shows future students what works. Only you and the Adrenasky team can see it.</p>
+  const used=e.used_adrenasky!==false;
+  const chk=(c)=>c?"checked":"";
+  app.innerHTML=`<button class="link back" id="rb">${icon("back",18)} Back</button>
+    <h1 class="disp big">${editing?"Edit your KCAA result":"Report your KCAA exam"}</h1>
+    <p class="small" style="margin-top:0">You can report exams you sat before you started using Adrenasky too, and come back later to add your feedback. Only you and the Adrenasky team can see it.</p>
     <div class="auth">
-      <label>Subject<select id="r-s">${live.map(x=>`<option value="${x.id}" ${SUBJ&&SUBJ.id===x.id?"selected":""}>${esc(x.name)}</option>`).join("")}</select></label>
-      <label>Exam date<input id="r-d" type="date" max="${today}" value="${today}"></label>
+      <label>Subject<select id="r-s">${live.map(x=>`<option value="${x.id}" ${(e.subject_id||(SUBJ&&SUBJ.id))===x.id?"selected":""}>${esc(x.name)}</option>`).join("")}</select></label>
+      <label>Exam date<input id="r-d" type="date" max="${today}" value="${e.exam_date||today}"></label>
       <fieldset class="seg"><legend>Result</legend>
-        <label><input type="radio" name="r-r" value="pass"> Passed</label>
-        <label><input type="radio" name="r-r" value="fail"> Didn't pass this time</label></fieldset>
-      <label>Score % (optional)<input id="r-p" type="number" min="0" max="100" inputmode="numeric" placeholder="e.g. 82"></label>
-      <label>Attempt<select id="r-a"><option value="1">First attempt</option><option value="2">Second attempt</option><option value="3">Third attempt or later</option></select></label>
-      <label>Anything you'd tell other students? (optional)<textarea id="r-t" rows="3" maxlength="600" placeholder="What helped, what surprised you in the exam…"></textarea></label>
-      <label style="display:flex;gap:8px;align-items:flex-start;font-weight:400"><input type="checkbox" id="r-c" style="min-height:auto;width:20px;height:20px;margin-top:2px"> Adrenasky may quote my comment with my first name.</label>
-      <div class="row"><button class="primary" id="r-go">Submit result</button></div>
+        <label><input type="radio" name="r-r" value="pass" ${chk(e.result==="pass")}> Passed</label>
+        <label><input type="radio" name="r-r" value="fail" ${chk(e.result==="fail")}> Didn't pass this time</label></fieldset>
+      <label>Score % (optional)<input id="r-p" type="number" min="0" max="100" inputmode="numeric" placeholder="e.g. 82" value="${e.score_pct??""}"></label>
+      <label>Attempt<select id="r-a">${[[1,"First attempt"],[2,"Second attempt"],[3,"Third attempt or later"]].map(([v,l])=>`<option value="${v}" ${e.attempt===v?"selected":""}>${l}</option>`).join("")}</select></label>
+      <fieldset class="seg"><legend>Did you use Adrenasky to prepare for this exam?</legend>
+        <label><input type="radio" name="r-u" value="yes" ${chk(used)}> Yes</label>
+        <label><input type="radio" name="r-u" value="no" ${chk(!used)}> No, I sat it before using Adrenasky</label></fieldset>
+      <div id="r-fb" ${used?"":"hidden"} style="display:${used?"grid":"none"};gap:14px">
+        <fieldset class="seg rating"><legend>How much did Adrenasky help you prepare? (optional, you can add this later)</legend>
+          <div class="rate5">${[1,2,3,4,5].map(n=>`<label><input type="radio" name="r-h" value="${n}" ${chk(e.helpfulness===n)}><span>${n}</span></label>`).join("")}</div>
+          <span class="small" style="flex-basis:100%">1 = not much, 5 = a great deal</span></fieldset>
+        <label>Anything you'd tell other students? (optional)<textarea id="r-t" rows="3" maxlength="600" placeholder="What helped, what surprised you in the exam…">${esc(e.testimonial||"")}</textarea></label>
+        <label style="display:flex;gap:8px;align-items:flex-start;font-weight:400"><input type="checkbox" id="r-c" style="min-height:auto;width:20px;height:20px;margin-top:2px" ${chk(e.consent_to_quote)}> Adrenasky may quote my comment with my first name.</label>
+      </div>
+      <div class="row"><button class="primary" id="r-go">${editing?"Save changes":"Submit result"}</button></div>
     </div>`;
-  $("#rb").onclick=()=>home();
+  $("#rb").onclick=back;
+  app.querySelectorAll('input[name="r-u"]').forEach(x=>x.onchange=()=>{ const on=x.value==="yes"&&x.checked; const fb=$("#r-fb"); fb.hidden=!on; fb.style.display=on?"grid":"none"; });
   $("#r-go").onclick=async()=>{
     const r=(app.querySelector('input[name="r-r"]:checked')||{}).value;
     if(!r) return toast("Choose whether you passed.");
     const d=$("#r-d").value; if(!d) return toast("Add the exam date.");
     const pv=$("#r-p").value.trim(); const score=pv===""?null:Math.round(Number(pv));
     if(score!==null&&(isNaN(score)||score<0||score>100)) return toast("Score must be between 0 and 100.");
-    const sid=$("#r-s").value, text=$("#r-t").value.trim();
+    const sid=$("#r-s").value, usedA=(app.querySelector('input[name="r-u"]:checked')||{}).value!=="no";
+    const text=usedA?$("#r-t").value.trim():"", h=usedA?(app.querySelector('input[name="r-h"]:checked')||{}).value:null;
+    const row={subject_id:sid, exam_date:d, result:r, score_pct:score, attempt:+$("#r-a").value, used_adrenasky:usedA,
+      testimonial:text||null, consent_to_quote:!!text&&$("#r-c").checked, helpfulness:h?+h:null};
     const btn=$("#r-go"); btn.disabled=true; btn.textContent="Saving…";
-    const {error}=await sb.from("exam_results").insert({user_id:USER.id, subject_id:sid, exam_date:d, result:r, score_pct:score,
-      attempt:+$("#r-a").value, testimonial:text||null, consent_to_quote:!!text&&$("#r-c").checked});
-    if(error){ btn.disabled=false; btn.textContent="Submit result"; return toast("Couldn't save: "+error.message); }
+    const {error}=editing?await sb.from("exam_results").update(row).eq("id",e.id):await sb.from("exam_results").insert({user_id:USER.id,...row});
+    if(error){ btn.disabled=false; btn.textContent=editing?"Save changes":"Submit result"; return toast("Couldn't save: "+error.message); }
+    if(editing){ toast("Result updated"); return progress("kcaa"); }
     const name=(SUBJECTS.find(x=>x.id===sid)||{}).name||"your subject";
-    app.innerHTML=r==="pass"
-      ?`<section class="briefing"><h2>Congratulations!</h2><p>Well done on passing ${esc(name)}. Thank you for letting us know; results like yours show other students what works.</p><div class="row"><button class="primary" id="rh">Back to revision</button></div></section>`
+    app.innerHTML=!usedA
+      ?`<section class="briefing"><h2>Thanks for adding it</h2><p>Your earlier ${esc(name)} result is saved. When you sit your next exam after revising with Adrenasky, report that one too, and tell us how it went.</p><div class="row"><button class="primary" id="rh">Back to revision</button></div></section>`
+      :r==="pass"
+      ?`<section class="briefing"><h2>Congratulations!</h2><p>Well done on passing ${esc(name)}. Thank you for letting us know; results like yours show other students what works.${h?"":" You can add a rating or comment any time under Progress, then KCAA results."}</p><div class="row"><button class="primary" id="rh">Back to revision</button></div></section>`
       :`<section class="briefing"><h2>Thanks for telling us</h2><p>Plenty of pilots pass ${esc(name)} on their next attempt. Focus your revision on the chapters where your accuracy is lowest, and sit a few timed practice exams before you rebook.</p><div class="row"><button class="primary" id="rh">Back to revision</button></div></section>`;
     $("#rh").onclick=()=>home();
   };
 }
 async function myResultsHTML(){
-  const {data}=await sb.from("exam_results").select("id,subject_id,exam_date,result,score_pct,attempt").order("exam_date",{ascending:false});
+  const {data}=await sb.from("exam_results").select("id,subject_id,exam_date,result,score_pct,attempt,helpfulness,used_adrenasky,testimonial,consent_to_quote").order("exam_date",{ascending:false});
+  myResultsHTML.rows=data||[];
   if(!data||!data.length) return `<p class="small">No exam results reported yet.</p>`;
-  return `<div class="wrapx"><table><tr><th>Date</th><th>Subject</th><th>Result</th><th></th></tr>${data.map(x=>`<tr><td>${fmtDate(x.exam_date)}</td>
-    <td>${esc((SUBJECTS.find(s=>s.id===x.subject_id)||{}).name||x.subject_id)}</td>
-    <td class="${x.result==="pass"?"pass":"fail"}">${x.result==="pass"?"Passed":"Not passed"}${x.score_pct!==null?" ("+x.score_pct+"%)":""}</td>
-    <td><button class="link rdel" data-id="${x.id}">Remove</button></td></tr>`).join("")}</table></div>`;
+  return data.map((x,k)=>`<div class="card"><div class="exrow" style="border:0;padding:0"><span><b>${esc((SUBJECTS.find(s=>s.id===x.subject_id)||{}).name||x.subject_id)}</b><br><span class="small">${fmtDate(x.exam_date)} · ${x.used_adrenasky===false?"Before Adrenasky":"With Adrenasky"}</span></span>
+    <b class="${x.result==="pass"?"pass":"fail"}">${x.result==="pass"?"Passed":"Not passed"}${x.score_pct!==null?" "+x.score_pct+"%":""}</b></div>
+    ${x.used_adrenasky!==false&&!x.helpfulness&&!x.testimonial?`<p class="small" style="margin:8px 0 0">Add a rating or comment when you're ready.</p>`:""}
+    ${x.helpfulness?`<p class="small" style="margin:8px 0 0">You rated Adrenasky ${x.helpfulness}/5</p>`:""}
+    <div class="row" style="margin-top:10px"><button class="ghost redit" data-k="${k}">${x.used_adrenasky!==false&&!x.helpfulness?"Add feedback":"Edit"}</button><button class="link rdel" data-id="${x.id}">Remove</button></div></div>`).join("");
 }
 async function resultsAdmin(){
   const el=$("#adm");
   const [sum,rows]=await Promise.all([rpc("admin_results_summary"),rpc("admin_results")]);
   el.innerHTML=`<p class="small">Results students have reported from their KCAA exams. Pass rates become meaningful once each subject has 10 or more reports.</p>
-    ${sum.length?`<div class="wrapx"><table><tr><th>Subject</th><th>Reported</th><th>Passed</th><th>Pass rate</th><th>First-time pass rate</th><th>Average score</th></tr>
-      ${sum.map(x=>`<tr><td>${esc(x.subject)}</td><td>${x.reported}</td><td>${x.passed}</td><td>${pct(x.pass_rate)}</td><td>${pct(x.first_time_pass_rate)}</td><td>${pct(x.avg_score)}</td></tr>`).join("")}</table></div>`:`<p class="small">No results reported yet.</p>`}
+    ${sum.length?`<div class="wrapx"><table><tr><th>Subject</th><th>With Adrenasky</th><th>Pass rate</th><th>Average score</th><th>Before Adrenasky</th><th>Pass rate</th><th>Helpfulness</th></tr>
+      ${sum.map(x=>`<tr><td>${esc(x.subject)}</td><td>${x.with_reported}</td><td>${pct(x.with_pass_rate)}</td><td>${pct(x.with_avg_score)}</td><td>${x.before_reported}</td><td>${pct(x.before_pass_rate)}</td><td>${x.avg_helpfulness!=null?x.avg_helpfulness+" / 5":"–"}</td></tr>`).join("")}</table></div>`:`<p class="small">No results reported yet.</p>`}
     ${rows.length?`<h3 class="section" style="margin-top:24px">All reports</h3>
       ${rows.map(x=>`<article class="qcard"><div class="qmeta"><span>${esc(x.full_name||x.email)} · ${esc(x.subject)}</span><span>${fmtDate(x.exam_date)}</span></div>
-        <p style="margin:0" class="${x.result==="pass"?"pass":"fail"}"><b>${x.result==="pass"?"Passed":"Not passed"}</b>${x.score_pct!==null?" with "+x.score_pct+"%":""} · attempt ${x.attempt}${x.attempt>=3?"+":""} · ${x.questions_answered} answers practised in the app</p>
+        <p style="margin:0" class="${x.result==="pass"?"pass":"fail"}"><b>${x.result==="pass"?"Passed":"Not passed"}</b>${x.score_pct!==null?" with "+x.score_pct+"%":""} · attempt ${x.attempt}${x.attempt>=3?"+":""} · ${x.used_adrenasky===false?"sat before using Adrenasky":x.questions_answered+" answers practised in the app"}${x.helpfulness?` · rated ${x.helpfulness}/5`:""}</p>
         ${x.testimonial?`<blockquote class="quote">"${esc(x.testimonial)}"</blockquote><p class="small" style="margin:0">${x.consent_to_quote?"May be quoted with first name":"Not for publication"}</p>`:""}</article>`).join("")}`:""}`;
 }
 
@@ -1355,6 +1577,8 @@ function newPassword(){
   $("#np-go").onclick=async ()=>{ const {error}=await sb.auth.updateUser({password:$("#np").value});
     if(error) toast(error.message); else { toast("Password updated"); checkDevice(); } };
 }
+applyTextSize();
+if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{})); }
 loading("Starting up");
 </script>
 </body>
