@@ -5,7 +5,7 @@
 // Needs the secret PAYSTACK_SECRET_KEY (sk_test_... or sk_live_...), set in Supabase > Edge Functions > Secrets.
 import { createClient } from "npm:@supabase/supabase-js@2.45.4";
 
-const SECRET = Deno.env.get("PAYSTACK_SECRET_KEY") ?? "";
+const SECRET = (Deno.env.get("PAYSTACK_SECRET_KEY") ?? "").trim();
 const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 const ORIGINS = ["https://adrenasky.com", "https://www.adrenasky.com", "https://adrenasky.vercel.app"];
 
@@ -95,7 +95,11 @@ Deno.serve(async (req) => {
         metadata: { user_id: user.id, plan, subject_id: subject, custom_fields: [{ display_name: "Plan", variable_name: "plan", value: price.label }] },
       }),
     });
-    if (!t.status) return json(req, { error: t.message ?? "Paystack didn't accept the payment." }, 502);
+    if (!t.status) {
+      console.log("paystack initialize rejected:", JSON.stringify({ message: t.message, code: t.code, key: SECRET.slice(0, 8) }));
+      await admin.from("payments").update({ status: "init_failed" }).eq("reference", reference);
+      return json(req, { error: t.message ?? "Paystack didn't accept the payment." }, 502);
+    }
     return json(req, { reference, access_code: t.data.access_code, authorization_url: t.data.authorization_url });
   }
 
