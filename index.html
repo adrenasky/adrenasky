@@ -578,15 +578,67 @@ function accountSheet(){
   w.innerHTML=`<section class="sheet" role="dialog" aria-modal="true" aria-label="Account"><div class="grab"></div>
     <h2 class="disp" style="margin:0 0 2px">Account</h2><p class="small" style="margin:0 0 10px">Signed in as ${esc(USER?USER.email:"")}</p>
     <button class="subjopt" id="as-acc"><span><b>Account and devices</b><span class="small">Theme, devices, reset progress</span></span></button>
+    ${payOn()?`<button class="subjopt" id="as-plan"><span><b>Plan and payment</b><span class="small">Your access, upgrade or renew</span></span></button>`:""}
     ${IS_ADMIN?`<button class="subjopt" id="as-admin"><span><b>Open admin</b><span class="small">Testers, questions, notes, results</span></span></button>`:""}
     <button class="subjopt" id="as-sup"><span><b>Contact support</b><span class="small">Questions about your account or the app</span></span></button>
     <button class="primary full" id="as-out" style="margin-top:6px">Log out</button></section>`;
   document.body.appendChild(w);
   w.onclick=e=>{ if(e.target===w) w.remove(); };
   w.querySelector("#as-acc").onclick=()=>{ w.remove(); progress("account"); };
+  const pl=w.querySelector("#as-plan"); if(pl) pl.onclick=()=>{ w.remove(); planView(); };
   const ad=w.querySelector("#as-admin"); if(ad) ad.onclick=()=>{ w.remove(); hideTabs(); adminView("overview"); };
   w.querySelector("#as-sup").onclick=()=>{ w.remove(); legalView("support"); };
   w.querySelector("#as-out").onclick=()=>{ w.remove(); ask("Log out of Adrenasky?","Log out","Cancel",async ()=>{ hideTabs(); await sb.auth.signOut(); }); };
+}
+/* ===================== PLAN AND PAYMENT (Paystack) ===================== */
+function payOn(){ return PAYMENTS==="on" || (PAYMENTS==="admin" && IS_ADMIN); }
+const kes=n=>"KES "+Number(n).toLocaleString("en-GB");
+function fmtDay(d){ return new Date(d).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}); }
+async function payApi(path, body){
+  const {data:{session}}=await sb.auth.getSession();
+  const r=await fetch(`${SUPABASE_URL}/functions/v1/paystack/${path}`,{method:"POST",
+    headers:{"Content-Type":"application/json",apikey:SUPABASE_KEY,Authorization:`Bearer ${session?session.access_token:""}`},
+    body:JSON.stringify(body||{})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(j.error||"Payment failed. Please try again.");
+  return j;
+}
+function loadPaystack(){
+  if(window.PaystackPop) return Promise.resolve();
+  return new Promise((ok,bad)=>{ const sc=document.createElement("script"); sc.src="https://js.paystack.co/v2/inline.js"; sc.onload=ok; sc.onerror=()=>bad(new Error("Couldn't open Paystack. Check your connection.")); document.head.appendChild(sc); });
+}
+async function startPayment(plan){
+  try{
+    toast("Opening secure checkout…");
+    const [init]=await Promise.all([payApi("init",{plan, subject_id:SUBJ&&SUBJ.id}), loadPaystack()]);
+    const pop=new window.PaystackPop();
+    pop.resumeTransaction(init.access_code,{
+      onSuccess: async ()=>{ toast("Confirming payment…");
+        try{ await payApi("verify",{reference:init.reference}); toast("Payment received. You're all set."); }
+        catch(e){ toast("Payment received. Access may take a minute to appear."); }
+        planView(); },
+      onCancel: ()=>toast("Payment cancelled"),
+    });
+  }catch(e){ toast(e.message); }
+}
+async function planView(){
+  screen("home",`<button class="link back" id="pb">${icon("back",18)} Back</button><h1 class="disp big">Plan and payment</h1><p class="small">Loading…</p>`);
+  $("#pb").onclick=home;
+  const [pr,sub]=await Promise.all([sb.from("prices").select("plan,label,amount_kes,days,is_active").eq("is_active",true), sb.from("subscriptions").select("subject_id,plan,starts_at,ends_at").gt("ends_at",new Date().toISOString()).order("ends_at",{ascending:false})]);
+  const prices=Object.fromEntries((pr.data||[]).map(x=>[x.plan,x]));
+  const subs=sub.data||[];
+  const name=id=>id?((SUBJECTS.find(x=>x.id===id)||{}).name||id):"All subjects";
+  const cur=subs.length?`<section class="card"><h2 class="disp">Your access</h2><ul class="keyl">${subs.map(x=>`<li><b>${esc(name(x.subject_id))}</b>: until ${fmtDay(x.ends_at)}</li>`).join("")}</ul></section>`
+    :`<section class="card"><h2 class="disp">Your access</h2><p class="small" style="margin:0">Free plan. The first questions in every chapter are free.</p></section>`;
+  const opt=(k,title,desc)=>prices[k]?`<section class="card"><h2 class="disp">${esc(title)}</h2><p class="small">${esc(desc)}</p>
+      <p style="font-size:24px;font-weight:700;margin:6px 0">${kes(prices[k].amount_kes)} <span class="small">for ${prices[k].days} days</span></p>
+      <button class="primary full" data-buy="${k}">Pay with M-Pesa or card</button></section>`:"";
+  app.querySelector("p.small").remove();
+  app.insertAdjacentHTML("beforeend", cur
+    + opt("subject",`${SUBJECT||"One subject"}`,`Full access to ${SUBJECT||"this subject"}: every question, note and mock exam.`)
+    + opt("all","All subjects","Every live subject, plus new subjects as they launch.")
+    + `<p class="small">Payments are processed securely by Paystack. Paying again before your access ends adds the time on top.${PAYSTACK_PK.startsWith("pk_test_")?" <b>Test mode:</b> no real money is taken.":""}</p>`);
+  app.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>startPayment(b.dataset.buy));
 }
 function screen(tab, html){ stopTimer(); app.innerHTML=appHeader()+html; wireHeader(); renderTabs(tab); }
 function subjectSheet(){
@@ -1029,6 +1081,10 @@ function supportLinks(reason){
   return out.length?`<div class="row" style="margin-top:12px">${out.join("")}</div>`:`<p class="small">Reply to the message you were invited with, and we'll help.</p>`;
 }
 // Prices are hidden until decided: set showPrices:true and fill price/period to display them.
+// Paystack checkout. PAYMENTS: "admin" = only admin accounts see the buy buttons (testing),
+// "on" = everyone, "off" = hidden. Use the pk_live_ key once Paystack approves the business.
+const PAYSTACK_PK = "pk_test_e977ba86aad323ceea29d3291fd88e98f2615017";
+const PAYMENTS = "admin";
 const PRICING={live:false, showPrices:false, subject:{price:"", period:"", label:"One subject"}, all:{price:"", period:"", label:"All subjects"}};
 const DISCLAIMER="Adrenasky is an independent study aid. It is not affiliated with, endorsed by or approved by the Kenya Civil Aviation Authority (KCAA) or any examining body. Always check current regulations and use approved training material.";
 function footerHTML(){
