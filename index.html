@@ -882,8 +882,10 @@ const FORMULAS={
   ["DME",["Height (NM) = feet ÷ 6,076","Ground range = √(slant range² − height²)","GS = change in DME ÷ time × 60 (flying to or from the station)"]],
   ["VOR and ADF",["Off track (NM) = degrees off × distance ÷ 60","Time to station (min) = elapsed time × 60 ÷ bearing change","QDM = MH + relative bearing","ADF true bearing: use the aircraft's variation; VOR radial: use the station's variation"]],
   ["ILS",["ROD = GS × 101 × tan(angle); 3° ≈ GS × 5","Localiser 0.5° per dot (2.5° full scale); glide slope ≈ 0.7° full scale"]]],
- met:[["ISA",["MSL: +15°C, 1013.25 hPa, 1.225 kg/m³","Lapse 1.98°C per 1,000 ft to 36,090 ft; then −56.5°C"]],
-  ["Altimetry",["1 hPa ≈ 27 ft near MSL","Altitude ≈ FL ± (1013 − QNH) × 27 ft","True altitude correction: 4 ft per 1,000 ft per °C ISA deviation","Density altitude ≈ PA + 120 ft × ISA deviation"]],
+ met:[["ISA",["MSL: +15°C, 1013.25 hPa, 1.225 kg/m³","Lapse 1.98°C per 1,000 ft (use 2°C) to 36,090 ft; then −56.5°C to 20 km","ISA temp = 15 − 2 × (altitude ÷ 1,000) · e.g. FL150: 15 − 30 = −15°C","ISA deviation = actual − ISA · e.g. FL180, OAT −34°C: −34 − (−21) = ISA −13"]],
+  ["Altimetry",["1 hPa ≈ 27 ft near MSL","Higher subscale reads higher by ΔhPa × 27 ft · e.g. 540 ft field, QNH 993, set 1013: reads 1,080 ft","Pressure altitude = elevation + (1013 − QNH) × 27 · e.g. 1,000 ft, QNH 1023: 730 ft","Altitude = FL − (1013 − QNH) × 27 · e.g. FL80, QNH 1000: ≈ 7,650 ft","QNH = QFE + elevation ÷ 27 · e.g. 540 ft, QNH 993: QFE ≈ 973 hPa","Aerodrome above MSL: QFE < QNH · below MSL: QFE > QNH · at MSL: equal"]],
+  ["True and density altitude",["True altitude correction = 4 ft × (altitude ÷ 1,000) × ISA deviation (or 1% per 2.5°C)","Add if warmer, subtract if colder · e.g. 10,000 ft, ISA −10: 10,000 − 400 = 9,600 ft","Pressure first, then temperature · e.g. FL100, QNH 1003, ISA −10: 9,730 − 390 ≈ 9,340 ft","Density altitude = PA + 120 ft × ISA deviation · e.g. PA 5,000 ft, ISA +20: 7,400 ft"]],
+  ["QFF vs QNH",["Aerodrome above MSL, warmer than ISA: QFF < QNH","Aerodrome above MSL, colder than ISA: QFF > QNH","Below MSL the signs reverse; at MSL all are equal"]],
   ["Stability and cloud",["DALR 3°C per 1,000 ft; SALR ≈ 1.5°C per 1,000 ft","Convective cloud base ≈ 400 ft × (temperature − dew point)"]]]
 };
 function formulaSheet(){
