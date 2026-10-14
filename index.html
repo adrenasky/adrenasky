@@ -387,13 +387,19 @@ function flag(id){
 }
 
 /* ===================== NOTES ===================== */
+// "Label: text" points show the label in bold
+function noteLine(p){ const m=/^([^:.]{2,48}):\s(.+)$/s.exec(p); return m?`<b>${esc(m[1])}:</b> ${esc(m[2])}`:esc(p); }
+// Chapter exam share, shown when the subject's weights are percentages
+function examShare(tid){ const t=TOPICS.find(x=>x.id===tid); if(!t||!(+t.weight>0)) return "";
+  const tot=TOPICS.reduce((a,x)=>a+(+x.weight||0),0); if(tot<80||tot>110) return "";
+  const v=+t.weight; return `About ${v<1?"<1":Math.round(v)}% of exam questions`; }
 function noteBody(tid){
   const n=NOTES[tid]; if(!n) return `<p class="small">Notes for this topic are coming soon.</p>`;
   // Lines starting "## " are section headings inside the note
   let html="", open=false;
   (n.points||[]).forEach(p=>{
     if(/^##\s/.test(p)){ if(open){ html+="</ul>"; open=false; } html+=`<h4 class="nsec">${esc(p.replace(/^##\s*/,""))}</h4>`; }
-    else { if(!open){ html+="<ul>"; open=true; } html+=`<li>${esc(p)}</li>`; }
+    else { if(!open){ html+="<ul>"; open=true; } html+=`<li>${noteLine(p)}</li>`; }
   });
   if(open) html+="</ul>";
   return html+(n.aid?`<div class="aid"><strong>Memory aid</strong>${esc(n.aid)}</div>`:"")
@@ -662,13 +668,13 @@ function chapterView(tid){
   const mist=QUESTIONS.filter(q=>q.topic===tid&&isMistake(q)); const n=NOTES[tid];
   const pts=n?(n.points||[]).filter(p=>!/^##\s/.test(p)).slice(0,3):[];
   screen("study",`<button class="link back" id="cb">${icon("back",18)} Study</button>
-    <span class="small">${esc(SUBJECT)} · Chapter ${idx}</span><h1 class="disp big">${esc(t.name)}</h1>
+    <span class="small">${esc(SUBJECT)} · Chapter ${idx}${examShare(tid)?" · "+examShare(tid):""}</span><h1 class="disp big">${esc(t.name)}</h1>
     <div class="stat3"><div class="card"><span class="statn ${accCls(st.acc)}">${st.acc===null?"–":Math.round(st.acc*100)+"%"}</span><span class="small">accuracy</span></div>
       <div class="card"><span class="statn">${st.n?Math.round(100*st.mastered/st.n):0}%</span><span class="small">mastered</span></div><div class="card"><span class="statn">${st.n}</span><span class="small">questions</span></div></div>
     <div class="row">${st.n?`<button class="primary" id="c-quiz">Quiz me (${Math.min(10,st.n)})</button>`:""}<button class="ghost" id="c-notes">Read notes</button></div>
     ${mist.length?`<section class="card"><h2 class="disp">Your mistakes here (${mist.length})</h2>${mist.slice(0,5).map(q=>`<button class="qrow" data-q="${q.id}">${icon("x",18,'class="bad"')}<span>${esc(q.q)}</span></button>`).join("")}
       <button class="ghost full" id="c-mist" style="margin-top:10px">Practise ${mist.length===1?"this one":"these "+mist.length}</button></section>`:""}
-    ${pts.length?`<section class="card"><h2 class="disp">Key notes</h2><ul class="keyl">${pts.map(p=>`<li>${esc(p)}</li>`).join("")}</ul><button class="link" id="c-notes2">Open full notes</button></section>`:""}`);
+    ${pts.length?`<section class="card"><h2 class="disp">Key notes</h2><ul class="keyl">${pts.map(p=>`<li>${noteLine(p)}</li>`).join("")}</ul><button class="link" id="c-notes2">Open full notes</button></section>`:""}`);
   $("#cb").onclick=studyHub;
   const qz=$("#c-quiz"); if(qz) qz.onclick=()=>study(tid);
   $("#c-notes").onclick=()=>noteView(tid); const n2=$("#c-notes2"); if(n2) n2.onclick=()=>noteView(tid);
@@ -679,7 +685,7 @@ function noteView(tid){
   stopTimer(); const t=TOPICS.find(x=>x.id===tid);
   screen("study",`<button class="link back" id="b">${icon("back",18)} ${esc(t?t.name:"Back")}</button>
     <article class="qcard note"><div class="qmeta"><span>${esc(SUBJECT)}</span>${NOTES[tid]&&NOTES[tid].is_draft?'<span class="draft">Draft</span>':''}</div>
-    <h2>${esc(topicName(tid))}</h2>${noteBody(tid)}</article>`);
+    <h2>${esc(topicName(tid))}</h2>${examShare(tid)?`<p class="small" style="margin-top:-4px">${examShare(tid)}</p>`:""}${noteBody(tid)}</article>`);
   $("#b").onclick=()=>chapterView(tid); window.scrollTo(0,0);
 }
 function questionView(qid, back){
@@ -993,7 +999,7 @@ function openPastExam(e){
 // Set live:true and the real prices when payments go live.
 // Support contact shown to users who need help (blocked accounts, device problems, data requests).
 // whatsapp: country code + number, digits only, e.g. "254712345678". Leave "" to hide a channel.
-const SUPPORT={whatsapp:"", email:""};
+const SUPPORT={whatsapp:"", email:"support@adrenasky.com"};
 function supportLinks(reason){
   const msg=encodeURIComponent("Hi Adrenasky support, "+(reason||"I need help with my account.")+(USER&&USER.email?" My account email is "+USER.email+".":""));
   const out=[];
