@@ -1191,7 +1191,7 @@ function authView(mode, msg){
     <div class="auth">
       ${signup?`<label>Full name<input id="f-name" autocomplete="name" required></label>`:""}
       <label>Email<input id="f-email" type="email" autocomplete="email" required></label>
-      <label>Password<input id="f-pass" type="password" autocomplete="${signup?"new-password":"current-password"}" minlength="6" required></label>
+      <label>Password<input id="f-pass" type="password" autocomplete="${signup?"new-password":"current-password"}" minlength="${signup?8:6}" required></label>${signup?`<p class="small" style="margin:-4px 0 0">At least 8 characters, with letters and numbers.</p>`:""}
       <button class="primary" id="f-go">${signup?"Create account":"Log in"}</button>
     </div>
   </section>
@@ -1215,11 +1215,18 @@ function authView(mode, msg){
     if(signup){
       const full_name=$("#f-name").value.trim();
       if(!full_name) return authView("signup",{text:"Please enter your name."});
+      if(!pwOk(password)) return authView("signup",{text:"Use at least 8 characters, with both letters and numbers."});
       const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name},emailRedirectTo:location.origin}});
       if(error) return authView("signup",{text:error.message});
       if(!data.session) return authView("login",{ok:true,text:"Account created. Check your email to confirm it, then log in."});
     } else {
       const {error}=await sb.auth.signInWithPassword({email,password});
+      if(error && /not confirmed/i.test(error.message)){
+        authView("login",{text:"Please confirm your email first. We sent you a link when you signed up."});
+        const card=$("#authcard"), rs=document.createElement("button"); rs.className="link"; rs.textContent="Resend confirmation email";
+        rs.onclick=async()=>{ const r=await sb.auth.resend({type:"signup",email,options:{emailRedirectTo:location.origin}}); toast(r.error?r.error.message:"Confirmation email sent. Check your inbox and spam."); };
+        if(card) card.appendChild(rs); const f=$("#f-email"); if(f) f.value=email; return;
+      }
       if(error) return authView("login",{text:error.message==="Invalid login credentials"?"Wrong email or password.":error.message});
     }
   };
@@ -1676,11 +1683,12 @@ sb.auth.onAuthStateChange((event, session)=>{
   else if(!u){ USER=null; authView("login"); }
   booted=true;
 });
+const pwOk=p=>p.length>=8&&/[A-Za-z]/.test(p)&&/\d/.test(p);
 function newPassword(){
   app.innerHTML=`<section class="briefing"><h2>Set a new password</h2>
-    <div class="auth"><label>New password<input id="np" type="password" minlength="6" autocomplete="new-password"></label>
+    <div class="auth"><label>New password<input id="np" type="password" minlength="8" autocomplete="new-password"></label><p class="small" style="margin:-4px 0 0">At least 8 characters, with letters and numbers.</p>
     <button class="primary" id="np-go">Save password</button></div></section>`;
-  $("#np-go").onclick=async ()=>{ const {error}=await sb.auth.updateUser({password:$("#np").value});
+  $("#np-go").onclick=async ()=>{ if(!pwOk($("#np").value)) return toast("Use at least 8 characters, with letters and numbers."); const {error}=await sb.auth.updateUser({password:$("#np").value});
     if(error) toast(error.message); else { toast("Password updated"); checkDevice(); } };
 }
 applyTextSize();
