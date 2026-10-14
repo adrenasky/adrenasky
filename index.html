@@ -1085,7 +1085,7 @@ function supportLinks(reason){
 // "on" = everyone, "off" = hidden. Use the pk_live_ key once Paystack approves the business.
 const PAYSTACK_PK = "pk_test_e977ba86aad323ceea29d3291fd88e98f2615017";
 const PAYMENTS = "admin";
-const PRICING={live:false, showPrices:false, subject:{price:"", period:"", label:"One subject"}, all:{price:"", period:"", label:"All subjects"}};
+const PRICING={section:false, live:false, showPrices:false, subject:{price:"", period:"", label:"One subject"}, all:{price:"", period:"", label:"All subjects"}};
 const DISCLAIMER="Adrenasky is an independent study aid. It is not affiliated with, endorsed by or approved by the Kenya Civil Aviation Authority (KCAA) or any examining body. Always check current regulations and use approved training material.";
 function footerHTML(){
   return `<footer class="foot"><p>${esc(DISCLAIMER)}</p>
@@ -1162,11 +1162,11 @@ function landingHTML(){
     <div class="feat">${feat.map(([t,d])=>`<div><b>${esc(t)}</b><p>${esc(d)}</p></div>`).join("")}</div>
     <h3 class="section">How it works</h3>
     <ol class="steps"><li><b>Pick a subject</b> and start with the free questions in every chapter.</li><li><b>Revise daily.</b> Adrenasky brings back what you got wrong, and the notes fill the gaps.</li><li><b>Sit practice exams</b> weighted like the real one, and watch your weak chapters shrink.</li></ol>
-    <h3 class="section" id="pricing">Pricing</h3>
+    ${PRICING.section?`    <h3 class="section" id="pricing">Pricing</h3>
     ${PRICING.live?"":`<p class="small" style="margin-top:0"><b>Free while we test.</b> ${PRICING.showPrices?"These are the planned launch prices; you won't be charged during testing.":"Launch prices will be announced before testing ends. You won't be charged during testing."}</p>`}
     <div class="plans">${plans.map((p,i)=>`<div class="${i?"plan best":"plan"}"><span class="pl">${esc(p.label)}</span>${PRICING.showPrices?`<b>${esc(p.price)}</b><span>per ${esc(p.period)}</span>`:`<b style="font-size:26px">Price coming soon</b>`}
       <p>${i?"Every live subject, plus new subjects as they launch.":"Full access to one subject's questions, notes and exams."}</p></div>`).join("")}</div>
-    <p class="small">Pay by M-Pesa. The first questions in every chapter stay free. Use on up to two devices.</p>
+    <p class="small">Pay by M-Pesa. The first questions in every chapter stay free. Use on up to two devices.</p>`:""}
     <h3 class="section">Questions</h3>
     <div class="faq">
       <details><summary>Are these the real KCAA exam questions?</summary><p>No. Every question is written by Adrenasky to test the facts that come up most often, based on an analysis of exam-bank questions. That way you understand the topic rather than memorising wording.</p></details>
@@ -1182,7 +1182,7 @@ function authView(mode, msg){
   mode=mode||"login";
   const signup=mode==="signup";
   app.innerHTML=`<header class="top"><h1 class="brand brandlogo">${LOGO_MARK}<span>Adrenasky<small>ATPL theory revision</small></span></h1>
-    <button class="link" id="hdr-price" style="font-size:15px">Pricing</button></header>
+    ${PRICING.section?`<button class="link" id="hdr-price" style="font-size:15px">Pricing</button>`:""}</header>
   ${landingHTML()}
   <section class="briefing" id="authcard" style="margin-top:28px">
     <h2>${signup?"Create your account":"Welcome back"}</h2>
@@ -1201,7 +1201,7 @@ function authView(mode, msg){
   wireFooter(); if(LIVE) paintLive(); else loadLive();
   const go=(m)=>{ authView(m); const c=$("#authcard"); if(c) c.scrollIntoView({behavior:"smooth"}); const f=$(m==="signup"?"#f-name":"#f-email"); if(f) setTimeout(()=>f.focus(),300); };
   $("#cta-su").onclick=()=>go("signup"); $("#cta-li").onclick=()=>go("login");
-  $("#hdr-price").onclick=()=>{ const el=$("#pricing"); if(el) el.scrollIntoView({behavior:"smooth"}); };
+  if($("#hdr-price")) $("#hdr-price").onclick=()=>{ const el=$("#pricing"); if(el) el.scrollIntoView({behavior:"smooth"}); };
   if(msg){ const c=$("#authcard"); if(c) c.scrollIntoView(); }
   $("#sw").onclick=()=>go(signup?"login":"signup");
   const fg=$("#forgot"); if(fg) fg.onclick=async ()=>{
