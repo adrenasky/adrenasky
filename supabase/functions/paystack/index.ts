@@ -76,8 +76,11 @@ Deno.serve(async (req) => {
   if (path.endsWith("/init")) {
     const plan = input.plan === "all" ? "all" : "subject";
     const subject = plan === "subject" ? String(input.subject_id ?? "") : null;
-    const { data: price } = await admin.from("prices").select("amount_kes,days,label,is_active").eq("plan", plan).single();
+    const { data: price } = await admin.from("prices").select("amount_kes,days,label,is_active,founding_discount_pct").eq("plan", plan).single();
     if (!price || !price.is_active) return json(req, { error: "This plan isn't available." }, 400);
+    // Founding members pay the discounted price, worked out here so it can't be changed in the browser.
+    const { data: founding } = await admin.rpc("founding_ok", { p_user: user.id });
+    if (founding) price.amount_kes = Math.round(price.amount_kes * (100 - price.founding_discount_pct) / 100);
     if (plan === "subject") {
       const { data: s } = await admin.from("subjects").select("id,status").eq("id", subject).single();
       if (!s || s.status !== "live") return json(req, { error: "Choose a live subject." }, 400);
@@ -92,7 +95,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         email: user.email, amount: price.amount_kes * 100, currency: "KES", reference,
         channels: ["mobile_money", "card"],
-        metadata: { user_id: user.id, plan, subject_id: subject, custom_fields: [{ display_name: "Plan", variable_name: "plan", value: price.label }] },
+        metadata: { user_id: user.id, plan, subject_id: subject, founding: !!founding, custom_fields: [{ display_name: "Plan", variable_name: "plan", value: price.label + (founding ? " (founding price)" : "") }] },
       }),
     });
     if (!t.status) {

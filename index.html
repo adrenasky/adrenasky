@@ -591,6 +591,24 @@ function accountSheet(){
   w.querySelector("#as-out").onclick=()=>{ w.remove(); ask("Log out of Adrenasky?","Log out","Cancel",async ()=>{ hideTabs(); await sb.auth.signOut(); }); };
 }
 /* ===================== PLAN AND PAYMENT (Paystack) ===================== */
+let MYTRIAL; // undefined = not loaded, null = never started
+async function loadTrial(){ const r=await sb.from("trials").select("subject_id,ends_at").maybeSingle(); MYTRIAL=r.data||null; return MYTRIAL; }
+function trialCard(){
+  if(!payOn()||MYTRIAL===undefined) return "";
+  const subj=id=>((SUBJECTS.find(x=>x.id===id)||{}).name||id);
+  if(MYTRIAL===null) return `<section class="card" style="border:2px solid var(--chart)"><h2 class="disp">Try everything free for 7 days</h2>
+      <p class="small" style="margin:6px 0 12px">Unlock every ${esc(SUBJECT)} question, note and mock exam for a week. No payment needed. One trial per student.</p>
+      <button class="primary full" id="trial-go">Start my free ${esc(SUBJECT)} trial</button></section>`;
+  const left=Math.ceil((new Date(MYTRIAL.ends_at)-Date.now())/864e5);
+  if(left<=0) return `<section class="card"><h2 class="disp">Your free trial has ended</h2><p class="small" style="margin:6px 0 12px">Your progress is saved. Upgrade to keep full access to ${esc(subj(MYTRIAL.subject_id))}.</p><button class="primary full" id="trial-up">See plans</button></section>`;
+  return `<section class="card"><p class="small" style="margin:0"><b>Free trial: ${left} day${left===1?"":"s"} left</b> on ${esc(subj(MYTRIAL.subject_id))}. <button class="link" id="trial-up">Upgrade</button></p></section>`;
+}
+function wireTrial(){
+  const g=$("#trial-go"); if(g) g.onclick=()=>ask(`Start your 7-day free trial of ${SUBJECT}? You can only do this once.`,"Start trial","Not now",async()=>{
+    const {error}=await sb.rpc("start_trial",{p_subject:SUBJ.id}); if(error) return toast(error.message);
+    await loadTrial(); toast("Your free trial has started"); home(); });
+  const u=$("#trial-up"); if(u) u.onclick=planView;
+}
 function payOn(){ return PAYMENTS==="on" || (PAYMENTS==="admin" && IS_ADMIN); }
 const kes=n=>"KES "+Number(n).toLocaleString("en-GB");
 function fmtDay(d){ return new Date(d).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}); }
@@ -624,13 +642,15 @@ async function startPayment(plan){
 async function planView(){
   screen("home",`<button class="link back" id="pb">${icon("back",18)} Back</button><h1 class="disp big">Plan and payment</h1><p class="small">Loading…</p>`);
   $("#pb").onclick=home;
-  const [pr,sub]=await Promise.all([sb.from("prices").select("plan,label,amount_kes,days,is_active").eq("is_active",true), sb.from("subscriptions").select("subject_id,plan,starts_at,ends_at").gt("ends_at",new Date().toISOString()).order("ends_at",{ascending:false})]);
+  const [pr,sub,base]=await Promise.all([sb.rpc("my_prices"), sb.from("subscriptions").select("subject_id,plan,starts_at,ends_at").gt("ends_at",new Date().toISOString()).order("ends_at",{ascending:false}), sb.from("prices").select("plan,amount_kes")]);
+  const full=Object.fromEntries((base.data||[]).map(x=>[x.plan,x.amount_kes]));
   const prices=Object.fromEntries((pr.data||[]).map(x=>[x.plan,x]));
   const subs=sub.data||[];
   const name=id=>id?((SUBJECTS.find(x=>x.id===id)||{}).name||id):"All subjects";
-  const cur=subs.length?`<section class="card"><h2 class="disp">Your access</h2><ul class="keyl">${subs.map(x=>`<li><b>${esc(name(x.subject_id))}</b>: until ${fmtDay(x.ends_at)}</li>`).join("")}</ul></section>`
+  const cur=subs.length?`<section class="card"><h2 class="disp">Your access</h2><ul class="keyl">${subs.map(x=>`<li><b>${esc(name(x.subject_id))}</b>${x.plan==="trial"?" (free trial)":""}: until ${fmtDay(x.ends_at)}</li>`).join("")}</ul></section>`
     :`<section class="card"><h2 class="disp">Your access</h2><p class="small" style="margin:0">Free plan. The first questions in every chapter are free.</p></section>`;
   const opt=(k,title,desc)=>prices[k]?`<section class="card"><h2 class="disp">${esc(title)}</h2><p class="small">${esc(desc)}</p>
+      ${prices[k].founding?`<p class="small" style="margin:0;color:var(--ok);font-weight:700">Founding member price · normally ${kes(full[k])}</p>`:""}
       <p style="font-size:24px;font-weight:700;margin:6px 0">${kes(prices[k].amount_kes)} <span class="small">for ${prices[k].days} days</span></p>
       <button class="primary full" data-buy="${k}">Pay with M-Pesa or card</button></section>`:"";
   app.querySelector("p.small").remove();
@@ -702,6 +722,7 @@ function home(){
     <button class="card readycard" id="ready" aria-label="Exam readiness ${readiness()}%. How is this worked out?">${ringSVG(readiness())}<div><span class="eyebrow">Exam readiness ${icon("info",15,'style="vertical-align:-2px"')}</span><span class="disp" style="font-size:20px">${esc(SUBJECT)}</span><span class="small">Tap to see how it's worked out and where to gain most.</span></div></button>
     <div class="stat3"><div class="card"><span class="statn">${icon("flame",20)}${streak()}</span><span class="small">day streak</span></div>
       <div class="card"><span class="statn">${due}</span><span class="small">due today</span></div><div class="card"><span class="statn">${fresh}</span><span class="small">not yet seen</span></div></div>
+    ${trialCard()}
     <section class="card"><h2 class="disp">Today's plan</h2><p class="small" style="margin:6px 0 12px">${plan}</p>
       <button class="primary full" id="go-study" ${!due&&!fresh?"disabled":""}>Continue revision</button></section>
     ${hy.length?`<section class="card"><h2 class="disp">High-yield Top 100</h2><p class="small" style="margin:6px 0 10px">${hyRight} of ${hy.length} answered correctly at least once.</p>
@@ -716,6 +737,7 @@ function home(){
   const gi=$("#go-install"); if(gi) gi.onclick=installSheet;
   const xi=$("#x-install"); if(xi) xi.onclick=()=>{ setPref("hide-install","1"); home(); };
   $("#ready").onclick=readinessSheet;
+  wireTrial(); if(MYTRIAL===undefined&&payOn()) loadTrial().then(()=>{ if($("#ready")) home(); }).catch(()=>{});
   wireChapRows();
 }
 function showReportCard(){ if(pref("hide-report","")) return false; let seen=0; Object.values(S.cards).forEach(c=>seen+=c.seen||0); return seen>=100; }
@@ -1316,7 +1338,8 @@ async function adminView(tab){
   const el=$("#adm");
   try{
   if(tab==="overview"){
-    const t=await rpc("admin_testers");
+    const [t,fd]=await Promise.all([rpc("admin_testers"), rpc("admin_founding").catch(()=>[])]);
+    const fm=Object.fromEntries((fd||[]).map(r=>[r.user_id,r.is_founding])); t.forEach(x=>x.is_founding=!!fm[x.user_id]);
     const week=Date.now()-7*86400000;
     const active=t.filter(x=>(x.last_active||x.last_login)&&new Date(x.last_active||x.last_login)>week).length;
     const exams=t.reduce((a,x)=>a+Number(x.exams_sat),0);
@@ -1325,7 +1348,7 @@ async function adminView(tab){
       <div><b>${exams}</b><span>Exams sat</span></div></div>
       <p class="small">Tap a tester to manage devices, block access or end a subscription.</p>
       <div class="wrapx"><table><tr><th>Name</th><th>Last active</th><th>Tried</th><th>Accuracy</th><th>Exams</th><th>Best</th><th>Devices</th></tr>
-      ${t.map((x,i)=>`<tr class="tap-row" data-i="${i}"><td><b>${esc(x.full_name||"No name")}</b>${x.is_blocked?'<span class="draft" style="color:var(--bad);border-color:var(--bad)">Blocked</span>':""}${Number(x.active_subscriptions)?'<span class="draft" style="color:var(--ok);border-color:var(--ok)">Subscribed</span>':""}<br><span class="small">${esc(x.email)}</span></td>
+      ${t.map((x,i)=>`<tr class="tap-row" data-i="${i}"><td><b>${esc(x.full_name||"No name")}</b>${x.is_blocked?'<span class="draft" style="color:var(--bad);border-color:var(--bad)">Blocked</span>':""}${x.is_founding?'<span class="draft" style="color:var(--ok);border-color:var(--ok)">Founding</span>':""}${Number(x.active_subscriptions)?'<span class="draft" style="color:var(--ok);border-color:var(--ok)">Subscribed</span>':""}<br><span class="small">${esc(x.email)}</span></td>
         <td>${ago(x.last_active||x.last_login)}</td><td>${x.questions_tried}</td><td>${pct(x.accuracy_pct)}</td><td>${x.exams_sat}</td><td>${pct(x.best_exam)}</td><td>${x.devices}/${x.device_limit}</td></tr>`).join("")}</table></div>`;
     el.querySelectorAll(".tap-row").forEach(r=>r.onclick=()=>testerActions(t[+r.dataset.i]));
   }
@@ -1488,12 +1511,14 @@ function testerActions(x){
     <button class="primary" id="sdl">Save device limit</button>
     <button class="ghost" id="rd">Clear all their devices</button>
     ${Number(x.active_subscriptions)?`<button class="ghost" id="es">End their subscription now</button>`:`<p class="small" style="margin:0">No active subscription.</p>`}
+    <button class="ghost" id="fnd">${x.is_founding?"Remove founding member price":"Make founding member (founding price)"}</button>
     <button class="${x.is_blocked?"primary":"ghost"}" id="blk" style="${x.is_blocked?"":"color:var(--bad);border-color:var(--bad)"}">${x.is_blocked?"Unblock account":"Block account"}</button>
     <button class="link" id="cl">Close</button></div></div>`;
   document.body.appendChild(w);
   w.querySelector("#cl").onclick=()=>w.remove();
   w.querySelector("#sdl").onclick=async()=>{ await rpc("admin_set_device_limit",{p_user:x.user_id,p_limit:+w.querySelector("#dl").value}); w.remove(); toast("Device limit saved"); adminView("overview"); };
   const es=w.querySelector("#es"); if(es) es.onclick=()=>{ w.remove(); ask(`End ${x.full_name||x.email}'s subscription now? They'll lose access to paid content immediately.`,"End subscription","Cancel",async()=>{ const n=await rpc("admin_end_subscriptions",{p_user:x.user_id}); toast(n?"Subscription ended":"No active subscription found"); adminView("overview"); }); };
+  w.querySelector("#fnd").onclick=async()=>{ await rpc("admin_set_founding",{p_user:x.user_id,p_on:!x.is_founding}); w.remove(); toast(x.is_founding?"Founding price removed":"Marked as founding member"); adminView("overview"); };
   w.querySelector("#blk").onclick=()=>{ w.remove(); const b=!x.is_blocked;
     ask(b?`Block ${x.full_name||x.email}? They'll be locked out on all devices until you unblock them.`:`Unblock ${x.full_name||x.email}? They'll be able to log in again.`, b?"Block":"Unblock","Cancel",
       async()=>{ await rpc("admin_set_blocked",{p_user:x.user_id,p_blocked:b}); toast(b?"Account blocked":"Account unblocked"); adminView("overview"); }); };
