@@ -1239,7 +1239,7 @@ function authView(mode, msg){
       if(!full_name) return authView("signup",{text:"Please enter your name."});
       if(!pwOk(password)) return authView("signup",{text:"Use at least 8 characters, with both letters and numbers."});
       const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name},emailRedirectTo:location.origin}});
-      if(error) return authView("signup",{text:error.message});
+      if(error) return authView("signup",{text:/database error saving new user|permanent email/i.test(error.message)?"Please sign up with a permanent email address, such as Gmail, Outlook or Yahoo. Temporary email services aren't accepted.":error.message});
       if(!data.session) return authView("login",{ok:true,text:"Account created. Check your email to confirm it, then log in."});
     } else {
       const {error}=await sb.auth.signInWithPassword({email,password});
