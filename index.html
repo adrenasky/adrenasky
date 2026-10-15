@@ -634,7 +634,10 @@ function pickExam(n, only){
 }
 /* ===================== THEME, NAVIGATION AND SHARED PIECES ===================== */
 function themePref(){ try{ return localStorage.getItem("adrenasky-theme")||"night"; }catch(e){ return "night"; } }
-function applyTheme(){ document.body.classList.toggle("nr", document.body.classList.contains("landing-on") || themePref()==="night"); }
+function applyTheme(){ const night=themePref()==="night";
+  document.body.classList.toggle("nr", document.body.classList.contains("landing-on") || night);
+  // The in-app switch wins over the phone's own light/dark setting
+  document.documentElement.setAttribute("data-theme", night?"dark":"light"); }
 function setTheme(t){ try{ localStorage.setItem("adrenasky-theme",t); }catch(e){} applyTheme(); }
 const ICONS={home:'<path d="M3 11l9-7 9 7"></path><path d="M5 10v10h14V10"></path>',
  study:'<path d="M4 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H4z"></path><path d="M20 5h-5a3 3 0 0 0-3 3"></path><path d="M20 5v13h-6"></path>',
