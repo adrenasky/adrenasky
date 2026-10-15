@@ -293,6 +293,9 @@ table.cmp{font-size:15px;min-width:420px}
 table.cmp th,table.cmp td{vertical-align:top;padding:8px 6px}
 table.cmp tr:first-child th{color:var(--chart);font-weight:700}
 table.cmp th[scope=row]{color:var(--muted);font-weight:700;width:22%}
+.sublinks{list-style:none;margin:0 0 8px;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+.sublinks a{display:inline-block;border:1px solid var(--line);border-radius:10px;padding:10px 14px;color:var(--ink);text-decoration:none;font-weight:700}
+.sublinks a:hover{border-color:var(--chart)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 </head>
@@ -302,7 +305,7 @@ table.cmp th[scope=row]{color:var(--muted);font-weight:700;width:22%}
     <h1>Adrenasky: ATPL theory revision</h1>
     <p>Pass your ATPL theory exams with practice questions, chapter notes and timed mock exams built from an analysis of over 12,000 real exam-bank questions. Made in Kenya for KCAA students, and useful for any EASA-style ATPL syllabus.</p>
     <h2>Subjects</h2>
-    <ul><li>Meteorology</li><li>Air Law (including Kenya and KCAA rules)</li><li>General Navigation</li><li>Radio Navigation</li><li>Human Performance and Limitations</li></ul>
+    <ul><li><a href="/atpl-meteorology">ATPL Meteorology</a></li><li><a href="/atpl-air-law">ATPL Air Law</a></li><li><a href="/atpl-general-navigation">ATPL General Navigation</a></li><li><a href="/atpl-radio-navigation">ATPL Radio Navigation</a></li><li><a href="/atpl-human-performance">ATPL Human Performance</a></li></ul>
     <p>Free questions in every chapter. Spaced repetition, exam-weighted mock exams and worked examples for every calculation topic.</p>
   </section>
 </main>
@@ -814,7 +817,7 @@ const EXAM_FORMATS={full:{n:40,min:60,label:"Full exam"},quick:{n:20,min:30,labe
 function examHub(){
   const st=examHub.st||(examHub.st={fmt:"full",mode:"all",chs:new Set()});
   screen("exam",`<h1 class="disp big">Practice exam</h1>
-    <p class="small">Questions come from every chapter in proportion to how often it appears in the real exam. Pass mark ${PASS_MARK}%.</p>
+    <p class="small">Questions come from every chapter in proportion to how often it appears in the real exam. Pass mark ${PASS_MARK}%. The real CASSOA pass mark is 70%, so practising to ${PASS_MARK}% gives you a margin on exam day.</p>
     <fieldset class="opts2"><legend>Format</legend>${Object.entries(EXAM_FORMATS).map(([k,f])=>`<label class="radcard ${st.fmt===k?"on":""}"><input type="radio" name="fmt" value="${k}" ${st.fmt===k?"checked":""}><span><b>${f.label}</b><span class="small">${f.n} questions · ${f.min} minutes</span></span></label>`).join("")}</fieldset>
     <fieldset class="opts2"><legend>Chapters</legend><div class="row"><button class="${st.mode==="all"?"primary":"ghost"}" id="m-all">All chapters</button><button class="${st.mode==="pick"?"primary":"ghost"}" id="m-pick">Choose chapters</button></div>
       ${st.mode==="pick"?`<div class="chklist">${TOPICS.filter(t=>QUESTIONS.some(q=>q.topic===t.id)).map(t=>`<label><input type="checkbox" value="${t.id}" ${st.chs.has(t.id)?"checked":""}> ${esc(t.name)}</label>`).join("")}</div>`:""}</fieldset>
@@ -1189,6 +1192,8 @@ function landingHTML(){
     <div class="plans">${plans.map((p,i)=>`<div class="${i?"plan best":"plan"}"><span class="pl">${esc(p.label)}</span>${PRICING.showPrices?`<b>${esc(p.price)}</b><span>per ${esc(p.period)}</span>`:`<b style="font-size:26px">Price coming soon</b>`}
       <p>${i?"Every live subject, plus new subjects as they launch.":"Full access to one subject's questions, notes and exams."}</p></div>`).join("")}</div>
     <p class="small">Pay by M-Pesa. The first questions in every chapter stay free. Use on up to two devices.</p>`:""}
+    <h3 class="section">Subjects</h3>
+    <ul class="sublinks"><li><a href="/atpl-meteorology">Meteorology</a></li><li><a href="/atpl-air-law">Air Law</a></li><li><a href="/atpl-general-navigation">General Navigation</a></li><li><a href="/atpl-radio-navigation">Radio Navigation</a></li><li><a href="/atpl-human-performance">Human Performance</a></li></ul>
     <h3 class="section">Questions</h3>
     <div class="faq">
       <details><summary>Are these the real KCAA exam questions?</summary><p>No. Every question is written by Adrenasky to test the facts that come up most often, based on an analysis of exam-bank questions. That way you understand the topic rather than memorising wording.</p></details>
