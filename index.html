@@ -293,6 +293,66 @@ table.cmp{font-size:15px;min-width:420px}
 table.cmp th,table.cmp td{vertical-align:top;padding:8px 6px}
 table.cmp tr:first-child th{color:var(--chart);font-weight:700}
 table.cmp th[scope=row]{color:var(--muted);font-weight:700;width:22%}
+/* payment screens: transform/opacity animations only, each plays once */
+.pw-runway{position:relative;height:56px;margin:6px 0 2px}
+.pw-strip{position:absolute;left:0;right:0;top:26px;height:22px;background:var(--ink);border-radius:4px;opacity:.9}
+.pw-days{position:absolute;left:6px;right:6px;top:35px;display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.pw-days i{height:4px;border-radius:2px;background:var(--lampoff)}
+.pw-days i.on{background:var(--lamp)}
+.pw-planewrap{position:absolute;left:0;top:0;width:100%;height:30px;transform:translateX(calc(var(--day) / 7 * 100% - 26px))}
+.pw-plane{width:30px;height:30px;color:var(--chart);display:block}
+.pw-daylab{display:flex;justify-content:space-between;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;font-size:13px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.pw-tag{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--magenta)}
+.pw-ring{display:flex;justify-content:center;padding:4px 0}
+.pw-ring text{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:30px;fill:var(--ink)}
+.pw-ring .sub{font-family:inherit;font-weight:400;font-size:11px;fill:var(--muted)}
+.pw-unlocks{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:8px}
+.pw-unlocks li{display:flex;gap:10px;align-items:center}
+.pw-unlocks svg{flex:none;color:var(--ok)}
+.pw-badge{display:inline-block;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;background:color-mix(in srgb,var(--ok) 14%,transparent);color:var(--ok);border-radius:6px;padding:4px 8px;margin-bottom:10px}
+.pw-plan{text-align:left;font:inherit;color:inherit;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:14px 16px;cursor:pointer;display:flex;flex-direction:column;gap:4px;width:100%;margin-bottom:10px}
+.pw-plan[aria-pressed="true"]{border-color:var(--chart);box-shadow:0 0 0 3px color-mix(in srgb,var(--chart) 18%,transparent)}
+.pw-plan .r{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pw-plan b{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:19px}
+.pw-radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center}
+.pw-plan[aria-pressed="true"] .pw-radio{border-color:var(--chart)}
+.pw-plan[aria-pressed="true"] .pw-radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--chart)}
+.pw-price{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.pw-price s{color:var(--muted)}
+.pw-price strong{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:26px}
+.pw-sky{position:relative;height:150px;border-radius:14px;background:var(--surface);border:1px solid var(--line);overflow:hidden;margin-top:6px}
+.pw-ground{position:absolute;left:0;right:0;bottom:0;height:18px;background:var(--ink);opacity:.9}
+.pw-ground::after{content:"";position:absolute;left:8%;right:8%;top:8px;height:2px;background:repeating-linear-gradient(90deg,var(--surface) 0 14px,transparent 14px 26px)}
+.pw-climb{position:absolute;inset:0;width:100%;height:100%}
+.pw-climb path{fill:none;stroke:var(--magenta);stroke-width:2.5;stroke-dasharray:4 5}
+.pw-lift{position:absolute;left:6%;bottom:14px;width:34px;height:34px;color:var(--chart)}
+.pw-stamp{border:3px solid var(--ok);color:var(--ok);border-radius:10px;padding:10px 12px;margin:16px 4px;text-align:center;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:20px;line-height:1.2;letter-spacing:.08em;text-transform:uppercase;transform:rotate(-3deg)}
+.pw-stamp span{display:block;font-size:14px;letter-spacing:.06em;opacity:.85}
+.pw-confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.pw-confetti i{position:absolute;top:-12px;width:7px;height:11px;border-radius:2px;background:var(--lamp);opacity:0}
+.pw-confetti i:nth-child(3n){background:var(--chart)} .pw-confetti i:nth-child(4n){background:var(--magenta)}
+@media (prefers-reduced-motion:no-preference){
+  .pw-go .pw-planewrap{animation:pwTaxi 1.4s cubic-bezier(.3,.7,.3,1) both}
+  @keyframes pwTaxi{from{transform:translateX(-6px)}}
+  .pw-go .pw-days i.on{animation:pwLight .35s ease-out both;animation-delay:calc(var(--i) * 120ms)}
+  @keyframes pwLight{from{opacity:0;transform:scaleX(.3)}}
+  .pw-go .pw-arc{animation:pwFill 1.6s cubic-bezier(.3,.7,.2,1) both .2s}
+  @keyframes pwFill{from{stroke-dashoffset:439.8}}
+  .pw-go .pw-unlocks li{animation:pwRise .4s ease-out both;animation-delay:calc(.9s + var(--i) * 90ms)}
+  @keyframes pwRise{from{opacity:0;transform:translateY(8px)}}
+  .pw-plan{transition:border-color .18s,box-shadow .18s,transform .18s}
+  .pw-plan[aria-pressed="true"]{transform:scale(1.015)}
+  .pw-go .pw-badge{animation:pwPop .45s cubic-bezier(.3,1.6,.5,1) both .3s}
+  @keyframes pwPop{from{opacity:0;transform:scale(.6)}}
+  .pw-go .pw-lift{animation:pwTakeoff 1.8s cubic-bezier(.5,0,.4,1) both .2s}
+  @keyframes pwTakeoff{35%{transform:translate(90px,0)}100%{transform:translate(min(210px,55vw),-92px) rotate(-28deg)}}
+  .pw-go .pw-climb path{animation:pwDraw 1.8s ease-in both .2s}
+  @keyframes pwDraw{from{opacity:0}40%{opacity:0}}
+  .pw-go .pw-stamp{animation:pwStamp .5s cubic-bezier(.3,1.5,.5,1) both 1.6s}
+  @keyframes pwStamp{from{opacity:0;transform:rotate(-3deg) scale(1.6)}}
+  .pw-confetti i{animation:pwFall 1.6s ease-in both;animation-delay:calc(1.9s + var(--d))}
+  @keyframes pwFall{0%{opacity:1;transform:none}100%{opacity:0;transform:translate(var(--x),90vh) rotate(var(--r))}}
+}
 .sublinks{list-style:none;margin:0 0 8px;padding:0;display:flex;flex-wrap:wrap;gap:10px}
 .sublinks a{display:inline-block;border:1px solid var(--line);border-radius:10px;padding:10px 14px;color:var(--ink);text-decoration:none;font-weight:700}
 .sublinks a:hover{border-color:var(--chart)}
@@ -603,14 +663,59 @@ function trialCard(){
       <p class="small" style="margin:6px 0 12px">Unlock every ${esc(SUBJECT)} question, note and mock exam for a week. No payment needed. One trial per student.</p>
       <button class="primary full" id="trial-go">Start my free ${esc(SUBJECT)} trial</button></section>`;
   const left=Math.ceil((new Date(MYTRIAL.ends_at)-Date.now())/864e5);
-  if(left<=0) return `<section class="card"><h2 class="disp">Your free trial has ended</h2><p class="small" style="margin:6px 0 12px">Your progress is saved. Upgrade to keep full access to ${esc(subj(MYTRIAL.subject_id))}.</p><button class="primary full" id="trial-up">See plans</button></section>`;
-  return `<section class="card"><p class="small" style="margin:0"><b>Free trial: ${left} day${left===1?"":"s"} left</b> on ${esc(subj(MYTRIAL.subject_id))}. <button class="link" id="trial-up">Upgrade</button></p></section>`;
+  if(left<=0) return `<section class="card"><h2 class="disp">Your free trial has ended</h2><p class="small" style="margin:6px 0 12px">Your progress is saved. Upgrade to keep full access to ${esc(subj(MYTRIAL.subject_id))}.</p><button class="primary full" id="trial-up" data-pw="1">See plans</button></section>`;
+  const day=Math.min(7,Math.max(1,8-left)), until=new Date(MYTRIAL.ends_at).toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});
+  return `<section class="card pw-go"><span class="pw-tag">Free trial</span><h2 class="disp" style="margin:2px 0 0">${left} day${left===1?"":"s"} left on ${esc(subj(MYTRIAL.subject_id))}</h2>
+    <div class="pw-runway" style="--day:${day}" aria-hidden="true"><div class="pw-strip"></div>
+      <div class="pw-days">${[0,1,2,3,4,5,6].map(i=>`<i class="${i<day?"on":""}" style="--i:${i}"></i>`).join("")}</div>
+      <div class="pw-planewrap">${PW_PLANE("pw-plane")}</div></div>
+    <div class="pw-daylab"><span>Day 1</span><span>Day ${day} of 7</span><span>Day 7</span></div>
+    <p class="small" style="margin:8px 0 12px">Full access to every question, note and mock exam until ${esc(until)}.</p>
+    <button class="ghost full" id="trial-up">See plans</button></section>`;
 }
 function wireTrial(){
   const g=$("#trial-go"); if(g) g.onclick=()=>ask(`Start your 7-day free trial of ${SUBJECT}? You can only do this once.`,"Start trial","Not now",async()=>{
     const {error}=await sb.rpc("start_trial",{p_subject:SUBJ.id}); if(error) return toast(error.message);
     await loadTrial(); toast("Your free trial has started"); home(); });
-  const u=$("#trial-up"); if(u) u.onclick=planView;
+  const u=$("#trial-up"); if(u) u.onclick=u.dataset.pw?paywall:planView;
+}
+const PW_PLANE=c=>`<svg class="${c}" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" transform="rotate(90 12 12)" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`;
+const PW_TICK='<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="3" d="M5 12.5l4.5 4.5L19 7"/></svg>';
+let ACCESS; // {sid, has, totals:{topic:n}} for the current subject
+async function loadAccess(){ if(!SUBJ) return; const {data,error}=await sb.rpc("access_summary",{p_subject:SUBJ.id}); if(!error&&data) ACCESS={sid:SUBJ.id,...data}; return ACCESS; }
+function lockedIn(tid){ if(!payOn()||!ACCESS||ACCESS.sid!==SUBJ.id||ACCESS.has) return 0;
+  const tot=tid?(ACCESS.totals[tid]||0):Object.values(ACCESS.totals).reduce((a,b)=>a+b,0);
+  const have=QUESTIONS.filter(q=>!tid||q.topic===tid).length; return Math.max(0,tot-have); }
+function paywall(back){
+  const p=readiness(), r=70, c=2*Math.PI*r, total=ACCESS&&ACCESS.sid===SUBJ.id?Object.values(ACCESS.totals).reduce((a,b)=>a+b,0):QUESTIONS.length;
+  screen("home",`<button class="link back" id="pwb">${icon("back",18)} Back</button><div class="pw-go">
+    <h1 class="disp big">Unlock all of ${esc(SUBJECT)}</h1>
+    <div class="pw-ring"><svg width="168" height="168" viewBox="0 0 168 168" role="img" aria-label="${p}% exam-ready. Target ${PASS_MARK}%.">
+      <circle cx="84" cy="84" r="${r}" fill="none" stroke="var(--line)" stroke-width="12"/>
+      <circle cx="84" cy="84" r="${r}" fill="none" stroke="var(--magenta)" stroke-width="18" stroke-dasharray="4 ${(c-4).toFixed(1)}" stroke-dashoffset="${(-(c*PASS_MARK/100)+2).toFixed(1)}" transform="rotate(-90 84 84)"/>
+      <circle class="pw-arc" cx="84" cy="84" r="${r}" fill="none" stroke="var(--chart)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${(c*(1-p/100)).toFixed(1)}" transform="rotate(-90 84 84)"/>
+      <text x="84" y="86" text-anchor="middle">${p}%</text><text class="sub" x="84" y="106" text-anchor="middle">exam-ready</text></svg></div>
+    <p class="small" style="text-align:center;margin:0 0 14px">The pink mark is the ${PASS_MARK}% you're aiming for. Full access gives you everything you need to get there.</p>
+    <ul class="pw-unlocks">
+      <li style="--i:0">${PW_TICK}All ${total.toLocaleString("en-GB")} questions, with explanations</li>
+      <li style="--i:1">${PW_TICK}Notes for all ${TOPICS.length} chapters</li>
+      <li style="--i:2">${PW_TICK}Timed ${EXAM_FORMATS.full.n}-question mock exams</li></ul>
+    <button class="primary full" id="pw-go">See plans</button></div>`);
+  $("#pwb").onclick=back||home; $("#pw-go").onclick=planView;
+}
+function successView(plan, amount, endsAt){
+  const what=plan==="all"?"All subjects":SUBJECT;
+  screen("home",`<div class="pw-go"><div class="pw-sky" aria-hidden="true">
+      <svg class="pw-climb" viewBox="0 0 300 150" preserveAspectRatio="none"><path d="M30 132 L120 132 Q190 126 290 30"/></svg>
+      ${PW_PLANE("pw-lift")}<div class="pw-ground"></div></div>
+    <div class="pw-stamp">Cleared · ${esc(what)}${endsAt?`<span>Valid until ${esc(fmtDay(endsAt))}</span>`:""}</div>
+    <h1 class="disp big">Payment received</h1>
+    <p class="small">${amount?esc(kes(amount))+" paid. ":""}Every ${plan==="all"?"":esc(SUBJECT)+" "}question, note and mock exam is now unlocked. Paystack emails your receipt.</p>
+    <button class="primary full" id="pw-start">Start revising</button></div>`);
+  $("#pw-start").onclick=()=>{ cf.remove(); loadData(); };
+  const cf=document.createElement("div"); cf.className="pw-confetti"; cf.setAttribute("aria-hidden","true");
+  for(let k=0;k<12;k++){ const i=document.createElement("i"); i.style.left=(8+k*7.5)+"%"; i.style.setProperty("--x",((k%2?1:-1)*(10+k*3))+"px"); i.style.setProperty("--r",(180+k*40)+"deg"); i.style.setProperty("--d",(k%4*70)+"ms"); cf.appendChild(i); }
+  if(!matchMedia("(prefers-reduced-motion: reduce)").matches){ document.body.appendChild(cf); setTimeout(()=>cf.remove(),4200); }
 }
 function payOn(){ return PAYMENTS==="on" || (PAYMENTS==="admin" && IS_ADMIN); }
 const kes=n=>"KES "+Number(n).toLocaleString("en-GB");
@@ -628,16 +733,18 @@ function loadPaystack(){
   if(window.PaystackPop) return Promise.resolve();
   return new Promise((ok,bad)=>{ const sc=document.createElement("script"); sc.src="https://js.paystack.co/v2/inline.js"; sc.onload=ok; sc.onerror=()=>bad(new Error("Couldn't open Paystack. Check your connection.")); document.head.appendChild(sc); });
 }
-async function startPayment(plan){
+async function startPayment(plan, amount){
   try{
     toast("Opening secure checkout…");
     const [init]=await Promise.all([payApi("init",{plan, subject_id:SUBJ&&SUBJ.id}), loadPaystack()]);
     const pop=new window.PaystackPop();
     pop.resumeTransaction(init.access_code,{
       onSuccess: async ()=>{ toast("Confirming payment…");
-        try{ await payApi("verify",{reference:init.reference}); toast("Payment received. You're all set."); }
+        let ok=false; try{ await payApi("verify",{reference:init.reference}); ok=true; }
         catch(e){ toast("Payment received. Access may take a minute to appear."); }
-        planView(); },
+        if(!ok) return planView();
+        let ends=null; try{ const {data}=await sb.from("subscriptions").select("ends_at").gt("ends_at",new Date().toISOString()).order("ends_at",{ascending:false}).limit(1); ends=data&&data[0]&&data[0].ends_at; }catch(e){}
+        ACCESS=undefined; successView(plan, amount, ends); },
       onCancel: ()=>toast("Payment cancelled"),
     });
   }catch(e){ toast(e.message); }
@@ -652,16 +759,22 @@ async function planView(){
   const name=id=>id?((SUBJECTS.find(x=>x.id===id)||{}).name||id):"All subjects";
   const cur=subs.length?`<section class="card"><h2 class="disp">Your access</h2><ul class="keyl">${subs.map(x=>`<li><b>${esc(name(x.subject_id))}</b>${x.plan==="trial"?" (free trial)":""}: until ${fmtDay(x.ends_at)}</li>`).join("")}</ul></section>`
     :`<section class="card"><h2 class="disp">Your access</h2><p class="small" style="margin:0">Free plan. The first questions in every chapter are free.</p></section>`;
-  const opt=(k,title,desc)=>prices[k]?`<section class="card"><h2 class="disp">${esc(title)}</h2><p class="small">${esc(desc)}</p>
-      ${prices[k].founding?`<p class="small" style="margin:0;color:var(--ok);font-weight:700">Founding member price · normally ${kes(full[k])}</p>`:""}
-      <p style="font-size:24px;font-weight:700;margin:6px 0">${kes(prices[k].amount_kes)} <span class="small">for ${prices[k].days} days</span></p>
-      <button class="primary full" data-buy="${k}">Pay with M-Pesa or card</button></section>`:"";
+  const keys=["subject","all"].filter(k=>prices[k]); let pick=keys[0];
+  const founding=keys.some(k=>prices[k].founding);
+  const opt=(k,title,desc)=>prices[k]?`<button class="pw-plan" type="button" data-plan="${k}" aria-pressed="${k===pick}">
+      <span class="r"><b>${esc(title)}</b><span class="pw-radio"></span></span><span class="small">${esc(desc)}</span>
+      <span class="pw-price">${prices[k].founding&&full[k]>prices[k].amount_kes?`<s>${kes(full[k])}</s>`:""}<strong>${kes(prices[k].amount_kes)}</strong><span class="small">/ ${prices[k].days} days</span></span></button>`:"";
   app.querySelector("p.small").remove();
-  app.insertAdjacentHTML("beforeend", cur
-    + opt("subject",`${SUBJECT||"One subject"}`,`Full access to ${SUBJECT||"this subject"}: every question, note and mock exam.`)
+  const payLabel=()=>`Pay ${kes(prices[pick].amount_kes)} with M-Pesa or card`;
+  app.insertAdjacentHTML("beforeend", cur + (keys.length?`<div class="pw-go" style="margin-top:14px">`
+    + (founding?`<span class="pw-badge">Founding member · 30% off while you stay subscribed</span>`:"")
+    + opt("subject",`${SUBJECT||"One subject"}`,`Every question, note and mock exam for ${SUBJECT||"this subject"}.`)
     + opt("all","All subjects","Every live subject, plus new subjects as they launch.")
-    + `<p class="small">Payments are processed securely by Paystack. Paying again before your access ends adds the time on top.${PAYSTACK_PK.startsWith("pk_test_")?" <b>Test mode:</b> no real money is taken.":""}</p>`);
-  app.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>startPayment(b.dataset.buy));
+    + `<button class="primary full" id="pw-pay">${payLabel()}</button></div>`:"")
+    + `<p class="small">Secure payment by Paystack. Paying again before your access ends adds the days on top.${PAYSTACK_PK.startsWith("pk_test_")?" <b>Test mode:</b> no real money is taken.":""}</p>`);
+  const plans=[...app.querySelectorAll(".pw-plan")], pay=$("#pw-pay");
+  plans.forEach(b=>b.onclick=()=>{ pick=b.dataset.plan; plans.forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false")); pay.textContent=payLabel(); });
+  if(pay) pay.onclick=()=>startPayment(pick, prices[pick].amount_kes);
 }
 function screen(tab, html){ stopTimer(); app.innerHTML=appHeader()+html; wireHeader(); renderTabs(tab); }
 function subjectSheet(){
@@ -768,10 +881,12 @@ function chapterView(tid){
     <div class="stat3"><div class="card"><span class="statn ${accCls(st.acc)}">${st.acc===null?"–":Math.round(st.acc*100)+"%"}</span><span class="small">accuracy</span></div>
       <div class="card"><span class="statn">${st.n?Math.round(100*st.mastered/st.n):0}%</span><span class="small">mastered</span></div><div class="card"><span class="statn">${st.n}</span><span class="small">questions</span></div></div>
     <div class="row">${st.n?`<button class="primary" id="c-quiz">Quiz me (${Math.min(10,st.n)})</button>`:""}<button class="ghost" id="c-notes">Read notes</button></div>
+    ${lockedIn(tid)?`<section class="card" style="border:2px solid var(--chart)"><h2 class="disp">${lockedIn(tid)} more questions in this chapter</h2><p class="small" style="margin:4px 0 12px">You've got the free ones. Unlock the full chapter, its notes and the mock exams.</p><button class="primary full" id="c-lock">Unlock ${esc(SUBJECT)}</button></section>`:""}
     ${mist.length?`<section class="card"><h2 class="disp">Your mistakes here (${mist.length})</h2>${mist.slice(0,5).map(q=>`<button class="qrow" data-q="${q.id}">${icon("x",18,'class="bad"')}<span>${esc(q.q)}</span></button>`).join("")}
       <button class="ghost full" id="c-mist" style="margin-top:10px">Practise ${mist.length===1?"this one":"these "+mist.length}</button></section>`:""}
     ${pts.length?`<section class="card"><h2 class="disp">Key notes</h2><ul class="keyl">${pts.map(p=>`<li>${noteLine(p)}</li>`).join("")}</ul><button class="link" id="c-notes2">Open full notes</button></section>`:""}`);
-  $("#cb").onclick=studyHub;
+  $("#cb").onclick=studyHub; const cl=$("#c-lock"); if(cl) cl.onclick=()=>paywall(()=>chapterView(tid));
+  if(payOn()&&(!ACCESS||ACCESS.sid!==SUBJ.id)) loadAccess().then(a=>{ if(a&&!a.has&&$("#cb")&&!$("#c-lock")&&lockedIn(tid)) chapterView(tid); }).catch(()=>{});
   const qz=$("#c-quiz"); if(qz) qz.onclick=()=>study(tid);
   $("#c-notes").onclick=()=>noteView(tid); const n2=$("#c-notes2"); if(n2) n2.onclick=()=>noteView(tid);
   const cm=$("#c-mist"); if(cm) cm.onclick=()=>study(null, mist, ()=>chapterView(tid));
