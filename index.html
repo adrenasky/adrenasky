@@ -512,7 +512,7 @@ function noteBody(tid){
 }
 /* ===================== REVISION (spaced repetition) ===================== */
 function study(topic, custom, back){
-  hideTabs(); stopTimer();
+  hideTabs(); stopTimer(); track("quiz", topic?((TOPICS.find(x=>x.id===topic)||{}).name||topic):(custom?"Custom set":"Daily revision"));
   const now=Date.now(); back=back||home;
   let queue;
   const N=sessionSize();
@@ -775,7 +775,7 @@ async function startPayment(plan, amount){
     });
   }catch(e){ toast(e.message); }
 }
-async function planView(){
+async function planView(){ track("plans");
   screen("home",`<button class="link back" id="pb">${icon("back",18)} Back</button><h1 class="disp big">Plan and payment</h1><p class="small">Loading…</p>`);
   $("#pb").onclick=home;
   const [pr,sub,base]=await Promise.all([sb.rpc("my_prices"), sb.from("subscriptions").select("subject_id,plan,starts_at,ends_at").gt("ends_at",new Date().toISOString()).order("ends_at",{ascending:false}), sb.from("prices").select("plan,amount_kes")]);
@@ -851,7 +851,7 @@ function wireChapRows(){ app.querySelectorAll("[data-ch]").forEach(b=>b.onclick=
 
 /* ===================== HOME ===================== */
 function home(){
-  if(!SUBJ) return subjectPicker();
+  if(!SUBJ) return subjectPicker(); track("open");
   const now=Date.now();
   const due=QUESTIONS.filter(q=>{const c=S.cards[q.id]; return c&&c.box>0&&c.due<=now;}).length;
   const fresh=QUESTIONS.filter(q=>!S.cards[q.id]||!S.cards[q.id].seen).length;
@@ -918,7 +918,7 @@ function chapterView(tid){
   const cm=$("#c-mist"); if(cm) cm.onclick=()=>study(null, mist, ()=>chapterView(tid));
   app.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>questionView(b.dataset.q, ()=>chapterView(tid)));
 }
-function noteView(tid){
+function noteView(tid){ track("notes", (TOPICS.find(x=>x.id===tid)||{}).name);
   stopTimer(); const t=TOPICS.find(x=>x.id===tid);
   screen("study",`<button class="link back" id="b">${icon("back",18)} ${esc(t?t.name:"Back")}</button>
     <article class="qcard note"><div class="qmeta"><span>${esc(SUBJECT)}</span>${NOTES[tid]&&NOTES[tid].is_draft?'<span class="draft">Draft</span>':''}</div>
@@ -978,7 +978,7 @@ function examHub(){
 }
 function examStart(){ examHub(); }
 function exam(qs, minutes){
-  hideTabs();
+  hideTabs(); track("exam", qs.length+" questions");
   minutes=minutes||Math.round(qs.length*1.5);
   const answers=new Array(qs.length).fill(null), marked=new Set();
   const orders=qs.map(()=>shuffle([0,1,2,3]));
@@ -1126,7 +1126,7 @@ const FORMULAS={
   ["Stability and cloud",["DALR 3°C per 1,000 ft; SALR ≈ 1.5°C per 1,000 ft","Convective cloud base ≈ 400 ft × (temperature − dew point)"]]]
 };
 function formulaSheet(){
-  const f=FORMULAS[SUBJ.id]; if(!f) return;
+  const f=FORMULAS[SUBJ.id]; if(!f) return; track("formulas");
   screen("study",`<button class="link back" id="fb">${icon("back",18)} Study</button><h1 class="disp big">Formula sheet</h1>
     <p class="small">${esc(SUBJECT)}: the formulas the exam keeps reusing.</p>
     ${f.map(([h,items])=>`<section class="card"><h2 class="disp">${esc(h)}</h2><ul class="keyl">${items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>`).join("")}
@@ -1419,7 +1419,7 @@ async function loadSubjects(){
   SUBJECTS=sj.data.map(x=>({...x, topics:tp.data.filter(t=>t.subject_id===x.id).map(t=>({id:t.id,name:t.name,weight:Number(t.weight)||1}))}));
 }
 function setSubject(id){
-  SUBJ=SUBJECTS.find(x=>x.id===id); SUBJECT=SUBJ.name; TOPICS=SUBJ.topics;
+  SUBJ=SUBJECTS.find(x=>x.id===id); SUBJECT=SUBJ.name; TOPICS=SUBJ.topics; track("subject");
   try{ localStorage.setItem("adrenasky-subject",id); }catch(e){}
 }
 async function startApp(){
@@ -1488,14 +1488,23 @@ function adminShell(tab, body){
   $("#asj").onchange=e=>{ setSubject(e.target.value); adminState.ch=""; loadData(()=>adminView(tab)); };
   app.querySelectorAll(".adm button").forEach(b=>b.onclick=()=>adminView(b.dataset.t));
 }
+// Records what a student opens, so Admin can see what they were last doing. Fire and forget; repeats within 2 minutes are skipped.
+let lastTrack="";
+function track(action, detail){
+  try{ if(!USER||IS_ADMIN) return; const key=action+"|"+(SUBJ&&SUBJ.id)+"|"+(detail||""), now=Date.now();
+    if(lastTrack&&lastTrack.k===key&&now-lastTrack.t<120000) return; lastTrack={k:key,t:now};
+    sb.from("activity").insert({action, subject_id:SUBJ?SUBJ.id:null, detail:detail?String(detail).slice(0,120):null}).then(()=>{},()=>{});
+  }catch(e){}
+}
 async function rpc(name,args){ const {data,error}=await sb.rpc(name,args||{}); if(error){ toast(error.message); throw error; } return data; }
 async function adminView(tab){
   stopTimer(); hideTabs(); tab=tab||"overview"; adminShell(tab); window.scrollTo(0,0);
   const el=$("#adm");
   try{
   if(tab==="overview"){
-    const [t,fd]=await Promise.all([rpc("admin_testers"), rpc("admin_founding").catch(()=>[])]);
+    const [t,fd,ac]=await Promise.all([rpc("admin_testers"), rpc("admin_founding").catch(()=>[]), rpc("admin_activity").catch(()=>[])]);
     const fm=Object.fromEntries((fd||[]).map(r=>[r.user_id,r.is_founding])); t.forEach(x=>x.is_founding=!!fm[x.user_id]);
+    const am=Object.fromEntries((ac||[]).map(r=>[r.user_id,r])); t.forEach(x=>x.doing=am[x.user_id]);
     const week=Date.now()-7*86400000;
     const active=t.filter(x=>(x.last_active||x.last_login)&&new Date(x.last_active||x.last_login)>week).length;
     const exams=t.reduce((a,x)=>a+Number(x.exams_sat),0);
@@ -1503,9 +1512,9 @@ async function adminView(tab){
       <div><b>${t.length}</b><span>Testers</span></div><div><b>${active}</b><span>Active this week</span></div>
       <div><b>${exams}</b><span>Exams sat</span></div></div>
       <p class="small">Tap a tester to manage devices, block access or end a subscription.</p>
-      <div class="wrapx"><table><tr><th>Name</th><th>Last active</th><th>Tried</th><th>Accuracy</th><th>Exams</th><th>Best</th><th>Devices</th></tr>
+      <div class="wrapx"><table><tr><th>Name</th><th>Last active</th><th>Studying</th><th>Tried</th><th>Accuracy</th><th>Exams</th><th>Best</th><th>Devices</th></tr>
       ${t.map((x,i)=>`<tr class="tap-row" data-i="${i}"><td><b>${esc(x.full_name||"No name")}</b>${x.is_blocked?'<span class="draft" style="color:var(--bad);border-color:var(--bad)">Blocked</span>':""}${x.is_founding?'<span class="draft" style="color:var(--ok);border-color:var(--ok)">Founding</span>':""}${Number(x.active_subscriptions)?'<span class="draft" style="color:var(--ok);border-color:var(--ok)">Subscribed</span>':""}<br><span class="small">${esc(x.email)}</span></td>
-        <td>${ago(x.last_active||x.last_login)}</td><td>${x.questions_tried}</td><td>${pct(x.accuracy_pct)}</td><td>${x.exams_sat}</td><td>${pct(x.best_exam)}</td><td>${x.devices}/${x.device_limit}</td></tr>`).join("")}</table></div>`;
+        <td>${ago(x.last_active||x.last_login)}</td><td class="small" style="margin:0;min-width:150px">${doingText(x.doing)}</td><td>${x.questions_tried}</td><td>${pct(x.accuracy_pct)}</td><td>${x.exams_sat}</td><td>${pct(x.best_exam)}</td><td>${x.devices}/${x.device_limit}</td></tr>`).join("")}</table></div>`;
     el.querySelectorAll(".tap-row").forEach(r=>r.onclick=()=>testerActions(t[+r.dataset.i]));
   }
   if(tab==="exams"){
@@ -1659,10 +1668,13 @@ async function editNote(tid){
   };
 }
 
+const DOING={open:"Opened the app",subject:"Switched subject",notes:"Read notes",quiz:"Quiz",exam:"Mock exam",review:"Reviewed mistakes",formulas:"Formula sheet",plans:"Looked at plans",answered:"Answered questions"};
+function doingText(d){ if(!d) return "–"; return `<b>${esc(d.subject||"")}</b>${d.subject?"<br>":""}${esc(DOING[d.action]||d.action)}${d.detail&&d.action!=="open"&&d.action!=="subject"?": "+esc(d.detail):""}<br><span style="opacity:.75">${ago(d.at)}</span>`; }
 function testerActions(x){
   const w=document.createElement("div"); w.className="modal";
   w.innerHTML=`<div class="modal-box"><p>${esc(x.full_name||x.email)}</p>
     <p class="small" style="font-weight:400;margin-top:-8px">${esc(x.email)} · ${x.devices} of ${x.device_limit} devices</p>
+    <div id="hist" class="small" style="font-weight:400;max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:12px">Loading recent activity…</div>
     <div class="auth"><label>Device limit<input id="dl" type="number" min="1" max="10" value="${x.device_limit}"></label>
     <button class="primary" id="sdl">Save device limit</button>
     <button class="ghost" id="rd">Clear all their devices</button>
@@ -1672,6 +1684,8 @@ function testerActions(x){
     <button class="link" id="cl">Close</button></div></div>`;
   document.body.appendChild(w);
   w.querySelector("#cl").onclick=()=>w.remove();
+  rpc("admin_activity_for",{p_user:x.user_id}).then(h=>{ const el=w.querySelector("#hist"); if(!el) return;
+    el.innerHTML=h&&h.length?`<b>Recent activity</b>`+h.map(r=>`<div style="padding:6px 0;border-top:1px solid var(--line)">${esc(r.subject||"")}${r.subject?" · ":""}${esc(DOING[r.action]||r.action)}${r.detail?": "+esc(r.detail):""}<br><span style="opacity:.75">${fmtDate(r.at)} · ${ago(r.at)}</span></div>`).join(""):"No activity recorded yet."; }).catch(()=>{});
   w.querySelector("#sdl").onclick=async()=>{ await rpc("admin_set_device_limit",{p_user:x.user_id,p_limit:+w.querySelector("#dl").value}); w.remove(); toast("Device limit saved"); adminView("overview"); };
   const es=w.querySelector("#es"); if(es) es.onclick=()=>{ w.remove(); ask(`End ${x.full_name||x.email}'s subscription now? They'll lose access to paid content immediately.`,"End subscription","Cancel",async()=>{ const n=await rpc("admin_end_subscriptions",{p_user:x.user_id}); toast(n?"Subscription ended":"No active subscription found"); adminView("overview"); }); };
   w.querySelector("#fnd").onclick=async()=>{ await rpc("admin_set_founding",{p_user:x.user_id,p_on:!x.is_founding}); w.remove(); toast(x.is_founding?"Founding price removed":"Marked as founding member"); adminView("overview"); };
