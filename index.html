@@ -106,6 +106,19 @@ table{width:100%;border-collapse:collapse;font-size:15px}
 td,th{padding:8px 4px;border-bottom:1px solid var(--line);text-align:left}
 th{color:var(--muted);font-weight:400}
 .wrapx{overflow-x:auto}
+.dash{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+@media(min-width:700px){.dash{grid-template-columns:repeat(4,1fr)}}
+.dash .k{background:var(--surface);border-radius:14px;padding:14px}
+.dash .k b{display:block;font-family:"Archivo",sans-serif;font-size:30px;line-height:1;color:var(--chart)}
+.dash .k span{display:block;font-size:13px;color:var(--muted);margin-top:6px}
+.dash .k i{display:block;font-style:normal;font-size:12px;color:var(--muted);margin-top:2px}
+.dcard{background:var(--surface);border-radius:14px;padding:14px;margin-bottom:14px}
+.dcard h3{font-family:"Archivo",sans-serif;font-size:17px;margin:0 0 10px;color:var(--ink)}
+.dcard .row2{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.dcard .row2:first-of-type{border-top:0}
+.dleg{display:flex;gap:14px;font-size:12px;color:var(--muted);margin:6px 0 0}
+.dleg u{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;text-decoration:none;vertical-align:-1px}
+
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:15px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
 /* ---- Official logo mark (adapts to theme) ---- */
@@ -675,7 +688,7 @@ function accountSheet(){
   w.onclick=e=>{ if(e.target===w) w.remove(); };
   w.querySelector("#as-acc").onclick=()=>{ w.remove(); progress("account"); };
   const pl=w.querySelector("#as-plan"); if(pl) pl.onclick=()=>{ w.remove(); planView(); };
-  const ad=w.querySelector("#as-admin"); if(ad) ad.onclick=()=>{ w.remove(); hideTabs(); adminView("overview"); };
+  const ad=w.querySelector("#as-admin"); if(ad) ad.onclick=()=>{ w.remove(); hideTabs(); adminView("dashboard"); };
   w.querySelector("#as-sup").onclick=()=>{ w.remove(); legalView("support"); };
   w.querySelector("#as-out").onclick=()=>{ w.remove(); ask("Log out of Adrenasky?","Log out","Cancel",async ()=>{ hideTabs(); await sb.auth.signOut(); }); };
 }
@@ -1473,7 +1486,7 @@ const pct=v=>v===null||v===undefined?"–":Math.round(v)+"%";
 const ago=d=>{ if(!d) return "Never"; const m=(Date.now()-new Date(d))/60000;
   return m<2?"Just now":m<60?Math.floor(m)+" min ago":m<1440?Math.floor(m/60)+" h ago":Math.floor(m/1440)+" d ago"; };
 function adminShell(tab, body){
-  const tabs=[["overview","Testers"],["exams","Exams"],["reports","Reports"],["questions","Questions"],["notes","Notes"],["results","Results"],["chapters","Chapters"],["subjects","Subjects"]];
+  const tabs=[["dashboard","Dashboard"],["overview","Testers"],["exams","Exams"],["reports","Reports"],["questions","Questions"],["notes","Notes"],["results","Results"],["chapters","Chapters"],["subjects","Subjects"]];
   app.innerHTML=`<button class="link back" id="ab">Back to the app</button>
     <div style="display:flex;justify-content:space-between;align-items:center"><h2 class="cond" style="font-size:34px;margin:6px 0 14px;color:var(--chart)">Admin</h2>
     <button class="ghost" id="arf" style="min-height:40px;padding:8px 14px">Refresh</button></div>
@@ -1498,9 +1511,38 @@ function track(action, detail){
 }
 async function rpc(name,args){ const {data,error}=await sb.rpc(name,args||{}); if(error){ toast(error.message); throw error; } return data; }
 async function adminView(tab){
-  stopTimer(); hideTabs(); tab=tab||"overview"; adminShell(tab); window.scrollTo(0,0);
+  stopTimer(); hideTabs(); tab=tab||"dashboard"; adminShell(tab); window.scrollTo(0,0);
   const el=$("#adm");
   try{
+  if(tab==="dashboard"){
+    const d=await rpc("admin_dashboard"), rv=d.revenue||{}, kes=n=>"KES "+Number(n||0).toLocaleString("en-KE");
+    const k=(b,l,i)=>`<div class="k"><b>${b}</b><span>${l}</span>${i?`<i>${i}</i>`:""}</div>`;
+    const days=d.by_day||[], mx=Math.max(3,...days.map(x=>Math.max(x.signups,x.active)));
+    const W=320,H=120,bw=W/days.length;
+    const bars=days.map((x,i)=>{ const h1=x.active/mx*(H-22), h2=x.signups/mx*(H-22), xx=i*bw+3;
+      return `<rect x="${xx}" y="${H-16-h1}" width="${bw/2-3}" height="${Math.max(h1,x.active?2:0)}" rx="2" fill="var(--chart)"/>
+        <rect x="${xx+bw/2-2}" y="${H-16-h2}" width="${bw/2-3}" height="${Math.max(h2,x.signups?2:0)}" rx="2" fill="var(--magenta)"/>
+        <text x="${xx+bw/2-1}" y="${H-3}" font-size="8" text-anchor="middle" fill="var(--muted)">${new Date(x.d+"T00:00:00").getDate()}</text>`; }).join("");
+    const subj=(d.subjects||[]).map(x=>`<div class="row2"><span><b>${esc(x.name)}</b></span><span class="small" style="margin:0;text-align:right">${x.students} student${x.students===1?"":"s"} · ${x.actions} actions<br>${x.exams} exam${x.exams===1?"":"s"}${x.exam_avg!==null?" · avg "+x.exam_avg+"%":""}</span></div>`).join("");
+    const rec=(d.recent||[]).map(x=>`<div class="row2"><span><b>${esc(x.name)}</b><br><span class="small" style="margin:0">${esc(x.subject||"")}${x.subject?" · ":""}${esc(DOING[x.action]||x.action)}${x.detail&&x.action!=="open"&&x.action!=="subject"?": "+esc(x.detail):""}</span></span><span class="small" style="margin:0;white-space:nowrap">${ago(x.at)}</span></div>`).join("");
+    const pays=(rv.recent||[]).map(x=>`<div class="row2"><span><b>${esc(x.name)}</b><br><span class="small" style="margin:0">${esc(x.subject||x.plan||"")} · ${esc(x.channel==="mobile_money"?"M-Pesa":x.channel||"")}</span></span><span style="text-align:right"><b>${kes(x.kes)}</b><br><span class="small" style="margin:0">${ago(x.at)}</span></span></div>`).join("");
+    el.innerHTML=`<div class="dash">
+      ${k(d.users,"Students",`${d.new_7d} new this week`)}
+      ${k(d.active_today,"Active today",`${d.active_7d} this week · ${d.active_30d} this month`)}
+      ${k(d.subscribed,"Subscribed",`${d.founding} founding`)}
+      ${k(kes(rv.last30_kes),"Revenue, 30 days",`${kes(rv.total_kes)} all time`)}
+      ${k(Number(d.questions_answered).toLocaleString("en-KE"),"Questions answered",d.accuracy!==null?`${d.accuracy}% correct`:"")}
+      ${k(d.exams,"Mock exams sat",d.exams?`avg ${d.exam_avg}% · ${d.exam_passed} passed`:"")}
+      ${k(rv.paid,"Payments",`${rv.pending} pending · ${rv.failed} failed`)}
+      ${k(d.blocked,"Blocked","")}</div>
+      <div class="dcard"><h3>Last 14 days</h3>
+        <svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Active students and sign-ups per day">${bars}</svg>
+        <div class="dleg"><span><u style="background:var(--chart)"></u>Active students</span><span><u style="background:var(--magenta)"></u>New sign-ups</span></div></div>
+      <div class="dcard"><h3>By subject (last 30 days)</h3>${subj||'<p class="small">No live subjects.</p>'}</div>
+      <div class="dcard"><h3>Latest activity</h3>${rec||'<p class="small">No activity yet.</p>'}</div>
+      <div class="dcard"><h3>Latest payments</h3>${pays||'<p class="small">No payments yet. Real payments will appear here.</p>'}</div>
+      <p class="small">Updated ${ago(d.generated_at)}. Your own account and test payments are left out. Tap Refresh to update.</p>`;
+  }
   if(tab==="overview"){
     const [t,fd,ac]=await Promise.all([rpc("admin_testers"), rpc("admin_founding").catch(()=>[]), rpc("admin_activity").catch(()=>[])]);
     const fm=Object.fromEntries((fd||[]).map(r=>[r.user_id,r.is_founding])); t.forEach(x=>x.is_founding=!!fm[x.user_id]);

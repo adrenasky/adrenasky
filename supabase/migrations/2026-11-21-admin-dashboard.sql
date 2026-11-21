@@ -1,0 +1,1 @@
+-- admin_dashboard(): applied to Supabase on 2026-11-21 (admin-only, SECURITY DEFINER). Returns counts, 14-day trend, per-subject use, payments and latest activity as one jsonb. Excludes admin accounts and admin test payments. See the live definition with: select pg_get_functiondef('public.admin_dashboard'::regproc);
