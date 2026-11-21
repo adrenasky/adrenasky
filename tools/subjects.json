@@ -1150,5 +1150,241 @@
     "Yes. Every new account gets a free 7-day trial of one subject with full access to its questions, notes and mock exams. There is no card needed to start."
    ]
   ]
+ },
+ {
+  "slug": "atpl-operational-procedures",
+  "name": "Operational Procedures",
+  "code": "070",
+  "nq": 419,
+  "np": 106,
+  "title": "ATPL Operational Procedures Questions and Notes, including KCARs | Adrenasky",
+  "h1": "ATPL <span>Operational Procedures</span> questions and notes",
+  "h1_plain": "ATPL Operational Procedures",
+  "meta": "ATPL Operational Procedures revision: 419 exam-style questions across 17 chapters on fire and smoke, oxygen and equipment, all-weather minima, wake turbulence and dangerous goods. Try 8 free questions.",
+  "lead": "Learn the minima, equipment rules and emergency procedures the Ops paper keeps testing, with explanations that point out where the KCARs differ from JAR-OPS. Built by a flight instructor at Wilson Airport for KCAA and East African (CASSOA) students.",
+  "final": "Pass Operational Procedures the first time",
+  "topics": [
+   {
+    "name": "Fire and Smoke",
+    "w": 12.9
+   },
+   {
+    "name": "Instruments, Equipment and Oxygen",
+    "w": 11.9
+   },
+   {
+    "name": "Operator, Commander and Flight Preparation",
+    "w": 10.8
+   },
+   {
+    "name": "Long-Range, Polar and NAT Operations",
+    "w": 10.5
+   },
+   {
+    "name": "All Weather Operations and Minima",
+    "w": 9.2
+   },
+   {
+    "name": "Wake Turbulence",
+    "w": 6.8
+   },
+   {
+    "name": "Windshear and Microburst",
+    "w": 5.3
+   },
+   {
+    "name": "Dangerous Goods",
+    "w": 5.2
+   },
+   {
+    "name": "Decompression",
+    "w": 5
+   },
+   {
+    "name": "Ground De-icing and Anti-icing",
+    "w": 4.9
+   },
+   {
+    "name": "Contaminated Runways",
+    "w": 4.4
+   },
+   {
+    "name": "Emergency Landing, Ditching and Fuel Jettison",
+    "w": 3.5
+   },
+   {
+    "name": "Minimum Equipment List",
+    "w": 2.7
+   },
+   {
+    "name": "Security",
+    "w": 2.1
+   },
+   {
+    "name": "Noise Abatement",
+    "w": 1.8
+   },
+   {
+    "name": "Helicopter Operations and Emergencies",
+    "w": 1.8
+   },
+   {
+    "name": "Bird Strike",
+    "w": 1.4
+   }
+  ],
+  "questions": [
+   {
+    "c": "All Weather Operations",
+    "q": "A Category I precision approach has:",
+    "o": [
+     "A decision height of at least 200 ft",
+     "A decision height of at least 50 ft",
+     "A decision height of at least 100 ft",
+     "No decision height"
+    ],
+    "a": 0,
+    "e": "CAT I: DH not below 200 ft, RVR not below 550 m."
+   },
+   {
+    "c": "All Weather Operations",
+    "q": "A Category I precision approach may be flown with a runway visual range of at least:",
+    "o": [
+     "550 m",
+     "350 m",
+     "800 m",
+     "500 m"
+    ],
+    "a": 0,
+    "e": "CAT I minimum RVR is 550 m with DH 200 ft."
+   },
+   {
+    "c": "All Weather Operations",
+    "q": "A Category A aeroplane may fly a circling approach only if the visibility is at least:",
+    "o": [
+     "1,500 m",
+     "1,600 m",
+     "3,600 m",
+     "2,400 m"
+    ],
+    "a": 0,
+    "e": "Circling minimum visibility: A 1,500 m; B 1,600 m; C 2,400 m; D 3,600 m."
+   },
+   {
+    "c": "All Weather Operations",
+    "q": "On an ILS approach, if the reported weather is below the crew's operating minima, the approach must not be continued beyond:",
+    "o": [
+     "The outer marker (or equivalent)",
+     "The FAF",
+     "The middle marker",
+     "The glide slope intercept point"
+    ],
+    "a": 0,
+    "e": "Approach ban: not beyond the outer marker, or 1,000 ft above the aerodrome if there is no outer marker."
+   },
+   {
+    "c": "Equipment and Oxygen",
+    "q": "For a non-pressurised aircraft, supplemental oxygen is:",
+    "o": [
+     "Oxygen required to operate at pressure altitudes above 10,000 ft",
+     "Therapeutic oxygen carried for certain passengers",
+     "Oxygen for passengers for physiological reasons",
+     "Oxygen for protection against smoke and CO2"
+    ],
+    "a": 0,
+    "e": "Supplemental oxygen is what the altitude requires; first-aid oxygen is for passengers' medical needs."
+   },
+   {
+    "c": "Equipment and Oxygen",
+    "q": "The purpose of first-aid oxygen is to:",
+    "o": [
+     "Give undiluted oxygen to passengers who need it for physiological reasons after a depressurisation",
+     "Give the flight crew respiratory assistance after depressurisation",
+     "Supply all passengers after depressurisation",
+     "Protect the cabin crew's breathing"
+    ],
+    "a": 0,
+    "e": "First-aid oxygen is undiluted oxygen for passengers who still need it once supplemental oxygen is no longer required."
+   },
+   {
+    "c": "Equipment and Oxygen",
+    "q": "The cockpit voice recorder must record automatically:",
+    "o": [
+     "From before the aeroplane moves under its own power until it can no longer move under its own power",
+     "From brake release until the parking brake is set",
+     "From full thrust until it can no longer move under its own power",
+     "From before it moves under its own power until the parking brake is set"
+    ],
+    "a": 0,
+    "e": "The CVR and FDR start and stop on the same rule: whenever the aeroplane can move under its own power."
+   },
+   {
+    "c": "All Weather Operations",
+    "q": "Aircraft approach categories use Vat = 1.3 × Vso. An aeroplane with Vat between 141 and 165 kt is Category:",
+    "o": [
+     "D",
+     "B",
+     "C",
+     "E"
+    ],
+    "a": 0,
+    "e": "A below 91 kt; B 91–120; C 121–140; D 141–165; E 166–210."
+   }
+  ],
+  "notes": {
+   "chapter": "Fire and Smoke",
+   "points": [
+    [
+     "Fire classes",
+     "A = solids (paper, wood, fabric); B = liquids such as fuel and oil; electrical fires; special fires = metals, gases and chemicals."
+    ],
+    [
+     "Water",
+     "on class A solids only. Never on liquid, electrical or metal fires."
+    ],
+    [
+     "Cockpit fire",
+     "halon or CO2 only. Powder blinds the crew; water conducts."
+    ],
+    [
+     "Hot brakes",
+     "approach the wheels only from the front or rear, because tyres burst sideways."
+    ]
+   ],
+   "example": {
+    "t": "Key numbers · cabin hand extinguishers",
+    "lines": [
+     "7–30 seats: 1 · 31–60: 2 · 61–200: 3",
+     "201–300: 4 · 301–400: 5 · 401–500: 6",
+     "<b>Above 60 seats, at least 2 cabin extinguishers must be halon</b>"
+    ]
+   },
+   "locked": {
+    "t": "Worked example · oxygen masks above FL250",
+    "lines": [
+     "Cabin masks = installed seats + 10%.",
+     "200 seats → 220 masks"
+    ]
+   },
+   "more": "Notes for all 17 Ops chapters inside, with the KCAR differences flagged."
+  },
+  "faq": [
+   [
+    "How many questions are in the exam, and what is the pass mark?",
+    "Under the East African CASSOA system, each ATPL theory paper is usually 40 questions in about one hour. The pass mark is 70%, but aim for 75% or more in practice so you have a margin on exam day."
+   ],
+   [
+    "Which Operational Procedures topics are tested most?",
+    "Fire and smoke, instruments, equipment and oxygen, operator and flight preparation, long-range and NAT operations, and all-weather minima make up over half the paper. The numbers matter: approach category speeds, RVR minima and oxygen requirements."
+   ],
+   [
+    "Does it cover the Kenyan regulations (KCARs)?",
+    "Yes. Where the KCAA question bank gives a different answer from older JAR-OPS material, the explanation says so, so you know which figure the exam expects."
+   ],
+   [
+    "Can I try it before paying?",
+    "Yes. Every new account gets a free 7-day trial of one subject with full access to its questions, notes and mock exams. There is no card needed to start."
+   ]
+  ]
  }
 ]
