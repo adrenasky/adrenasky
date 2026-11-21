@@ -294,12 +294,12 @@
   "slug": "atpl-air-law",
   "name": "Air Law",
   "code": "010",
-  "nq": 334,
-  "np": 321,
+  "nq": 514,
+  "np": 406,
   "title": "ATPL Air Law Questions and Notes, including KCAA Rules | Adrenasky",
   "h1": "ATPL <span>Air Law</span> questions and notes",
   "h1_plain": "ATPL Air Law",
-  "meta": "ATPL Air Law revision: 334 exam-style questions across 13 chapters, covering ICAO, rules of the air, ATS, approach procedures and Kenya regulations. Try 8 free questions.",
+  "meta": "ATPL Air Law revision: 514 exam-style questions across 13 chapters, covering ICAO, rules of the air, ATS, approach procedures and Kenya regulations. Try 8 free questions.",
   "lead": "Cover ICAO annexes, rules of the air, ATS and separation, instrument procedures and Kenya national regulations, with short notes that pull out the numbers the exam keeps asking for. Built by a flight instructor at Wilson Airport for KCAA and East African (CASSOA) students.",
   "final": "Pass Air Law the first time",
   "topics": [
@@ -489,7 +489,7 @@
      "Runways under 760 m apart count as one for wake turbulence."
     ]
    },
-   "more": "321 Air Law note points inside, including Kenya and KCAA rules."
+   "more": "406 Air Law note points inside, including Kenya and KCAA rules."
   },
   "faq": [
    [
@@ -946,12 +946,12 @@
   "slug": "atpl-human-performance",
   "name": "Human Performance",
   "code": "040",
-  "nq": 415,
-  "np": 290,
+  "nq": 682,
+  "np": 354,
   "title": "ATPL Human Performance and Limitations Questions and Notes | Adrenasky",
   "h1": "ATPL <span>Human Performance</span> questions and notes",
   "h1_plain": "ATPL Human Performance and Limitations",
-  "meta": "ATPL Human Performance and Limitations revision: 415 exam-style questions across 13 chapters on hypoxia, stress and sleep, CRM, memory, illusions and vision. Try 8 free questions.",
+  "meta": "ATPL Human Performance and Limitations revision: 682 exam-style questions across 13 chapters on hypoxia, stress and sleep, CRM, memory, illusions and vision. Try 8 free questions.",
   "lead": "Cover hypoxia, stress and sleep, CRM, memory and attention, illusions, vision and hearing, with notes that pin down the thresholds and times the exam asks for. Built by a flight instructor at Wilson Airport for KCAA and East African (CASSOA) students.",
   "final": "Pass Human Performance the first time",
   "topics": [
@@ -1130,7 +1130,7 @@
      "Treat with 100% oxygen; recovery takes days."
     ]
    },
-   "more": "290 Human Performance note points inside, covering all 13 chapters."
+   "more": "354 Human Performance note points inside, covering all 13 chapters."
   },
   "faq": [
    [

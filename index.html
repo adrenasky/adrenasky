@@ -1870,12 +1870,18 @@ async function deviceLimitView(tooSoon){
   $("#lo").onclick=()=>sb.auth.signOut();
 }
 
+// Links from the subject pages (/?s=met) pre-select that subject and open the sign-up form.
+let FROM_LINK=null;
+try{ const q=new URLSearchParams(location.search), sid=q.get("s");
+  if(sid&&/^[a-z]{2,8}$/.test(sid)){ FROM_LINK={sid, mode:q.get("a")==="login"?"login":"signup"}; try{ localStorage.setItem("adrenasky-subject",sid); }catch(e){} }
+  if(sid) history.replaceState(null,"",location.pathname); }catch(e){}
 let booted=false;
 sb.auth.onAuthStateChange((event, session)=>{
   const u=session?session.user:null;
   if(event==="PASSWORD_RECOVERY"){ return newPassword(); }
   if(u && (!USER || USER.id!==u.id)){ USER=u; checkDevice(); }
-  else if(!u){ USER=null; authView("login"); }
+  else if(!u){ USER=null; authView(FROM_LINK?FROM_LINK.mode:"login");
+    if(FROM_LINK){ const c=$("#authcard"); if(c) setTimeout(()=>c.scrollIntoView({block:"start"}),60); FROM_LINK=null; } }
   booted=true;
 });
 const pwOk=p=>p.length>=8&&/[A-Za-z]/.test(p)&&/\d/.test(p);

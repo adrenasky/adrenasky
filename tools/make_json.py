@@ -26,10 +26,10 @@ S.append(dict(slug="atpl-meteorology",name="Meteorology",code="050",nq=509,np=46
   more="40 more altimetry points and worked examples inside, plus notes for all 29 chapters."),
  faq=[EXAM,("Which Met topics are tested most?","Visibility, altimetry, clouds, air masses and pressure systems carry the most questions. Altimetry calculations come up in almost every paper, so practise them until they are automatic."),("Is Adrenasky useful for KCAA exams?","Yes. The question banks follow the ATPL syllabus the KCAA exams are based on, and the notes are written for students training in East Africa."),TRIAL]))
 
-S.append(dict(slug="atpl-air-law",name="Air Law",code="010",nq=334,np=321,
+S.append(dict(slug="atpl-air-law",name="Air Law",code="010",nq=514,np=406,
  title="ATPL Air Law Questions and Notes, including KCAA Rules | Adrenasky",
  h1="ATPL <span>Air Law</span> questions and notes",h1_plain="ATPL Air Law",
- meta="ATPL Air Law revision: 334 exam-style questions across 13 chapters, covering ICAO, rules of the air, ATS, approach procedures and Kenya regulations. Try 8 free questions.",
+ meta="ATPL Air Law revision: 514 exam-style questions across 13 chapters, covering ICAO, rules of the air, ATS, approach procedures and Kenya regulations. Try 8 free questions.",
  lead="Cover ICAO annexes, rules of the air, ATS and separation, instrument procedures and Kenya national regulations, with short notes that pull out the numbers the exam keeps asking for. Built by a flight instructor at Wilson Airport for KCAA and East African (CASSOA) students.",
  final="Pass Air Law the first time",
  topics=T([("International Law, ICAO and Regulatory Framework",11.7),("Airworthiness and Aircraft Registration",1.9),("Flight Crew Licensing",9.2),("Rules of the Air",18.4),("Instrument and Approach Procedures",19.1),("SSR, Transponder and ACAS",6.7),("Airspace Classification",5.9),("Air Traffic Services, Separation and Control",13),("Aeronautical Information Service",3.8),("Aerodromes, Visual Aids and Lighting",6.5),("Facilitation and Search and Rescue",2.1),("Security",1.2),("Accident and Incident Investigation",.6)]),
@@ -45,7 +45,7 @@ S.append(dict(slug="atpl-air-law",name="Air Law",code="010",nq=334,np=321,
  notes=dict(chapter="Instrument and Approach Procedures",points=[("Transition","at or below the transition altitude, fly altitude on QNH. The transition level is the lowest flight level available above it."),("MSA","at least 300 m (984 ft) obstacle clearance within 25 NM of the homing facility."),("Holding","outbound leg 1 minute at or below 14,000 ft, 1 minute 30 seconds above."),("Missed approach","designed on a nominal 2.5% climb gradient.")],
   example=dict(t="Worked example · departure climb gradient",lines=["Procedure design gradient (PDG) = obstacle surface + margin.","3.3% = 2.5% + 0.8%","<b>Minimum PDG 3.3% unless the chart says otherwise</b>"]),
   locked=dict(t="Key numbers · parallel runway approaches",lines=["Independent approaches: 1,000 ft vertical or 3 NM radar separation until established on the localizer.","Runways under 760 m apart count as one for wake turbulence."]),
-  more="321 Air Law note points inside, including Kenya and KCAA rules."),
+  more="406 Air Law note points inside, including Kenya and KCAA rules."),
  faq=[EXAM,("Which Air Law topics are tested most?","Instrument and approach procedures, rules of the air, air traffic services and ICAO's framework make up over 60% of the paper. Learn their numbers well: separation minima, holding times and MSA."),("Does it cover Kenya's own regulations?","Yes. Alongside ICAO material, the Air Law notes include Kenya national regulations and KCAA rules, so you learn where Kenya differs from the ICAO standard."),TRIAL]))
 
 S.append(dict(slug="atpl-general-navigation",name="General Navigation",code="061",nq=209,np=168,
@@ -92,10 +92,10 @@ S.append(dict(slug="atpl-radio-navigation",name="Radio Navigation",code="062",nq
   more="224 Radio Navigation note points inside, with the formulas worked through."),
  faq=[EXAM,("Which Radio Navigation topics are tested most?","Radio wave theory, GNSS, RNAV and FMS, VOR and ILS carry the most questions. Wavelength, range and DME slant-range calculations come up in most papers."),("Is this useful for real IFR flying too?","Yes. The same knowledge of VOR, ILS, GNSS and RNAV limits applies directly to instrument flying and MEIR training."),TRIAL]))
 
-S.append(dict(slug="atpl-human-performance",name="Human Performance",code="040",nq=415,np=290,
+S.append(dict(slug="atpl-human-performance",name="Human Performance",code="040",nq=682,np=354,
  title="ATPL Human Performance and Limitations Questions and Notes | Adrenasky",
  h1="ATPL <span>Human Performance</span> questions and notes",h1_plain="ATPL Human Performance and Limitations",
- meta="ATPL Human Performance and Limitations revision: 415 exam-style questions across 13 chapters on hypoxia, stress and sleep, CRM, memory, illusions and vision. Try 8 free questions.",
+ meta="ATPL Human Performance and Limitations revision: 682 exam-style questions across 13 chapters on hypoxia, stress and sleep, CRM, memory, illusions and vision. Try 8 free questions.",
  lead="Cover hypoxia, stress and sleep, CRM, memory and attention, illusions, vision and hearing, with notes that pin down the thresholds and times the exam asks for. Built by a flight instructor at Wilson Airport for KCAA and East African (CASSOA) students.",
  final="Pass Human Performance the first time",
  topics=T([("Respiration, Circulation and Hypoxia",21),("Stress, Fatigue and Sleep",10),("CRM, Communication and Leadership",10),("Information Processing, Memory and Attention",10),("Illusions and Spatial Disorientation",8),("Health, G and Toxicology",8),("Vision",7),("Barotrauma and Decompression Sickness",7),("Hearing and Balance",5),("Human Error",5),("Decision Making",4),("Atmosphere and Gas Laws",4),("Automation",2)]),
@@ -110,7 +110,7 @@ S.append(dict(slug="atpl-human-performance",name="Human Performance",code="040",
  notes=dict(chapter="Respiration, Circulation and Hypoxia",points=[("Breathing control","rate and depth are driven by CO2 in the blood, not oxygen."),("Hypoxia types","hypoxic (low ppO2 at altitude), anaemic (CO, anaemia), stagnant (poor circulation), histotoxic (poisoned cells)."),("Thresholds","indifferent zone to 10,000 ft; short-term memory suffers from 12,000 ft; critical threshold about 20,000 ft."),("Night vision","is affected first, from about 5,000 ft.")],
   example=dict(t="Key numbers · time of useful consciousness",lines=["25,000 ft: 3–5 minutes","30,000 ft: 45–90 seconds","35,000 ft: 30–60 seconds","<b>40,000 ft and above: about 15 seconds or less</b>"]),
   locked=dict(t="Key numbers · carbon monoxide",lines=["Binds haemoglobin 210–250 times more readily than oxygen.","Treat with 100% oxygen; recovery takes days."]),
-  more="290 Human Performance note points inside, covering all 13 chapters."),
+  more="354 Human Performance note points inside, covering all 13 chapters."),
  faq=[EXAM,("Which Human Performance topics are tested most?","Respiration and hypoxia alone is about a fifth of the paper. Stress and sleep, CRM, and memory and attention follow. Learn the altitude thresholds and time of useful consciousness figures exactly."),("Is Human Performance an easy pass?","It has less maths than other subjects, but the questions turn on precise wording and numbers. Practising with explanations is the quickest way to learn how the examiner phrases things."),TRIAL]))
 
 json.dump(S,open(os.path.join(os.path.dirname(__file__),"subjects.json"),"w"),ensure_ascii=False,indent=1)

@@ -110,8 +110,12 @@ Q.forEach((x,i)=>{
 });
 """
 
+SID = {"atpl-meteorology": "met", "atpl-air-law": "law", "atpl-general-navigation": "gnav",
+       "atpl-radio-navigation": "rnav", "atpl-human-performance": "hp"}
+
 def page(s):
     url = f"{SITE}/{s['slug']}"
+    go = f"/?s={SID[s['slug']]}"
     qs = []
     for i, q in enumerate(s["questions"]):
         opts, a = shuffle(q, i)
@@ -173,7 +177,7 @@ def page(s):
 <div class="wrap">
   <header class="top">
     <a class="brand" href="/">Adrenasky</a>
-    <a class="btn ghost" href="/">Log in</a>
+    <a class="btn ghost" href="{go}&a=login">Log in</a>
   </header>
 
   <section class="hero">
@@ -182,7 +186,7 @@ def page(s):
     <p class="lead">{E(s['lead'])}</p>
     <div class="facts">{"".join(f'<div><b>{E(a)}</b><span>{E(b)}</span></div>' for a, b in facts)}</div>
     <div class="cta-row">
-      <a class="btn primary" href="/">Start your free 7-day trial</a>
+      <a class="btn primary" href="{go}">Start your free 7-day trial</a>
       <a class="btn ghost" href="#try">Try {len(qs)} questions now</a>
     </div>
   </section>
@@ -214,7 +218,7 @@ def page(s):
   <section class="final">
     <h2>{E(s['final'])}</h2>
     <p>Try any one subject free for 7 days. Practise on your phone between flights, with your progress saved across devices.</p>
-    <a class="btn primary" href="/">Create a free account</a>
+    <a class="btn primary" href="{go}">Create a free account</a>
   </section>
 
   <section class="faq">
