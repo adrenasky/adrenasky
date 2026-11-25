@@ -111,7 +111,8 @@ Q.forEach((x,i)=>{
 """
 
 SID = {"atpl-meteorology": "met", "atpl-air-law": "law", "atpl-general-navigation": "gnav",
-       "atpl-radio-navigation": "rnav", "atpl-human-performance": "hp", "atpl-operational-procedures": "ops"}
+       "atpl-radio-navigation": "rnav", "atpl-human-performance": "hp", "atpl-operational-procedures": "ops",
+       "atpl-principles-of-flight": "pof"}
 
 def page(s):
     url = f"{SITE}/{s['slug']}"

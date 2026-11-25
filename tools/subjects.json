@@ -1386,5 +1386,224 @@
     "Yes. Every new account gets a free 7-day trial of one subject with full access to its questions, notes and mock exams. There is no card needed to start."
    ]
   ]
+ },
+ {
+  "slug": "atpl-principles-of-flight",
+  "name": "Principles of Flight",
+  "code": "081",
+  "nq": 974,
+  "np": 203,
+  "title": "ATPL Principles of Flight Questions, Notes and Worked Examples | Adrenasky",
+  "h1": "ATPL <span>Principles of Flight</span> questions and notes",
+  "h1_plain": "ATPL Principles of Flight",
+  "meta": "ATPL Principles of Flight revision: 974 exam-style questions across 11 chapters, from high-speed flight and stability to stall speeds, turns and propellers. Try 8 free questions.",
+  "lead": "Work through high-speed flight, drag, flight mechanics, loads, stability, propellers and controls, with every calculation (stall speeds, load factors, turn radius, VA) recomputed and shown step by step. Built by a flight instructor at Wilson Airport for KCAA and East African (CASSOA) students.",
+  "extra_facts": [
+   [
+    "6",
+    "formula sheets"
+   ]
+  ],
+  "final": "Pass Principles of Flight the first time",
+  "topics": [
+   {
+    "name": "High-Speed Flight",
+    "w": 17.3
+   },
+   {
+    "name": "Drag",
+    "w": 12.2
+   },
+   {
+    "name": "Flight Mechanics: Climb, Descent and Turns",
+    "w": 10.6
+   },
+   {
+    "name": "Limitations, Loads and Gusts",
+    "w": 9.4
+   },
+   {
+    "name": "Stability",
+    "w": 8.4
+   },
+   {
+    "name": "Propellers",
+    "w": 8.3
+   },
+   {
+    "name": "Flight Controls and Trim",
+    "w": 8.2
+   },
+   {
+    "name": "Aerofoils and Lift",
+    "w": 7.9
+   },
+   {
+    "name": "Basic Aerodynamics: Laws and Definitions",
+    "w": 7.1
+   },
+   {
+    "name": "Stall, Spin and Contamination",
+    "w": 5.7
+   },
+   {
+    "name": "High Lift Devices",
+    "w": 4.9
+   }
+  ],
+  "questions": [
+   {
+    "c": "Stall, Spin and Contamination",
+    "q": "An aeroplane has a stall speed of 78 kt at a mass of 6,850 kg. What is the stall speed at 5,000 kg?",
+    "o": [
+     "67 kt",
+     "91 kt",
+     "78 kt",
+     "57 kt"
+    ],
+    "a": 0,
+    "e": "Vs₂ = Vs₁ × √(m₂ ÷ m₁) = 78 × √(5,000 ÷ 6,850) ≈ 66.6, so 67 kt."
+   },
+   {
+    "c": "Stall, Spin and Contamination",
+    "q": "In straight and level flight at 1.3 VS, the lift coefficient as a percentage of CLmax is:",
+    "o": [
+     "59%",
+     "77%",
+     "130%",
+     "169%"
+    ],
+    "a": 0,
+    "e": "CL ÷ CLmax = (VS ÷ V)² = 1 ÷ 1.3² ≈ 0.59."
+   },
+   {
+    "c": "Stall, Spin and Contamination",
+    "q": "On a swept-wing aeroplane at low airspeed, the pitch-up phenomenon is caused by:",
+    "o": [
+     "Wingtip stall",
+     "Boundary layer fences",
+     "Extension of trailing edge flaps",
+     "A forward CG"
+    ],
+    "a": 0,
+    "e": "Spanwise flow makes the tips stall first. They lie aft, so the centre of pressure moves forward and the nose rises."
+   },
+   {
+    "c": "Basic Aerodynamics",
+    "q": "In subsonic incompressible flow through a venturi, compared with the undisturbed flow, the throat has:",
+    "o": [
+     "Higher dynamic pressure and the same total pressure",
+     "Lower dynamic pressure and the same total pressure",
+     "Higher static pressure and higher speed",
+     "Higher total pressure"
+    ],
+    "a": 0,
+    "e": "The air speeds up in the throat, so dynamic pressure rises and static pressure falls. Total pressure stays the same."
+   },
+   {
+    "c": "Flight Controls and Trim",
+    "q": "How does the elevator move when trimming for a speed increase with a trim tab?",
+    "o": [
+     "The tab moves up and pushes the elevator further down",
+     "The tab moves down and pushes the elevator further up",
+     "Nothing changes externally",
+     "The stabiliser leading edge moves down"
+    ],
+    "a": 0,
+    "e": "A speed increase needs nose-down trim. The tab always moves opposite to the elevator."
+   },
+   {
+    "c": "High Lift Devices",
+    "q": "Slat extension:",
+    "o": [
+     "Delays the stall to a higher angle of attack",
+     "Decreases the critical angle of attack",
+     "Increases wing area and aft camber",
+     "Provides boundary layer suction"
+    ],
+    "a": 0,
+    "e": "Air through the slot re-energises the boundary layer, so the wing can reach a higher angle of attack before stalling."
+   },
+   {
+    "c": "Aerofoils and Lift",
+    "q": "For a positively cambered aerofoil, the pitching moment when CL = 0 is:",
+    "o": [
+     "Negative (nose down)",
+     "Positive (nose up)",
+     "Zero",
+     "Infinite"
+    ],
+    "a": 0,
+    "e": "At zero net lift the forces on the front and rear form a couple that pitches the nose down."
+   },
+   {
+    "c": "Flight Controls and Trim",
+    "q": "If the airspeed is doubled with the same control surface deflection, the aerodynamic force on the surface becomes:",
+    "o": [
+     "Four times greater",
+     "Twice as large",
+     "Four times smaller",
+     "√2 times greater"
+    ],
+    "a": 0,
+    "e": "Force ∝ ½ρV², so 2² = 4."
+   }
+  ],
+  "notes": {
+   "chapter": "Stall, Spin and Contamination",
+   "points": [
+    [
+     "Stall",
+     "a wing stalls when it exceeds the critical angle of attack, at any speed or attitude."
+    ],
+    [
+     "Stall speed",
+     "Vs ∝ √weight and ∝ √n. It rises with a forward CG, ice and, at high altitude, compressibility."
+    ],
+    [
+     "Swept wing",
+     "the tips stall first, the CP moves forward and the nose pitches up. A straight wing stalls root-first and the nose drops."
+    ],
+    [
+     "Warning and protection",
+     "the stick shaker warns; the stick pusher fires at a higher angle of attack to stop it rising further."
+    ]
+   ],
+   "example": {
+    "t": "Worked example · stall speed in a turn",
+    "lines": [
+     "Vs = 100 kt in level flight. Level turn at 60° bank.",
+     "1. n = 1 ÷ cos 60° = 2",
+     "2. Vs in the turn = 100 × √2",
+     "<b>Vs ≈ 141 kt</b>"
+    ]
+   },
+   "locked": {
+    "t": "Worked example · manoeuvring speed",
+    "lines": [
+     "1 g stall speed 70 kt, limit load factor 2.5.",
+     "VA = 70 × √2.5 ≈ 111 kt"
+    ]
+   },
+   "more": "203 Principles of Flight note points inside, covering all 11 chapters."
+  },
+  "faq": [
+   [
+    "How many questions are in the exam, and what is the pass mark?",
+    "Under the East African CASSOA system, each ATPL theory paper is usually 40 questions in about one hour. The pass mark is 70%, but aim for 75% or more in practice so you have a margin on exam day."
+   ],
+   [
+    "Which Principles of Flight topics are tested most?",
+    "High-speed flight is the biggest chapter, followed by drag, flight mechanics (climbs, descents and turns), loads and gusts, and stability. Learn the square-root rules for stall speed and load factor until they are automatic."
+   ],
+   [
+    "Are the calculations explained?",
+    "Yes. Every calculation question, from stall speed and load factor to turn radius, climb gradient and VA, has been recomputed and comes with the working."
+   ],
+   [
+    "Can I try it before paying?",
+    "Yes. Every new account gets a free 7-day trial of one subject with full access to its questions, notes and mock exams. There is no card needed to start."
+   ]
+  ]
  }
 ]
