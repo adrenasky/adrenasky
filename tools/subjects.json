@@ -1386,5 +1386,217 @@
     "Yes. Every new account gets a free 7-day trial of one subject with full access to its questions, notes and mock exams. There is no card needed to start."
    ]
   ]
+ },
+ {
+  "slug": "atpl-principles-of-flight",
+  "name": "Principles of Flight",
+  "code": "081",
+  "nq": 973,
+  "np": 192,
+  "title": "ATPL Principles of Flight Questions and Notes with Worked Examples | Adrenasky",
+  "h1": "ATPL <span>Principles of Flight</span> questions and notes",
+  "h1_plain": "ATPL Principles of Flight",
+  "meta": "ATPL Principles of Flight revision: 973 exam-style questions across 11 chapters on lift, drag, stall, high-speed flight, stability, loads and propellers, with worked examples. Try 8 free questions.",
+  "lead": "Work through lift, drag, stalling, high-speed flight, stability, flight controls, loads and propellers, with every explanation showing the reasoning and the worked examples showing the calculation. Built by a flight instructor at Wilson Airport for KCAA and East African (CASSOA) students.",
+  "final": "Pass Principles of Flight the first time",
+  "topics": [
+   {
+    "name": "High-Speed Flight",
+    "w": 17.3
+   },
+   {
+    "name": "Drag",
+    "w": 12.2
+   },
+   {
+    "name": "Flight Mechanics: Climb, Descent and Turns",
+    "w": 10.6
+   },
+   {
+    "name": "Limitations, Loads and Gusts",
+    "w": 9.4
+   },
+   {
+    "name": "Stability",
+    "w": 8.4
+   },
+   {
+    "name": "Propellers",
+    "w": 8.3
+   },
+   {
+    "name": "Flight Controls and Trim",
+    "w": 8.2
+   },
+   {
+    "name": "Aerofoils and Lift",
+    "w": 7.9
+   },
+   {
+    "name": "Basic Aerodynamics: Laws and Definitions",
+    "w": 7.1
+   },
+   {
+    "name": "Stall, Spin and Contamination",
+    "w": 5.7
+   },
+   {
+    "name": "High Lift Devices",
+    "w": 4.9
+   }
+  ],
+  "questions": [
+   {
+    "c": "Aerofoils and Lift",
+    "q": "Lift is the:",
+    "o": [
+     "Component of the total aerodynamic force perpendicular to the undisturbed airflow",
+     "Component of the total aerodynamic force perpendicular to the local flow",
+     "Component of the total aerodynamic force perpendicular to the mean aerodynamic chord",
+     "Vertical component of the total aerodynamic force, perpendicular to the undisturbed airflow"
+    ],
+    "a": 0,
+    "e": "Lift is the part of the total aerodynamic force at right angles to the undisturbed (free stream) airflow; drag is the part parallel to it. It is not necessarily vertical."
+   },
+   {
+    "c": "Aerofoils and Lift",
+    "q": "A symmetrical aerofoil will generate:",
+    "o": [
+     "Zero lift at zero angle of attack",
+     "Zero lift at a negative angle of attack",
+     "Zero lift at a positive angle of attack",
+     "Lift at all angles of attack"
+    ],
+    "a": 0,
+    "e": "With no camber, the flow is the same above and below at zero AoA, so CL = 0 at α = 0."
+   },
+   {
+    "c": "Stall, Spin and Contamination",
+    "q": "The stall speed:",
+    "o": [
+     "Increases with an increased weight",
+     "Does not depend on weight",
+     "Decreases with an increased weight",
+     "Increases with the length of the wingspan"
+    ],
+    "a": 0,
+    "e": "More weight needs more lift, so at CLmax a higher speed is needed: Vs ∝ √W."
+   },
+   {
+    "c": "Stall, Spin and Contamination",
+    "q": "The sensor of a stall warning system (e.g. a flapper switch) can be activated by a change in the location of the:",
+    "o": [
+     "Stagnation point",
+     "Centre of lift",
+     "Transition region",
+     "Centre of gravity"
+    ],
+    "a": 0,
+    "e": "As AoA increases the stagnation point moves down and back under the leading edge. The airflow then pushes the flapper vane up and triggers the warning."
+   },
+   {
+    "c": "Flight Controls and Trim",
+    "q": "Upon extension of a spoiler on a wing:",
+    "o": [
+     "CD is increased and CL is decreased",
+     "Only CL is decreased (CD remains unaffected)",
+     "Both CL and CD are increased",
+     "CD is increased, while CL remains unaffected"
+    ],
+    "a": 0,
+    "e": "A spoiler disturbs the flow over the upper surface: it destroys lift and adds drag. At the same angle of attack CL falls and CD rises."
+   },
+   {
+    "c": "High Lift Devices",
+    "q": "On a wing fitted with a Fowler trailing edge flap, the fully extended position produces:",
+    "o": [
+     "An increase in wing area and camber",
+     "An increase in wing area only",
+     "An unaffected wing area and increase in camber",
+     "An unaffected CD at a given angle of attack"
+    ],
+    "a": 0,
+    "e": "Fully extended, the Fowler flap has moved aft (more area) and down (more camber)."
+   },
+   {
+    "c": "Flight Mechanics: Climb, Descent and Turns",
+    "q": "An aeroplane is in a steady level coordinated turn at 45° bank and 230 kt TAS. The same aeroplane at the same bank and speed but a lower mass will turn with:",
+    "o": [
+     "The same turn radius",
+     "A larger turn radius",
+     "A higher rate of turn",
+     "A smaller turn radius"
+    ],
+    "a": 0,
+    "e": "Radius = V² ÷ (g tan φ) and rate = g tan φ ÷ V. Neither depends on mass, so radius and rate are the same at the same speed and bank."
+   },
+   {
+    "c": "Flight Mechanics: Climb, Descent and Turns",
+    "q": "During a coordinated climbing turn to the right:",
+    "o": [
+     "The left wing has a larger angle of attack than the right wing",
+     "Both wings have the same angle of attack",
+     "The left wing has a larger stalling angle of attack than the right wing",
+     "The left wing has a smaller angle of attack than the right wing"
+    ],
+    "a": 0,
+    "e": "Both wings climb at the same vertical speed, but the outer (left) wing travels further and faster round the turn, so its path is shallower. Its relative airflow is less inclined from above, so its angle of attack is larger."
+   }
+  ],
+  "notes": {
+   "chapter": "Limitations, Loads and Gusts",
+   "points": [
+    [
+     "Load factor",
+     "n = lift ÷ weight. It is above 1 in turns, pull-ups and up-gusts, and below 1 in steady climbs and descents (n = cos γ) and push-overs."
+    ],
+    [
+     "Limit and ultimate load",
+     "ultimate = 1.5 × limit. Above limit the structure may deform permanently; above ultimate it fails."
+    ],
+    [
+     "Manoeuvring speed",
+     "VA = VS × √n limit. At or below VA, full up-elevator stalls the wing before the limit load is reached."
+    ],
+    [
+     "Gust load factor",
+     "Δn rises with speed, with air density and with lift-curve slope, and falls with wing loading."
+    ]
+   ],
+   "example": {
+    "t": "Worked example · gust load factor",
+    "lines": [
+     "CL 0.42, lift-curve slope 0.1 per degree, gust +3°.",
+     "n = (0.42 + 0.3) ÷ 0.42",
+     "<b>n = 1.71</b>"
+    ]
+   },
+   "locked": {
+    "t": "Worked example · manoeuvring speed",
+    "lines": [
+     "VS 70 kt, n limit 2.5.",
+     "VA = 70 × √2.5 = 111 kt"
+    ]
+   },
+   "more": "192 note points across all 11 chapters inside, with worked examples for the calculations."
+  },
+  "faq": [
+   [
+    "How many questions are in the exam, and what is the pass mark?",
+    "Under the East African CASSOA system, each ATPL theory paper is usually 40 questions in about one hour. The pass mark is 70%, but aim for 75% or more in practice so you have a margin on exam day."
+   ],
+   [
+    "Which Principles of Flight topics are tested most?",
+    "High-speed flight, drag, climb, descent and turns, and loads and gusts make up about half the paper. Stability, propellers, flight controls and lift add most of the rest."
+   ],
+   [
+    "Does it explain why an answer is right?",
+    "Yes. Every question has an explanation that gives the reasoning, not just the key, and the calculation chapters have worked examples you can follow step by step."
+   ],
+   [
+    "Can I try it before paying?",
+    "Yes. Every new account gets a free 7-day trial of one subject with full access to its questions, notes and mock exams. There is no card needed to start."
+   ]
+  ]
  }
 ]
