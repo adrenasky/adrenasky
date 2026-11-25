@@ -1136,7 +1136,13 @@ const FORMULAS={
   ["Altimetry",["1 hPa ≈ 27 ft near MSL","Higher subscale reads higher by ΔhPa × 27 ft · e.g. 540 ft field, QNH 993, set 1013: reads 1,080 ft","Pressure altitude = elevation + (1013 − QNH) × 27 · e.g. 1,000 ft, QNH 1023: 730 ft","Altitude = FL − (1013 − QNH) × 27 · e.g. FL80, QNH 1000: ≈ 7,650 ft","QNH = QFE + elevation ÷ 27 · e.g. 540 ft, QNH 993: QFE ≈ 973 hPa","Aerodrome above MSL: QFE < QNH · below MSL: QFE > QNH · at MSL: equal"]],
   ["True and density altitude",["True altitude correction = 4 ft × (altitude ÷ 1,000) × ISA deviation (or 1% per 2.5°C)","Add if warmer, subtract if colder · e.g. 10,000 ft, ISA −10: 10,000 − 400 = 9,600 ft","Pressure first, then temperature · e.g. FL100, QNH 1003, ISA −10: 9,730 − 390 ≈ 9,340 ft","Density altitude = PA + 120 ft × ISA deviation · e.g. PA 5,000 ft, ISA +20: 7,400 ft"]],
   ["QFF vs QNH",["Aerodrome above MSL, warmer than ISA: QFF < QNH","Aerodrome above MSL, colder than ISA: QFF > QNH","Below MSL the signs reverse; at MSL all are equal"]],
-  ["Stability and cloud",["DALR 3°C per 1,000 ft; SALR ≈ 1.5°C per 1,000 ft","Convective cloud base ≈ 400 ft × (temperature − dew point)"]]]
+  ["Stability and cloud",["DALR 3°C per 1,000 ft; SALR ≈ 1.5°C per 1,000 ft","Convective cloud base ≈ 400 ft × (temperature − dew point)"]]],
+ pof:[["Lift and Bernoulli",["L = CL × ½ρV² × S (q = ½ρV²)","Lift ∝ V²: double the speed → 4 × lift","pt = ps + q; continuity: A × V = constant (incompressible)","Gas law: p = ρRT"]],
+  ["Stall speed",["Vs ∝ √weight: Vs₂ = Vs₁ × √(m₂ ÷ m₁) · e.g. 78 kt at 6,850 kg → 67 kt at 5,000 kg","Vs in a turn = Vs × √n","CL ÷ CLmax = (Vs ÷ V)² · e.g. 1.3 Vs → 59%, 2 Vs → 25%"]],
+  ["Turns",["Load factor n = 1 ÷ cos(bank) · 60° → n = 2, Vs × 1.41 · 45° → Vs + 19%","Radius = V² ÷ (g × tan bank), V in m/s · e.g. 200 kt, 30° bank ≈ 1,870 m ≈ 1 NM"]],
+  ["Loads",["VA = Vs × √(limit load factor) · e.g. 70 kt, n 2.5 → 111 kt","Gust Δn ∝ EAS × lift curve slope ÷ wing loading","Control surface force ∝ V²"]],
+  ["Climb and glide",["Climb gradient (%) ≈ (T − D) ÷ W × 100","ROC (ft/min) ≈ TAS (kt) × 101 × gradient · e.g. 100 kt, 3% → 303 ft/min","Glide ratio = L ÷ D; glide distance = height × L/D"]],
+  ["High speed",["M = TAS ÷ LSS; LSS (kt) = 38.95 × √K · e.g. −56.5°C → 573 kt","Climb at constant IAS → Mach rises (watch MMO); constant Mach → IAS falls"]]]
 };
 function formulaSheet(){
   const f=FORMULAS[SUBJ.id]; if(!f) return; track("formulas");
