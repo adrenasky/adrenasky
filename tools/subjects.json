@@ -1393,11 +1393,17 @@
   "code": "081",
   "nq": 973,
   "np": 192,
-  "title": "ATPL Principles of Flight Questions and Notes with Worked Examples | Adrenasky",
+  "title": "ATPL Principles of Flight Questions, Notes and Worked Examples | Adrenasky",
   "h1": "ATPL <span>Principles of Flight</span> questions and notes",
   "h1_plain": "ATPL Principles of Flight",
-  "meta": "ATPL Principles of Flight revision: 973 exam-style questions across 11 chapters on lift, drag, stall, high-speed flight, stability, loads and propellers, with worked examples. Try 8 free questions.",
-  "lead": "Work through lift, drag, stalling, high-speed flight, stability, flight controls, loads and propellers, with every explanation showing the reasoning and the worked examples showing the calculation. Built by a flight instructor at Wilson Airport for KCAA and East African (CASSOA) students.",
+  "meta": "ATPL Principles of Flight revision: 973 exam-style questions across 11 chapters, from high-speed flight and stability to stall speeds, turns and propellers. Try 8 free questions.",
+  "lead": "Work through high-speed flight, drag, flight mechanics, loads, stability, propellers and controls, with every calculation (stall speeds, load factors, turn radius, VA) recomputed and shown step by step. Built by a flight instructor at Wilson Airport for KCAA and East African (CASSOA) students.",
+  "extra_facts": [
+   [
+    "6",
+    "formula sheets"
+   ]
+  ],
   "final": "Pass Principles of Flight the first time",
   "topics": [
    {
@@ -1447,138 +1453,139 @@
   ],
   "questions": [
    {
-    "c": "Aerofoils and Lift",
-    "q": "Lift is the:",
+    "c": "Stall, Spin and Contamination",
+    "q": "An aeroplane has a stall speed of 78 kt at a mass of 6,850 kg. What is the stall speed at 5,000 kg?",
     "o": [
-     "Component of the total aerodynamic force perpendicular to the undisturbed airflow",
-     "Component of the total aerodynamic force perpendicular to the local flow",
-     "Component of the total aerodynamic force perpendicular to the mean aerodynamic chord",
-     "Vertical component of the total aerodynamic force, perpendicular to the undisturbed airflow"
+     "67 kt",
+     "91 kt",
+     "78 kt",
+     "57 kt"
     ],
     "a": 0,
-    "e": "Lift is the part of the total aerodynamic force at right angles to the undisturbed (free stream) airflow; drag is the part parallel to it. It is not necessarily vertical."
-   },
-   {
-    "c": "Aerofoils and Lift",
-    "q": "A symmetrical aerofoil will generate:",
-    "o": [
-     "Zero lift at zero angle of attack",
-     "Zero lift at a negative angle of attack",
-     "Zero lift at a positive angle of attack",
-     "Lift at all angles of attack"
-    ],
-    "a": 0,
-    "e": "With no camber, the flow is the same above and below at zero AoA, so CL = 0 at α = 0."
+    "e": "Vs₂ = Vs₁ × √(m₂ ÷ m₁) = 78 × √(5,000 ÷ 6,850) ≈ 66.6, so 67 kt."
    },
    {
     "c": "Stall, Spin and Contamination",
-    "q": "The stall speed:",
+    "q": "In straight and level flight at 1.3 VS, the lift coefficient as a percentage of CLmax is:",
     "o": [
-     "Increases with an increased weight",
-     "Does not depend on weight",
-     "Decreases with an increased weight",
-     "Increases with the length of the wingspan"
+     "59%",
+     "77%",
+     "130%",
+     "169%"
     ],
     "a": 0,
-    "e": "More weight needs more lift, so at CLmax a higher speed is needed: Vs ∝ √W."
+    "e": "CL ÷ CLmax = (VS ÷ V)² = 1 ÷ 1.3² ≈ 0.59."
    },
    {
     "c": "Stall, Spin and Contamination",
-    "q": "The sensor of a stall warning system (e.g. a flapper switch) can be activated by a change in the location of the:",
+    "q": "On a swept-wing aeroplane at low airspeed, the pitch-up phenomenon is caused by:",
     "o": [
-     "Stagnation point",
-     "Centre of lift",
-     "Transition region",
-     "Centre of gravity"
+     "Wingtip stall",
+     "Boundary layer fences",
+     "Extension of trailing edge flaps",
+     "A forward CG"
     ],
     "a": 0,
-    "e": "As AoA increases the stagnation point moves down and back under the leading edge. The airflow then pushes the flapper vane up and triggers the warning."
+    "e": "Spanwise flow makes the tips stall first. They lie aft, so the centre of pressure moves forward and the nose rises."
+   },
+   {
+    "c": "Basic Aerodynamics",
+    "q": "In subsonic incompressible flow through a venturi, compared with the undisturbed flow, the throat has:",
+    "o": [
+     "Higher dynamic pressure and the same total pressure",
+     "Lower dynamic pressure and the same total pressure",
+     "Higher static pressure and higher speed",
+     "Higher total pressure"
+    ],
+    "a": 0,
+    "e": "The air speeds up in the throat, so dynamic pressure rises and static pressure falls. Total pressure stays the same."
    },
    {
     "c": "Flight Controls and Trim",
-    "q": "Upon extension of a spoiler on a wing:",
+    "q": "How does the elevator move when trimming for a speed increase with a trim tab?",
     "o": [
-     "CD is increased and CL is decreased",
-     "Only CL is decreased (CD remains unaffected)",
-     "Both CL and CD are increased",
-     "CD is increased, while CL remains unaffected"
+     "The tab moves up and pushes the elevator further down",
+     "The tab moves down and pushes the elevator further up",
+     "Nothing changes externally",
+     "The stabiliser leading edge moves down"
     ],
     "a": 0,
-    "e": "A spoiler disturbs the flow over the upper surface: it destroys lift and adds drag. At the same angle of attack CL falls and CD rises."
+    "e": "A speed increase needs nose-down trim. The tab always moves opposite to the elevator."
    },
    {
     "c": "High Lift Devices",
-    "q": "On a wing fitted with a Fowler trailing edge flap, the fully extended position produces:",
+    "q": "Slat extension:",
     "o": [
-     "An increase in wing area and camber",
-     "An increase in wing area only",
-     "An unaffected wing area and increase in camber",
-     "An unaffected CD at a given angle of attack"
+     "Delays the stall to a higher angle of attack",
+     "Decreases the critical angle of attack",
+     "Increases wing area and aft camber",
+     "Provides boundary layer suction"
     ],
     "a": 0,
-    "e": "Fully extended, the Fowler flap has moved aft (more area) and down (more camber)."
+    "e": "Air through the slot re-energises the boundary layer, so the wing can reach a higher angle of attack before stalling."
    },
    {
-    "c": "Flight Mechanics: Climb, Descent and Turns",
-    "q": "An aeroplane is in a steady level coordinated turn at 45° bank and 230 kt TAS. The same aeroplane at the same bank and speed but a lower mass will turn with:",
+    "c": "Aerofoils and Lift",
+    "q": "For a positively cambered aerofoil, the pitching moment when CL = 0 is:",
     "o": [
-     "The same turn radius",
-     "A larger turn radius",
-     "A higher rate of turn",
-     "A smaller turn radius"
+     "Negative (nose down)",
+     "Positive (nose up)",
+     "Zero",
+     "Infinite"
     ],
     "a": 0,
-    "e": "Radius = V² ÷ (g tan φ) and rate = g tan φ ÷ V. Neither depends on mass, so radius and rate are the same at the same speed and bank."
+    "e": "At zero net lift the forces on the front and rear form a couple that pitches the nose down."
    },
    {
-    "c": "Flight Mechanics: Climb, Descent and Turns",
-    "q": "During a coordinated climbing turn to the right:",
+    "c": "Flight Controls and Trim",
+    "q": "If the airspeed is doubled with the same control surface deflection, the aerodynamic force on the surface becomes:",
     "o": [
-     "The left wing has a larger angle of attack than the right wing",
-     "Both wings have the same angle of attack",
-     "The left wing has a larger stalling angle of attack than the right wing",
-     "The left wing has a smaller angle of attack than the right wing"
+     "Four times greater",
+     "Twice as large",
+     "Four times smaller",
+     "√2 times greater"
     ],
     "a": 0,
-    "e": "Both wings climb at the same vertical speed, but the outer (left) wing travels further and faster round the turn, so its path is shallower. Its relative airflow is less inclined from above, so its angle of attack is larger."
+    "e": "Force ∝ ½ρV², so 2² = 4."
    }
   ],
   "notes": {
-   "chapter": "Limitations, Loads and Gusts",
+   "chapter": "Stall, Spin and Contamination",
    "points": [
     [
-     "Load factor",
-     "n = lift ÷ weight. It is above 1 in turns, pull-ups and up-gusts, and below 1 in steady climbs and descents (n = cos γ) and push-overs."
+     "Stall",
+     "a wing stalls when it exceeds the critical angle of attack, at any speed or attitude."
     ],
     [
-     "Limit and ultimate load",
-     "ultimate = 1.5 × limit. Above limit the structure may deform permanently; above ultimate it fails."
+     "Stall speed",
+     "Vs ∝ √weight and ∝ √n. It rises with a forward CG, ice and, at high altitude, compressibility."
     ],
     [
-     "Manoeuvring speed",
-     "VA = VS × √n limit. At or below VA, full up-elevator stalls the wing before the limit load is reached."
+     "Swept wing",
+     "the tips stall first, the CP moves forward and the nose pitches up. A straight wing stalls root-first and the nose drops."
     ],
     [
-     "Gust load factor",
-     "Δn rises with speed, with air density and with lift-curve slope, and falls with wing loading."
+     "Warning and protection",
+     "the stick shaker warns; the stick pusher fires at a higher angle of attack to stop it rising further."
     ]
    ],
    "example": {
-    "t": "Worked example · gust load factor",
+    "t": "Worked example · stall speed in a turn",
     "lines": [
-     "CL 0.42, lift-curve slope 0.1 per degree, gust +3°.",
-     "n = (0.42 + 0.3) ÷ 0.42",
-     "<b>n = 1.71</b>"
+     "Vs = 100 kt in level flight. Level turn at 60° bank.",
+     "1. n = 1 ÷ cos 60° = 2",
+     "2. Vs in the turn = 100 × √2",
+     "<b>Vs ≈ 141 kt</b>"
     ]
    },
    "locked": {
     "t": "Worked example · manoeuvring speed",
     "lines": [
-     "VS 70 kt, n limit 2.5.",
-     "VA = 70 × √2.5 = 111 kt"
+     "1 g stall speed 70 kt, limit load factor 2.5.",
+     "VA = 70 × √2.5 ≈ 111 kt"
     ]
    },
-   "more": "192 note points across all 11 chapters inside, with worked examples for the calculations."
+   "more": "192 Principles of Flight note points inside, covering all 11 chapters."
   },
   "faq": [
    [
@@ -1587,11 +1594,11 @@
    ],
    [
     "Which Principles of Flight topics are tested most?",
-    "High-speed flight, drag, climb, descent and turns, and loads and gusts make up about half the paper. Stability, propellers, flight controls and lift add most of the rest."
+    "High-speed flight is the biggest chapter, followed by drag, flight mechanics (climbs, descents and turns), loads and gusts, and stability. Learn the square-root rules for stall speed and load factor until they are automatic."
    ],
    [
-    "Does it explain why an answer is right?",
-    "Yes. Every question has an explanation that gives the reasoning, not just the key, and the calculation chapters have worked examples you can follow step by step."
+    "Are the calculations explained?",
+    "Yes. Every calculation question, from stall speed and load factor to turn radius, climb gradient and VA, has been recomputed and comes with the working."
    ],
    [
     "Can I try it before paying?",
